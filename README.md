@@ -1,4 +1,5 @@
 # Pocket ML 📱
+<img src="assets/97841003-231D-47A2-8EC2-31C9425701F1.jpeg" width="50%">
 
 PocketML is a functional statically-typed language designed for
 tinkering / small projects. Its main feature is the editor android app.

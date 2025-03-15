@@ -25,7 +25,7 @@ let grammar = """
 %ignore WS_INLINE
 """;
 
-#########################################
+############################## parsing
 
 let _ = setreclimit 3000;
 
@@ -40,6 +40,7 @@ data Exp
 let parse : String -> Exp;
 let parse = parser grammar;
 
+####################### interpreter
 let eval : (Dict Number)-> Exp -> Maybe Number;
 let binop : (Number -> Number -> Number)->(Dict Number) -> Exp -> Exp -> Maybe Number;
 
@@ -59,13 +60,17 @@ let eval = \env -> \exp -> case exp
 	| Neg x -> fmap neg (eval env x)
 ;
 
-#########################################
+######################### tests
 
-let test = parse 
-	"let x = 2 + 4; x * 2";
+let test = "1 + 3";
 
-let res = eval (dict ()) test;
-let _ = print res;
+let res = eval (dict ()) (parse test);
 
-module (*)
+let main =
+	case res
+	| Nothing -> print "Error!"
+    | Just x -> print (test + " => " + (str x))
+ ;
+
+ module (*)
 

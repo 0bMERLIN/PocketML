@@ -95,7 +95,6 @@ case Just 1
     | Just x -> print x
     | Nothing -> ()
 ```
-Note that `()` represents the unit value of type `Unit`.
 
 #### 2.3 Lists
 Lists can be created like in the following example:
@@ -174,7 +173,7 @@ let greet = \x -> print2 "Hi," x;
 let pi = 4;
 module (greet, pi)
 ```
-Modules can also use `(*)` to export *all*
+Modules can also use `(*)` to export _all_
 types and variables.
 
 ```sml
@@ -189,12 +188,12 @@ import directory.mymodule;
 
 #### 2.7 Python interop
 PocketML is an interpreted language based on python. It
-has access to all features of python and the
+has access to most features of python and the
 libraries `numpy`, `pygments`, `lark`, and `kivy`.
-Python code can be included in Lang code using
+Python code can be included in PocketML code using
 `%% ... %%`. The `__EXPORTS__` variable
 can be used to transfer data from python
-to Lang:
+to PocketML:
 
 ```sml
 %%
@@ -222,17 +221,17 @@ PocketML!
 A large part of PocketML is its editor.
 Use the `Editor` tab in the top toolbar
 to edit files. Results show up in either
-the `Program` tab for graphics or the `Text Out`
-tab for text output. Open, delete files and folders
+the `Graphics` tab for graphics or the `Text Out`
+tab for text output. Manage project files and directories
 in the `Files` tab. For advanced file management
 use a File manager app that can access the
 `InternalStorage/Android/data/org.myapp.test/files/`
-directory.
-The info box above the keyboard shows the type
-of the symbol the cursor is on when clicked.
+directory. The info box above the keyboard shows the type
+of the symbol the cursor is on when clicked (no live type checking yet,
+because the typechecker is too slow).
 
 ##### Extending and hacking!
-PocketML`s editor is accessible from Python (see 2.7).
+PocketML`s editor is accessible to PocketML by using python interop.
 Use the following template to gain access to
 the editor object. It contains the "terminalout"
 and "graphicalout" objects.
@@ -246,8 +245,8 @@ def cls(_):
 %%;
 ()
 ```
-To see Python-Editor interop in action, refer
-to the `graphics2.ml` library and the source code.
+For a better insight into accessing the editor from code,
+refer to the `graphics2.ml` library.
 
 ## Screenshots
 
@@ -255,4 +254,3 @@ to the `graphics2.ml` library and the source code.
 <img src="assets/1.jpeg" width="40%">
 <br>
 <img src="assets/2.jpeg" width="40%">
-<video src="assets/3.mp4" width="40%" controls>

@@ -2,8 +2,8 @@ import std;
 import state;
 import graphics2;
 
-let pos = mkSt [300, 800];
-let vel = mkSt [0, 0];
+let pos = mkSt [300,800];
+let vel = mkSt [0,0];
 
 let bounce = \_u ->
 	when (lt (vget 1 (getSt pos)) 0) 
@@ -18,7 +18,7 @@ let onUp = \_->
 do
 	clear ()
 	let c = circle (300,300) 300;
-	let b = button "Up" (width - 300, height - 300) (300, 300);
+	let b = button "Up" (width - 300,height - 300) (300,300);
 	onpress b onUp
 	
 	setTick (\_ -> do

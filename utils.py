@@ -1,5 +1,13 @@
 import functools
 import re
+from kivy.core.window import Window
+from kivy import platform
+
+BTN_H = Window.height/15
+BTN_W = Window.width/4
+if platform != "android":
+    BTN_H = 800/15
+    BTN_W = 500/4
 
 def word_at_index(s, index):
     words = list(re.finditer(r'[a-zA-Z_][a-zA-Z_0-9]*', s))  # Find words using regex

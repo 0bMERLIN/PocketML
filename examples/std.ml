@@ -23,7 +23,7 @@ def mklist(xs):
 	if xs == []: return ("Nil",)
 	return ("Cons",xs[0],mklist(xs[1:]))
 
-EDITOR = self.env["editor"] if "editor" in self.env else None
+EDITOR = self.env["editor"]
 def cls(_):
 	global EDITOR
 	EDITOR.terminalout.text=""
@@ -40,6 +40,7 @@ tup = lambda l:dict(zip(
 __EXPORTS__={
 	"float":float,
 	"int":int,
+	"str":str,
 	"time":lambda _: time.time(),
 	"cls":cls,
 	"not":lambda x: not x,
@@ -67,6 +68,7 @@ data List a
 let cls : Unit->Unit;
 let time : Unit -> Number;
 let setreclimit : Number->Unit;
+let str : a -> String;
 
 let not : Bool -> Bool;
 let eq = equal;
@@ -75,9 +77,9 @@ let neq = \a->\b->not (equal a b);
 let float : a -> Number;
 let int : a -> Number;
 let neg = \x -> -x;
-let rec sum = \case
+let rec mull = \case
 	  Nil -> 0
-	| Cons x xs -> add x (sum xs);
+	| Cons x xs -> add x (mull xs);
 
 let id = \x -> x;
 let when = \cond -> \func -> if cond

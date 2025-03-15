@@ -1,7 +1,5 @@
 
 /.buildozer
-__pycache__/utils.cpython-310.pyc
-/__pycache__
 /__pycache__
 /editor/__pycache__
 /interpreter/__pycache__

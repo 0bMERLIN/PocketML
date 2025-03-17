@@ -1,5 +1,5 @@
 # Pocket ML 📱
-<img src="assets/97841003-231D-47A2-8EC2-31C9425701F1.jpeg" width="50%">
+<img src="assets/logo.jpeg" width="50%">
 
 PocketML is a functional statically-typed language designed for
 tinkering / small projects. Its main feature is the editor android app.
@@ -252,7 +252,13 @@ refer to the `graphics.ml` library.
 
 ## Screenshots
 
-<img src="assets/0.jpeg" width="40%">
-<img src="assets/1.jpeg" width="40%">
-<br>
-<img src="assets/2.jpeg" width="40%">
+<table>
+    <tr>
+    <td><img src="assets/0.jpeg"></td>
+    <td><img src="assets/1.jpeg"></td>
+    </tr>
+    <tr>
+    <td><img src="assets/2.jpeg"></td>
+    <td><img src="assets/3.jpeg"></td>
+    </tr>
+</table>

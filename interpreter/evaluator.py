@@ -42,6 +42,13 @@ class Evaluator(Interpreter):
         return acc
 
     # ========== EXPRESSIONS
+    def list(self, elems):
+        xs = self.visit_children(elems)
+        l = ("Nil",)
+        for x in reversed(xs):
+            l = ("Cons",x,l)
+        return l
+
     def nparray(self, elems):
         return np.array(self.visit_children(elems))
 
@@ -120,8 +127,13 @@ class Evaluator(Interpreter):
         return inner
 
     def lamcase(self, lamcases):
+        closure = copy(self.env)
         def inner(v):
-            return self.match(v, *lamcases.children, match_arg_evaluated=True)
+            old_env = copy(self.env)
+            self.env.update(closure)
+            res = self.match(v, *lamcases.children, match_arg_evaluated=True)
+            self.env = old_env
+            return res
 
         return inner
 
@@ -207,7 +219,7 @@ class Evaluator(Interpreter):
         return str(nm) == str(self.match_arg[0])
 
     def papp(self, f, a):
-        old_ma = deepcopy(self.match_arg)
+        old_ma = self.match_arg # might need copy()!
 
         if len(self.match_arg) == 1:
             self.match_arg = self.match_arg[0]

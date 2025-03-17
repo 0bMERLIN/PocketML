@@ -102,14 +102,15 @@ Lists can be created like in the following example:
 ```python
 import std;
 
-print (list (1,2,3))
+print [1, 2, 3]
 # => (Cons 1 (Cons 2 (Cons 3 Nil)))
 ```
 
-Numpy arrays can be created using the `[1, 2, 3, ...]` syntax:
+Numpy arrays can be created using the `|1, 2, 3, ...|` syntax:
 ```python
-print ([1, 2] + [3, 4]) # => [4. 6.]
+print (|1, 2| + |3, 4|) # => [4. 6.]
 ```
+They have type `Vec`.
 
 #### 2.4 Tuples and Records
 PocketML supports both tuples and records. It is
@@ -147,7 +148,7 @@ let rec sum = \x -> case x
     | Nil -> 0
 	| Cons x xs -> add x (sum xs);
 
-print (sum (list (1,2,3,4)))
+print (sum [1,2,3,4])
 ```
 Or alternatively:
 ```sml
@@ -156,7 +157,7 @@ let sum = \case
     | Nil -> 0
 	| Cons x xs -> add x (sum xs);
 
-print (sum (list (1,2,3,4)))
+print (sum [1,2,3,4])
 ```
 >Note: The above example also uses the `\case` notation
 which is equivalent to `\x -> case x ...`.
@@ -247,7 +248,7 @@ def cls(_):
 ()
 ```
 For a better insight into accessing the editor from code,
-refer to the `graphics2.ml` library.
+refer to the `graphics.ml` library.
 
 ## Screenshots
 

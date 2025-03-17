@@ -1,5 +1,4 @@
 from math import sqrt
-import sys
 from interpreter.typecheck import load_file
 from interpreter.evaluator import Evaluator
 

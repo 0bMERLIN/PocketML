@@ -37,15 +37,15 @@ class GraphicalOut(Widget):
         self.pressed_keys = list(filter(lambda k: k[1] != keycode, self.pressed_keys))
 
     @curry
-    def circle(pos: dict, rad: int):
-        Ellipse(pos=pos.values(), size=(rad,) * 2)
+    def circle(pos, rad: int):
+        Ellipse(pos=pos, size=(rad,) * 2)
 
     @curry
-    def rect(pos: dict, size: dict):
-        Rectangle(pos=pos.values(), size=size.values())
+    def rect(pos, size):
+        Rectangle(pos=pos, size=size)
 
-    def color(color: dict):
-        Color(*color.values())
+    def color(color):
+        Color(*color)
 
     def clear(self, _):
         self.canvas.clear()
@@ -55,7 +55,7 @@ class GraphicalOut(Widget):
 
     @curry
     def setUpdate(self, state, f):
-        self.enable_kb()
+        #self.enable_kb()
         if self.update_event != None:
             Clock.unschedule(self.update_event)
         self.state = state
@@ -67,18 +67,14 @@ class GraphicalOut(Widget):
 
         self.update_event = Clock.schedule_interval(helper, 1 / 60)
 
-    def button(self, text):
-        @curry
-        def helper(pos, size):
-            btn = Button(
-                text=text,
-                pos=pos.values(),
-                size=size.values(),
-            )
-            self.add_widget(btn)
-            return btn
-
-        return helper
+    def button(self, text, pos, size):
+        btn = Button(
+            text=text,
+            pos=pos,
+            size=size,
+        )
+        self.add_widget(btn)
+        return btn
 
     def execute(self, f):
         return f(self)

@@ -4,6 +4,8 @@ from dataclasses import dataclass as dat
 from types import NoneType
 from typing import Dict, List
 
+class PMLTypeError(Exception):
+    pass
 
 @dat
 class Typ:
@@ -49,14 +51,14 @@ class Typ:
         if isinstance(t, TVar):
             return t.unify(self, line)
         if isinstance(t, TRecord):
-            raise Exception(
+            raise PMLTypeError(
                 f"Cannot unify non-record type {self} with record {t} (line {line})"
             )
         if t.name != self.name:
             fn_warn = ""
             if t.name == "->" or self.name == "->":
                 fn_warn = "\n(Probably applied non-function as a function or passed too many arguments!)"
-            raise Exception(
+            raise PMLTypeError(
                 f"Cannot unify ({self.name}) with ({t.name}) (line {line})" + fn_warn
             )
         return sum([a.unify(b, line) for a, b in zip(self.params, t.params)], start=[])
@@ -100,7 +102,7 @@ class TVar:
 
     def unify(self, t, line):
         if not isinstance(t, TVar) and t.occurs(self.name):
-            raise Exception(f"Occurs check failed: {self} = {t} (line {line})")
+            raise PMLTypeError(f"Occurs check failed: {self} = {t} (line {line})")
         return [(self, t, line)]
 
     def occurs(self, nm):
@@ -165,7 +167,7 @@ class TRecord:
                 self_issubset = set(t.entries.keys()).issubset(self.entries.keys())
                 t_issubset = set(self.entries.keys()).issubset(t.entries.keys())
                 if not (self_issubset or t_issubset):
-                    raise Exception(
+                    raise PMLTypeError(
                         f"Cannot unify record {t} with "
                         + f"record {self} (line {line})\n"
                         + "Probably access to a key that is not in the record."

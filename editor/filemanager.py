@@ -89,8 +89,8 @@ class FileManager(FloatLayout):
         # build layout
         layout = BoxLayout(orientation="vertical")
         
-        donebtn = Button(text="Move here", size=(BTN_W, BTN_H))
-        cancelbtn = Button(text="Cancel", size=(BTN_W, BTN_H))
+        donebtn = Button(text="Move here", size_hint=(1, 0.15))
+        cancelbtn = Button(text="Cancel", size_hint=(1, 0.15))
         filechooser = FileChooserListView(size_hint=(1,1), dirselect=True)
         filechooser.path = path[:-len(file)]
 

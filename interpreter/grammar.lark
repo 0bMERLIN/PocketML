@@ -13,9 +13,15 @@ PRODOP: "/" | "*" | "°"
     | product PRODOP atom -> infix_op
     | "-" atom -> neg
 
+?atom: "\\" NAME "->" expr -> lam
+    | "\\" "case" lamcases -> lamcase
+    | atom0
+    | atom atom -> app
+
 ?atom0: atom0 "." NAME -> access
     | "(" tupleelems ")" -> _tuple
-    | "[" tupleelems "]" -> nparray
+    | "|" tupleelems "|" -> nparray
+    | "[" tupleelems "]" -> list
     | "do" "{" _sep{expr, ";"}  (";")?"}" -> do
     | none_expr -> none
     | "import" _sep{NAME, "."} ";" expr -> _import
@@ -37,11 +43,6 @@ PRODOP: "/" | "*" | "°"
     | /%(.|[\n])+%/ -> inlinepython
 
 tupleelems: expr "," (expr ("," expr)*)?
-
-?atom: "\\" NAME "->" expr -> lam
-    | "\\" "case" lamcases -> lamcase
-    | atom0
-    | expr atom -> app
 
 lamcases: _sep{case, "|"}
 none_expr: "(" ")"
@@ -72,9 +73,11 @@ constructor: UPPERNAME typeatom*
 
 
 // ========= TYPES
-?type: UPPERNAME typeatom* -> ttyp
-    | typeatom
-    | typeatom "->" type -> tfun
+?type: typeatom1
+    | typeatom1 "->" type -> tfun
+
+?typeatom1: typeatom
+    | UPPERNAME typeatom* -> ttyp
 
 ?typeatom: LOWERNAME -> tvar
     | "(" tupletelems ")" -> ttuple

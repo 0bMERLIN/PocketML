@@ -14,7 +14,6 @@ if DBG:
 # print all definitions if True
 PRINT_LETS = False
 
-
 @dat
 class ModuleData:
     env: Dict[str, Typ]
@@ -49,13 +48,13 @@ class ModuleData:
 
 def load_module(filename) -> ModuleData:
     """
-    Load a file. Raise exception if the file
+    Load a file. Raise PMLTypeError if the file
     does not return a record representing
     its exports.
     """
     _, m = load_file(filename)
     if not isinstance(m, ModuleData):
-        raise Exception(f"Cannot load file {filename} as a module that returns:\n{m}")
+        raise PMLTypeError(f"Cannot load file {filename} as a module that returns:\n{m}")
     return m
 
 BUILTIN_TYPES = {
@@ -93,8 +92,8 @@ def load_file(filename) -> Tuple[ParseTree, Typ]:
     )
     try:
         return (tree, solve(typechecker.constraints, typechecker.visit(tree)))
-    except Exception as e:
-        raise Exception(f"Type error ({filename}):\n"+str(e))
+    except PMLTypeError as e:
+        raise PMLTypeError(f"Type error ({filename}):\n"+str(e))
 
 
 @v_args(True)
@@ -113,7 +112,7 @@ class Typechecker(Interpreter):
     # ===================== module system
     def typeexport(self, tname):
         if str(tname) not in self.type_env:
-            raise Exception(f"Cannot export undefined type {tname} (line {tname.line})")
+            raise PMLTypeError(f"Cannot export undefined type {tname} (line {tname.line})")
         return ModuleData(
             env={},
             type_env={str(tname): self.type_env[str(tname)]},
@@ -126,7 +125,7 @@ class Typechecker(Interpreter):
 
     def valueexport(self, name):
         if str(name) not in self.env:
-            raise Exception(
+            raise PMLTypeError(
                 f"Cannot export undefined variable {name} (line {name.line})"
             )
         return ModuleData({str(name): self.env[str(name)]}, {}, {})
@@ -161,6 +160,12 @@ class Typechecker(Interpreter):
         return res
 
     # ===================== expressions
+    def list(self, elems):
+        types = self.visit_children(elems)
+        tv = newtv(elems.meta.line)
+        for t in types: self.constr(tv, t, t.line)
+        return Typ("List", [tv], elems.meta.line)
+
     def nparray(self, elems):
         types = self.visit_children(elems)
         for t in types: self.constr(t, t_num, t.line)
@@ -265,7 +270,7 @@ class Typechecker(Interpreter):
 
     def var(self, x):
         if x not in self.env:
-            raise Exception(f"Variable {x} not defined (line {x.line})")
+            raise PMLTypeError(f"Variable {x} not defined (line {x.line})")
         return self.env[x].inst()
 
     def app(self, f, x):
@@ -360,7 +365,7 @@ class Typechecker(Interpreter):
 
     def pconstrname(self, nm):
         if str(nm) not in self.env:
-            raise Exception(f"Constructor {nm} not defined. (line {nm.line})")
+            raise PMLTypeError(f"Constructor {nm} not defined. (line {nm.line})")
         t = self.env[str(nm)].inst()
         return t
 
@@ -383,7 +388,7 @@ class Typechecker(Interpreter):
 
     def tvar(self, x):
         if not (self.allow_free_tvars or str(x) in self.type_env):
-            raise Exception(f"Unknown type variable {x} (line {x.line})")
+            raise PMLTypeError(f"Unknown type variable {x} (line {x.line})")
         return TVar(str(x), x.line)
 
     def ttyp(self, name, params=None):
@@ -397,7 +402,7 @@ class Typechecker(Interpreter):
         # alias
         if str(name) in self.type_aliases:
             if self.type_env[str(name)] != len(params):
-                raise Exception(
+                raise PMLTypeError(
                     f"Type alias {name} takes {self.type_env[name]} "
                     + f"parameters, {len(params)} given (line {name.line})"
                 )
@@ -410,7 +415,7 @@ class Typechecker(Interpreter):
         # type
         if str(name) in self.type_env:
             if self.type_env[str(name)] != len(params):
-                raise Exception(
+                raise PMLTypeError(
                     f"Type {name} takes {self.type_env[name]} "
                     + f"parameters, {len(params)} given (line {name.line})"
                 )
@@ -421,7 +426,7 @@ class Typechecker(Interpreter):
             )
 
         # not found
-        raise Exception(f"Type {name} not defined (line {name.line})")
+        raise PMLTypeError(f"Type {name} not defined (line {name.line})")
 
     def constructor(self, name, *params):
         params = [*map(self.visit, params)]

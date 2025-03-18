@@ -8,8 +8,6 @@ from kivy.clock import Clock
 from kivy.uix.boxlayout import BoxLayout
 from kivy.core.window import Window
 
-from editor.graphicalout import GraphicalOut
-
 from interpreter.interpreter import run_file
 from interpreter.lexer import Lexer
 from interpreter.parser import get_imports
@@ -204,26 +202,26 @@ class InputField(Widget):
         self.stop_button = Button(
             text="Stop",
             size_hint=(1, 1),
-            size=(BTN_W, BTN_H),
+            size=(BTN_W/2, BTN_H),
             pos=(0, code_input_y - 2 * BTN_H),
         )
         self.close_button = Button(
-            text="Close Tab",
+            text="Close",
             size_hint=(1, 1),
-            size=(BTN_W, BTN_H),
-            pos=(BTN_W, code_input_y - 2 * BTN_H),
+            size=(BTN_W/2, BTN_H),
+            pos=(BTN_W/2, code_input_y - 2 * BTN_H),
         )
         self.save_button = Button(
             text="Save",
             size_hint=(1, 1),
             size=(BTN_W, BTN_H),
-            pos=(2 * BTN_W, code_input_y - 2 * BTN_H),
+            pos=(BTN_W, code_input_y - 2 * BTN_H),
         )
         self.run_button = Button(
             text="Run",
             size_hint=(1, 1),
             size=(BTN_W, BTN_H),
-            pos=(3 * BTN_W, code_input_y - 2 * BTN_H),
+            pos=(2 * BTN_W, code_input_y - 2 * BTN_H),
         )
 
         self.code_input = LineNumCodeInput(
@@ -238,7 +236,7 @@ class InputField(Widget):
             size_hint=(1, 1),
             size=(Window.width - BTN_W, BTN_H),
             pos=(0, code_input_y - BTN_H),
-            text_size=(Window.width, BTN_H),
+            text_size=(Window.width - BTN_W, BTN_H),
             halign="center",
             valign="middle",
         )
@@ -257,6 +255,20 @@ class InputField(Widget):
             pos=(Window.width - BTN_W / 2, code_input_y - BTN_H),
         )
 
+        self.redo_button = Button(
+            text="Redo",
+            size_hint=(1, 1),
+            size=(BTN_W / 2, BTN_H),
+            pos=(Window.width - BTN_W / 2, code_input_y - 2*BTN_H),
+        )
+
+        self.undo_button = Button(
+            text="Undo",
+            size_hint=(1, 1),
+            size=(BTN_W / 2, BTN_H),
+            pos=(Window.width - BTN_W, code_input_y - 2*BTN_H),
+        )
+
         if os.path.exists(filename):
             self.code_input.code_input.text = open(filename).read()
         else:
@@ -273,6 +285,8 @@ class InputField(Widget):
         self.dec_font_size_button.on_press = lambda: self.code_input.set_font_size(
             self.code_input.fontsize + 1
         )
+        self.redo_button.on_press = self.code_input.code_input.do_redo
+        self.undo_button.on_press = self.code_input.code_input.do_undo
 
         self.add_widget(self.code_input)
         self.add_widget(self.run_button)
@@ -282,3 +296,5 @@ class InputField(Widget):
         self.add_widget(self.inc_font_size_button)
         self.add_widget(self.dec_font_size_button)
         self.add_widget(self.gettype_button)
+        self.add_widget(self.undo_button)
+        self.add_widget(self.redo_button)

@@ -252,4 +252,8 @@ For a better insight into accessing the editor from code,
 refer to the `graphics.ml` library.
 
 ## Demo
-<video src='assets/demo.mp4' width="40%"></video>
+<video controls>
+    <source
+        src="assets/demo.mp4"
+        type="video/mp4">
+</video>

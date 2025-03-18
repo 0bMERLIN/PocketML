@@ -252,8 +252,4 @@ For a better insight into accessing the editor from code,
 refer to the `graphics.ml` library.
 
 ## Demo
-<video controls>
-    <source
-        src="assets/demo.mp4"
-        type="video/mp4">
-</video>
+https://github.com/user-attachments/assets/004b7bec-1c1f-44db-961f-9e52f83d04ce

@@ -222,7 +222,8 @@ PocketML!
 ##### GUI
 A large part of PocketML is its editor.
 Use the `Editor` tab in the top toolbar
-to edit files. Results show up in either
+to edit files. Close files by long pressing the
+file tab. Results show up in either
 the `Graphics` tab for graphics or the `Text Out`
 tab for text output. Manage project files and directories
 in the `Files` tab. For advanced file management
@@ -250,15 +251,5 @@ def cls(_):
 For a better insight into accessing the editor from code,
 refer to the `graphics.ml` library.
 
-## Screenshots
-
-<table>
-    <tr>
-    <td><img src="assets/0.jpeg"></td>
-    <td><img src="assets/1.jpeg"></td>
-    </tr>
-    <tr>
-    <td><img src="assets/2.jpeg"></td>
-    <td><img src="assets/3.jpeg"></td>
-    </tr>
-</table>
+## Demo
+<video src='/assets/demo.mp4' width="40%"></video>

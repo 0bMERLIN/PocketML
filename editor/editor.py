@@ -16,8 +16,9 @@ with open("current_file.txt") as f:
     current_files = f.read().strip("\n").split("\n")
 
 
-# a tab header that does something when long pressed
 class LongPressTabHeader(TabbedPanelHeader):
+    """A tab header that does something when long pressed"""
+
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self.hold_event = None  # Event to track long press
@@ -41,6 +42,10 @@ class LongPressTabHeader(TabbedPanelHeader):
 
 
 class Editor(Widget):
+    """
+    The main editor widget. Contains tabs for code
+    editing, file management etc.
+    """
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
@@ -127,4 +132,3 @@ class Editor(Widget):
                     + ("[OPEN]" if fname.endswith(current_filename) else "")
                     + "\n"
                 )
-

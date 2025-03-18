@@ -8,6 +8,8 @@ from utils import curry
 
 
 class GraphicalOut(Widget):
+    """Canvas accessible to PocketML code."""
+
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self.screen = Widget()

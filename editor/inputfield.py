@@ -3,109 +3,18 @@ import traceback
 
 from kivy.uix.widget import Widget
 from kivy.uix.button import Button
-from kivy.uix.codeinput import CodeInput
-from kivy.clock import Clock
-from kivy.uix.boxlayout import BoxLayout
 from kivy.core.window import Window
 
+from editor.codeinput import LineNumCodeInput
 from interpreter.interpreter import run_file
-from interpreter.lexer import Lexer
 from interpreter.parser import get_imports
 from interpreter.typ import PMLTypeError
 from interpreter.typecheck import BUILTIN_KINDS, BUILTIN_TYPES, ModuleData, load_file
 
 from utils import BTN_H, BTN_W, word_at_index
 
-
-class NoScrollCodeInput(CodeInput):
-    def on_touch_down(self, *args):
-        pass
-
-
-class LineNumCodeInput(BoxLayout):
-    """Custom widget that combines CodeInput with line numbers."""
-
-    def set_font_size(self, size):
-        self.fontsize = size
-        self.code_input.font_size = Window.width / size
-        self.line_numbers.font_size = Window.width / size
-        self.update_graphics()
-
-    def update_graphics(self):
-        self.line_numbers._update_graphics()
-        self.code_input._update_graphics()
-        self.update_line_numbers()
-        self.sync_scroll()
-
-    def __init__(self, code_input_y, code_input_h, **kwargs):
-        super().__init__(orientation="horizontal", **kwargs)
-
-        # Create line number label
-        self.line_numbers = NoScrollCodeInput(
-            pos=(0, code_input_y),
-            size=(50, code_input_h),
-            size_hint=(0.1, 1),
-            background_color=(0.01, 0.01, 0.01),
-            foreground_color=(0.9, 0.9, 0.9),
-            readonly=True,
-        )
-
-        # Create code input field with Python syntax highlighting
-        self.code_input = CodeInput(
-            pos=(0, code_input_y),
-            size=(Window.width, code_input_h),
-            background_color=(0.01, 0.01, 0.01),
-            foreground_color=(0.9, 0.9, 0.9),
-            auto_indent=True,
-            lexer=Lexer(),
-        )
-
-        # Bind updates to functions
-        self.code_input.bind(text=self.update_line_numbers, scroll_y=self.sync_scroll)
-
-        # Add widgets to layout
-        self.add_widget(self.line_numbers)
-        self.add_widget(self.code_input)
-
-        Clock.schedule_once(lambda _: self.set_font_size(32), 0.1)
-
-    def get_line_numbers(self):
-        line_count = self.code_input.text.count("\n") + 1
-        return "\n".join(str(i) for i in range(1, line_count + 1))
-
-    def get_visual_line_numbers(self):
-        """Computes line numbers considering text wrapping."""
-        lines = self.code_input.text.split("\n")
-        font_size = self.code_input.font_size
-        max_width = self.code_input.width - self.line_numbers.width
-
-        visual_lines = []
-        line_num = 1
-
-        for i, line in enumerate(lines):
-
-            # Create a temporary label to measure text width
-            text_width = self.code_input._get_text_width(
-                line[: len(line) - 4] if len(line) > 10 else line, 4, None
-            )
-
-            # Calculate how many visual lines this logical line takes
-            wrapped_lines = max(1, 1 + int(text_width // max_width))
-            visual_lines.append(str(line_num))
-            visual_lines.extend([" "] * (wrapped_lines - 1))
-            line_num += 1
-
-        return "\n".join(visual_lines)
-
-    def update_line_numbers(self, *args):
-        self.line_numbers.text = self.get_visual_line_numbers()
-
-    def sync_scroll(self, *args):
-        self.line_numbers.scroll_y = self.code_input.scroll_y
-        self.line_numbers._update_graphics()
-
-
 class InputField(Widget):
+    """A code editor that can invoke the interpreter"""
 
     def save(self):
         with open(self.filename, "w+") as f:
@@ -202,14 +111,8 @@ class InputField(Widget):
         self.stop_button = Button(
             text="Stop",
             size_hint=(1, 1),
-            size=(BTN_W/2, BTN_H),
+            size=(BTN_W, BTN_H),
             pos=(0, code_input_y - 2 * BTN_H),
-        )
-        self.close_button = Button(
-            text="Close",
-            size_hint=(1, 1),
-            size=(BTN_W/2, BTN_H),
-            pos=(BTN_W/2, code_input_y - 2 * BTN_H),
         )
         self.save_button = Button(
             text="Save",
@@ -276,7 +179,6 @@ class InputField(Widget):
 
         self.run_button.on_press = self.run_file
         self.save_button.on_press = self.save
-        self.close_button.on_press = self.close
         self.stop_button.on_press = self.stop_program
         self.gettype_button.on_press = self.get_type
         self.inc_font_size_button.on_press = lambda: self.code_input.set_font_size(
@@ -291,7 +193,6 @@ class InputField(Widget):
         self.add_widget(self.code_input)
         self.add_widget(self.run_button)
         self.add_widget(self.save_button)
-        self.add_widget(self.close_button)
         self.add_widget(self.stop_button)
         self.add_widget(self.inc_font_size_button)
         self.add_widget(self.dec_font_size_button)

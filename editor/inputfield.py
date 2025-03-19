@@ -9,7 +9,7 @@ from editor.codeinput import LineNumCodeInput
 from interpreter.interpreter import run_file
 from interpreter.parser import get_imports
 from interpreter.typ import PMLTypeError
-from interpreter.typecheck import BUILTIN_KINDS, BUILTIN_TYPES, ModuleData, load_file
+from interpreter.typecheck import BUILTIN_KINDS, BUILTIN_TYPES, load_module
 
 from utils import BTN_H, BTN_W, word_at_index
 
@@ -51,15 +51,19 @@ class InputField(Widget):
         Try to find the type of `nm` in the
         given file or any of the ones it imports
         """
-        _, typ = load_file(filename)
-        if isinstance(typ, ModuleData):
-            self.cached_names[filename] = typ.get_all_types_and_kinds()
-            t = typ.get_type_or_kind(nm)
-            if t != None:
-                return t
+        typ = None
+        try:
+            typ = load_module(filename)
+        except PMLTypeError as e:
+            return None
 
-        res = [self.find_type(nm, fname) for fname in get_imports(filename)]
-        return res[0] if res != [] else None
+        t = typ.get_type_or_kind(nm)
+
+        if t == None:
+            res = [self.find_type(nm, fname) for fname in get_imports(filename)]
+            return res[0] if res != [] else None
+        else:
+            return t
 
     def get_type(self):
 
@@ -76,12 +80,7 @@ class InputField(Widget):
         if current_symbol in builtins:
             t = current_symbol + " : " + str(builtins[current_symbol])
 
-        # see if name is in cache.
-        for _, names in self.cached_names.items():
-            if current_symbol in names:
-                t = current_symbol + " : " + str(names[current_symbol])
-                break
-
+        # type check
         try:
             t0 = self.find_type(current_symbol, self.filename)
             if t0 != None:
@@ -97,13 +96,9 @@ class InputField(Widget):
     def __init__(self, filename, editor, **kwargs):
         super().__init__(**kwargs)
 
-        ############### Intellisense
-        # Type: Dict[str (MODULE NAME), Dict[str, Typ]]
-        self.cached_names = {}
-
         ############### UI
         self.editor = editor
-        self.filename = filename
+        self.filename = os.path.relpath(filename)
 
         code_input_h = Window.height / 3 + BTN_H
         code_input_y = Window.height - code_input_h - BTN_H * 2

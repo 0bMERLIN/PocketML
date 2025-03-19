@@ -1,4 +1,6 @@
 from copy import copy, deepcopy
+import json
+import time
 from typing import Tuple
 from lark import ParseTree, v_args
 from lark.visitors import Interpreter
@@ -6,13 +8,16 @@ from dataclasses import dataclass as dat
 from interpreter.parser import parse_file
 from interpreter.path import storage_path
 from interpreter.typ import *
+import os
+import hashlib
 
 DBG = False
-if DBG:
-    import os
+
+CACHING = True
 
 # print all definitions if True
 PRINT_LETS = False
+
 
 @dat
 class ModuleData:
@@ -28,15 +33,19 @@ class ModuleData:
         )
 
     def get_type_or_kind(self, nm):
-        if nm in self.env: return self.env[nm]
-        if nm in self.type_env: return self.type_env[nm]
-        if nm in self.type_aliases: return self.type_aliases[nm]
-    
+        if nm in self.env:
+            return self.env[nm]
+        if nm in self.type_env:
+            return self.type_env[nm]
+        if nm in self.type_aliases:
+            return self.type_aliases[nm]
+
     def get_all_types_and_kinds(self):
         return dict(
-            list(self.env.items()) +
-            list(self.type_env.items()) +
-            list(self.type_aliases.items()))
+            list(self.env.items())
+            + list(self.type_env.items())
+            + list(self.type_aliases.items())
+        )
 
     def subst(self, nm: str, t):
         return ModuleData(
@@ -46,16 +55,41 @@ class ModuleData:
         )
 
 
+def get_file_hash(filename):
+    hasher = hashlib.sha256()
+    with open(filename, "rb") as f:
+        hasher.update(f.read())
+    return hasher.hexdigest()
+
+# store filename, types & file hash
+global_type_cache: Dict[str, Tuple[ModuleData, str]] = {}
+
+
 def load_module(filename) -> ModuleData:
     """
     Load a file. Raise PMLTypeError if the file
     does not return a record representing
     its exports.
     """
+
+    if (
+        CACHING
+        and filename in global_type_cache
+        and get_file_hash(filename) == global_type_cache[filename][1]
+    ):
+        print("[USED CACHE]", filename)
+        return global_type_cache[filename][0]
+
     _, m = load_file(filename)
     if not isinstance(m, ModuleData):
-        raise PMLTypeError(f"Cannot load file {filename} as a module that returns:\n{m}")
+        raise PMLTypeError(
+            f"Cannot load file {filename} as a module that returns:\n{m}"
+        )
+
+    global_type_cache[filename] = (m, get_file_hash(filename))
+
     return m
+
 
 BUILTIN_TYPES = {
     "and": t_fn(t_bool, t_fn(t_bool, t_bool)),
@@ -75,7 +109,8 @@ BUILTIN_TYPES = {
     "print2": Scheme.generalize(t_fn(tvar("b"), t_fn(tvar("a"), t_unit))),
 }
 
-BUILTIN_KINDS = { "Bool": 0, "Number": 0, "Unit": 0, "String": 0 }
+BUILTIN_KINDS = {"Bool": 0, "Number": 0, "Unit": 0, "String": 0}
+
 
 def load_file(filename) -> Tuple[ParseTree, Typ]:
     """
@@ -87,13 +122,13 @@ def load_file(filename) -> Tuple[ParseTree, Typ]:
     tree = parse_file(filename)
 
     # typecheck
-    typechecker = Typechecker(
-        BUILTIN_TYPES, BUILTIN_KINDS
-    )
+    typechecker = Typechecker(BUILTIN_TYPES, BUILTIN_KINDS)
+
     try:
-        return (tree, solve(typechecker.constraints, typechecker.visit(tree)))
+        res = solve(typechecker.constraints, typechecker.visit(tree))
+        return (tree, res)
     except PMLTypeError as e:
-        raise PMLTypeError(f"Type error ({filename}):\n"+str(e))
+        raise PMLTypeError(f"Type error ({filename}):\n" + str(e))
 
 
 @v_args(True)
@@ -112,7 +147,9 @@ class Typechecker(Interpreter):
     # ===================== module system
     def typeexport(self, tname):
         if str(tname) not in self.type_env:
-            raise PMLTypeError(f"Cannot export undefined type {tname} (line {tname.line})")
+            raise PMLTypeError(
+                f"Cannot export undefined type {tname} (line {tname.line})"
+            )
         return ModuleData(
             env={},
             type_env={str(tname): self.type_env[str(tname)]},
@@ -141,9 +178,13 @@ class Typechecker(Interpreter):
         # get filename
         modulepath = args.children[:-1]
         e = args.children[-1]
-        filename = storage_path+("/"if storage_path[-1]!="/" else "")+"/".join(map(str,modulepath))
+        filename = (
+            storage_path
+            + ("/" if storage_path[-1] != "/" else "")
+            + "/".join(map(str, modulepath))
+        )
         filename += ".ml"
-        
+
         m = load_module(filename)
         old_env = copy(self.env)
         old_tenv = copy(self.type_env)
@@ -163,12 +204,14 @@ class Typechecker(Interpreter):
     def list(self, elems):
         types = self.visit_children(elems)
         tv = newtv(elems.meta.line)
-        for t in types: self.constr(tv, t, t.line)
+        for t in types:
+            self.constr(tv, t, t.line)
         return Typ("List", [tv], elems.meta.line)
 
     def nparray(self, elems):
         types = self.visit_children(elems)
-        for t in types: self.constr(t, t_num, t.line)
+        for t in types:
+            self.constr(t, t_num, t.line)
         return Typ("Vec", [], elems.meta.line)
 
     def infix_op(self, a, op, b):
@@ -293,7 +336,7 @@ class Typechecker(Interpreter):
         cases = lamcases.children
 
         mt = self.match(argtv, *cases)
-        
+
         return Typ("->", [argtv, mt], lamcases.meta.line)
 
     def num(self, x):
@@ -358,10 +401,9 @@ class Typechecker(Interpreter):
 
     def pnum(self, x):
         return Typ("Number", [], x.line)
-    
+
     def pstr(self, x):
         return Typ("String", [], x.line)
-
 
     def pconstrname(self, nm):
         if str(nm) not in self.env:
@@ -381,9 +423,7 @@ class Typechecker(Interpreter):
     def ttuple(self, elems):
         types = self.visit_children(elems)
         return TRecord(
-            {f"_{i}": t for i, t in enumerate(types)},
-            elems.meta.line,
-            baked=True
+            {f"_{i}": t for i, t in enumerate(types)}, elems.meta.line, baked=True
         )
 
     def tvar(self, x):
@@ -408,8 +448,8 @@ class Typechecker(Interpreter):
                 )
             t: Typ = self.type_aliases[str(name)]
             substs = zip(t.free_tvars(), params)
-            for a,b in substs:
-                t = t.subst(a,b)
+            for a, b in substs:
+                t = t.subst(a, b)
             return t
 
         # type
@@ -574,4 +614,3 @@ def solve(constraints, t):
         t = t.subst(a.name, b)
 
     return t
-

@@ -58,6 +58,12 @@ class Evaluator(Interpreter):
         if op == "-": return x - y
         if op in "*°": return x * y
         if op == "/": return x / y
+        if op == "==": return x == y
+        if op == "!=": return x != y
+        if op == "<": return x < y
+        if op == "<=": return x <= y
+        if op == ">": return x > y
+        if op == ">=": return x >= y
 
     def do(self, *stmts):
         for s in stmts[:-1]:

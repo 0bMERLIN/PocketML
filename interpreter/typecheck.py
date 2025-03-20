@@ -216,8 +216,14 @@ class Typechecker(Interpreter):
 
     def infix_op(self, a, op, b):
         at, bt = self.visit(a), self.visit(b)
+        if op in ["||", "&&"]:
+            self.constr(at, t_bool, a.meta.line)
+            self.constr(bt, t_bool, b.meta.line)
+        elif op in ["<", ">", ">=", "<="]:
+            self.constr(at, t_num, a.meta.line)
+            self.constr(bt, t_num, b.meta.line)
         # ° can multiply anything together!
-        if op != "°":
+        elif op != "°":
             self.constr(at, bt, b.meta.line)
         return at
 

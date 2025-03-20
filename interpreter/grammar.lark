@@ -1,13 +1,16 @@
 
 // ============ EXPRESSIONS
 ?start: expr
-?expr: sum
+?expr: logicop
 
+LOGICOP: "||" | "&&"
+COMPOP: "==" | "!=" | "<" | ">" | ">=" | "<="
 SUMOP: "+" | "-"
 PRODOP: "/" | "*" | "°"
 
-?sum: product
-    | sum SUMOP product -> infix_op
+?logicop: comp | logicop LOGICOP comp -> infix_op
+?comp: sum | comp COMPOP sum -> infix_op
+?sum: product | sum SUMOP product -> infix_op
 
 ?product: atom
     | product PRODOP atom -> infix_op

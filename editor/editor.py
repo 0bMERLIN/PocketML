@@ -1,3 +1,4 @@
+import os
 from kivy.uix.widget import Widget
 from kivy.uix.textinput import TextInput
 from kivy.core.window import Window
@@ -116,7 +117,7 @@ class Editor(Widget):
         tab = LongPressTabHeader(text=filename.split("/")[-1])
         tab.action = i.close
         self.files_tab_panel.add_widget(tab)
-        self.file_tabs[filename] = tab
+        self.file_tabs[os.path.relpath(filename)] = tab
         tab.content = i
 
         self.save_current_files()

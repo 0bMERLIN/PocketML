@@ -64,6 +64,8 @@ class Evaluator(Interpreter):
         if op == "<=": return x <= y
         if op == ">": return x > y
         if op == ">=": return x >= y
+        if op == "||": return x or y
+        if op == "&&": return x and y
 
     def do(self, *stmts):
         for s in stmts[:-1]:

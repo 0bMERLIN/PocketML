@@ -15,19 +15,18 @@ let onUp = \_ ->
 	();
 
 let movePipe = \p ->
-	if lt (vget 0 p) 0
+	if vget 0 p < 0
 	then |width,
-		if eq (randint 0 1) 0
+		if randint 0 1 == 0
 		then randint (height/1.5) (height/2)
 		else -(randint (height/1.5) (height/2))|
 	else p+|-5,0|;
 
-let deathCond = \player -> \pipes -> or
+let deathCond = \player -> \pipes ->
 	# when player hits floor
-	(lt (vget 1 (getPos player)) 0)
-	
+	vget 1 (getPos player) < 0
 	# player hits pipe
-	(any (map (collide player) pipes))
+	|| any (map (collide player) pipes)
 ;
 
 let handleDeath = \player->\pipes->when

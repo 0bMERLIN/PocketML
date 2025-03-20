@@ -219,9 +219,14 @@ class Typechecker(Interpreter):
         if op in ["||", "&&"]:
             self.constr(at, t_bool, a.meta.line)
             self.constr(bt, t_bool, b.meta.line)
+            return Typ("Bool", [], a.meta.line)
         elif op in ["<", ">", ">=", "<="]:
             self.constr(at, t_num, a.meta.line)
             self.constr(bt, t_num, b.meta.line)
+            return Typ("Bool", [], a.meta.line)
+        elif op in ["==", "!="]:
+            self.constr(at, bt, b.meta.line)
+            return Typ("Bool", [], a.meta.line)
         # ° can multiply anything together!
         elif op != "°":
             self.constr(at, bt, b.meta.line)

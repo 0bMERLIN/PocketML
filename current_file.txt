@@ -1,1 +1,1 @@
-examples/test.ml[OPEN]
+examples/flappy.ml[OPEN]

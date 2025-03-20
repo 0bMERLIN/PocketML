@@ -1,4 +1,5 @@
 import functools
+import os
 import re
 from kivy.core.window import Window
 from kivy import platform
@@ -33,3 +34,12 @@ def curry(func):
 
     return _curried
 
+
+def relpath(path):
+    """
+    Try to get the relative path, otherwise return original path
+    """
+    try:
+        return os.path.relpath(path)
+    except:
+        return path

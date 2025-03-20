@@ -1,17 +1,15 @@
-import os
 from kivy.uix.widget import Widget
 from kivy.uix.textinput import TextInput
 from kivy.core.window import Window
 from kivy.uix.tabbedpanel import TabbedPanel, TabbedPanelItem, TabbedPanelHeader
 from kivy.clock import Clock
-from kivy.uix.label import Label
 
 from editor.filemanager import FileManager
 from editor.graphicalout import GraphicalOut
 from editor.inputfield import InputField
 from kivy.core.window import Window
 
-from utils import BTN_H, BTN_W
+from utils import BTN_H, BTN_W, relpath
 
 with open("current_file.txt") as f:
     current_files = f.read().strip("\n").split("\n")
@@ -117,7 +115,7 @@ class Editor(Widget):
         tab = LongPressTabHeader(text=filename.split("/")[-1])
         tab.action = i.close
         self.files_tab_panel.add_widget(tab)
-        self.file_tabs[os.path.relpath(filename)] = tab
+        self.file_tabs[relpath(filename)] = tab
         tab.content = i
 
         self.save_current_files()

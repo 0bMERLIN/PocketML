@@ -11,7 +11,7 @@ from interpreter.parser import get_imports
 from interpreter.typ import PMLTypeError
 from interpreter.typecheck import BUILTIN_KINDS, BUILTIN_TYPES, load_module
 
-from utils import BTN_H, BTN_W, word_at_index
+from utils import BTN_H, BTN_W, relpath, word_at_index
 
 class InputField(Widget):
     """A code editor that can invoke the interpreter"""
@@ -98,7 +98,7 @@ class InputField(Widget):
 
         ############### UI
         self.editor = editor
-        self.filename = os.path.relpath(filename)
+        self.filename = relpath(filename)
 
         code_input_h = Window.height / 3 + BTN_H
         code_input_y = Window.height - code_input_h - BTN_H * 2

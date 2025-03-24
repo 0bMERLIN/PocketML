@@ -61,6 +61,7 @@ def get_file_hash(filename):
         hasher.update(f.read())
     return hasher.hexdigest()
 
+
 # store filename, types & file hash
 global_type_cache: Dict[str, Tuple[ModuleData, str]] = {}
 
@@ -107,6 +108,11 @@ BUILTIN_TYPES = {
     "lt": t_fn(t_num, t_fn(t_num, t_bool)),
     "print": Scheme.generalize(t_fn(tvar("a"), t_unit)),
     "print2": Scheme.generalize(t_fn(tvar("b"), t_fn(tvar("a"), t_unit))),
+    "printa": Scheme.generalize(
+        t_fn(
+            TRecord({f"_{n}": tvar(f"a{n}") for n in range(10)}, -1, baked=True), t_unit
+        )
+    ),
 }
 
 BUILTIN_KINDS = {"Bool": 0, "Number": 0, "Unit": 0, "String": 0}
@@ -256,7 +262,15 @@ class Typechecker(Interpreter):
         return Typ("List", [t], code.line)
 
     # if-then-else
-    def ite(self, c, t, f):
+    def ite(self, c, *cases):
+        # else omitted -> must be Unit
+        if len(cases) == 1:
+            ct, tt = list(map(self.visit, (c, cases[0])))
+            self.constr(ct, t_bool, c.meta.line)
+            self.constr(tt, t_unit, cases[0].meta.line)
+            return Typ("Unit", [], c.meta.line)
+
+        t, f = cases
         ct, tt, ft = list(map(self.visit, (c, t, f)))
         self.constr(ct, t_bool, c.meta.line)
         self.constr(tt, ft, f.meta.line)
@@ -275,14 +289,30 @@ class Typechecker(Interpreter):
             del self.env[str(x)]
         return res
 
-    def let(self, x, e, b):
+    #
+    def let(self, *args):
+        x = args[0]
+        params = args[1:-2]
+        e, b = args[-2], args[-1]
+
+        # add args into env
+        tvs = []
+        for a in params:
+            tv = newtv(a.line)
+            tvs += [tv]
+            if str(a) != "_":
+                self.env[a] = tv
+
+        # build type of `e`
+        t = self.visit(e)
+        for tv, a in reversed(list(zip(tvs, params))):
+            t = Typ("->", [tv, t], a.line)
+        t = solve(self.constraints, t)
+
         # assignment
         if str(x) == "_":
-            t = self.visit(e)
-            solve(self.constraints, t)
             return self.visit(b)
-        t = self.visit(e)
-        t = solve(self.constraints, t)
+
         if type(t) == TRecord:
             t.baked = True
 
@@ -299,7 +329,11 @@ class Typechecker(Interpreter):
             del self.env[x]
         return tb
 
-    def letrec(self, x, e, b):
+    def letrec(self, *args):
+        x = args[0]
+        params = args[1:-2]
+        e, b = args[-2], args[-1]
+
         # automatically apply fix
         fix_t = Scheme.generalize(t_fn(t_fn(tvar("a"), tvar("a")), tvar("a"))).inst()
         tvres = newtv(x.line)
@@ -307,7 +341,7 @@ class Typechecker(Interpreter):
         # simulate a lambda
         xtv = newtv(x.line)
         self.env[x] = xtv
-        te = self.visit(e)
+        te = self.lam(*params, e)
 
         # simulate applying fix to \x -> e
         self.constr(
@@ -334,12 +368,31 @@ class Typechecker(Interpreter):
         self.constr(tv0, Typ("->", [self.visit(x), tvres], f.meta.line), f.meta.line)
         return tvres
 
-    def lam(self, x, b):
-        tv = newtv(x.line)
-        self.env[x] = tv
+    def lam(self, *args):
+
+        xs = args[:-1]
+        b = args[-1]
+
+        tvs = []
+
+        for x in xs:
+            tv = newtv(x.line)
+            tvs += [tv]
+            if str(x) != "_":
+                self.env[x] = tv
+
         t = self.visit(b)
-        del self.env[x]
-        return Typ("->", [tv, t], x.line)
+
+        for x in xs:
+            if str(x) != "_":
+                del self.env[x]
+
+        res = t
+
+        for tv, x in reversed(list(zip(tvs, xs))):
+            res = Typ("->", [tv, res], x.line)
+
+        return res
 
     def lamcase(self, lamcases):
 

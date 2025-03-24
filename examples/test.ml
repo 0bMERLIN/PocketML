@@ -1,3 +1,3 @@
-import lib.std;
+let f = \x y -> ("a" + x, 1 + y);
 
-print (2 >= 2)
+print (f "A" 2)

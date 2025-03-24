@@ -1,5 +1,7 @@
 from copy import copy, deepcopy
+from dataclasses import dataclass
 import sys
+from typing import List
 
 import numpy as np
 from lark import v_args
@@ -9,17 +11,47 @@ from interpreter.parser import parse_file
 from interpreter.path import storage_path
 
 
+@dataclass
+class Lambda:
+    eval: "Evaluator"
+    params: List[str]  # len > 1
+    body: object
+    closure: dict
+    body_evaluated: bool = False
+
+    def apply(self, arg):
+        if len(self.params) <= 1:
+            old_env = copy(self.eval.env)
+            self.eval.env.update(self.closure)
+            param = str(self.params[0])
+            if param != "_":
+                self.eval.env[param] = arg
+            res = self.body if self.body_evaluated else self.eval.visit(self.body)
+            self.eval.env = old_env
+            return res
+
+        env = dict(list(self.closure.items()) + [(self.params[0], arg)])
+        return Lambda(self.eval, self.params[1:], self.body, env, self.body_evaluated)
+
+    def __call__(self, *args):
+        return self.apply(*args)
+
+
 @v_args(inline=True)
 class Evaluator(Interpreter):
     def __init__(self, env):
         self.env = env
-        self.toplevel = False # is the current node a toplevel node?
+        self.toplevel = False  # is the current node a toplevel node?
 
     # ========== MODULE SYSTEM
     def _import(self, args):
         modulepath = args.children[:-1]
         e = args.children[-1]
-        filename = storage_path+("/"if storage_path[-1]!="/" else "")+"/".join(map(str,modulepath))
+        filename = (
+            storage_path
+            + ("/" if storage_path[-1] != "/" else "")
+            + "/".join(map(str, modulepath))
+        )
         filename += ".ml"
 
         tree = parse_file(filename)
@@ -46,7 +78,7 @@ class Evaluator(Interpreter):
         xs = self.visit_children(elems)
         l = ("Nil",)
         for x in reversed(xs):
-            l = ("Cons",x,l)
+            l = ("Cons", x, l)
         return l
 
     def nparray(self, elems):
@@ -54,18 +86,30 @@ class Evaluator(Interpreter):
 
     def infix_op(self, a, op, b):
         x, y = self.visit(a), self.visit(b)
-        if op == "+": return x + y
-        if op == "-": return x - y
-        if op in "*°": return x * y
-        if op == "/": return x / y
-        if op == "==": return x == y
-        if op == "!=": return x != y
-        if op == "<": return x < y
-        if op == "<=": return x <= y
-        if op == ">": return x > y
-        if op == ">=": return x >= y
-        if op == "||": return x or y
-        if op == "&&": return x and y
+        if op == "+":
+            return x + y
+        if op == "-":
+            return x - y
+        if op in "*°":
+            return x * y
+        if op == "/":
+            return x / y
+        if op == "==":
+            return x == y
+        if op == "!=":
+            return x != y
+        if op == "<":
+            return x < y
+        if op == "<=":
+            return x <= y
+        if op == ">":
+            return x > y
+        if op == ">=":
+            return x >= y
+        if op == "||":
+            return x or y
+        if op == "&&":
+            return x and y
 
     def do(self, *stmts):
         for s in stmts[:-1]:
@@ -85,33 +129,44 @@ class Evaluator(Interpreter):
             self.env.update(locals()["__EXPORTS__"])
         return self.visit(e)
 
-    def inlinepython(self,code):
+    def inlinepython(self, code):
         res = eval(code.strip("%%%"))
         return res
 
-    def ite(self, c, t, f):
+    def ite(self, c, *cases):
         if self.visit(c):
-            return self.visit(t)
-        return self.visit(f)
+            return self.visit(cases[0])
+        return self.visit(cases[1]) if len(cases) != 1 else None
 
-    def let(self, x, e, b):
-        self.env[str(x)] = self.visit(e)
+    def let(self, *args):
+        x = args[0]
+        params = args[1:-2]
+        e, b = args[-2], args[-1]
+
+        if len(params) == 0:
+            self.env[str(x)] = self.visit(e)
+        else:
+            self.env[str(x)] = Lambda(self, params, e, copy(self.env))
+
         return self.visit(b)
 
     def letdecl(self, _x, _e, b):
         return self.visit(b)
 
-    def letrec(self, x, e, b):
+    def letrec(self, *args):
+        x = args[0]
+        params = args[1:-2]
+        e, b = args[-2], args[-1]
+
         def Y(f):
             return (lambda x: f(lambda v: x(x)(v)))(lambda x: f(lambda v: x(x)(v)))
 
-        e0 = self.lam(x, e)
+        e0 = Lambda(self, [x] + [*params], e, copy(self.env))
 
-        # old = self.env[str(x)] if str(x) in self.env else ">>NONE<<MAGIC"
         self.env[str(x)] = Y(e0)
+
         res = self.visit(b)
-        # if old != ">>NONE<<MAGIC":
-        #     self.env[str(x)] = old
+
         return res
 
     def var(self, x):
@@ -122,20 +177,14 @@ class Evaluator(Interpreter):
     def app(self, f, x):
         return self.visit(f)(self.visit(x))
 
-    def lam(self, x, b):
-        closure = copy(self.env)
-        def inner(v):
-            old_env = copy(self.env)
-            self.env.update(closure)
-            self.env[str(x)] = v
-            res = self.visit(b)
-            self.env = old_env
-            return res
-
-        return inner
+    def lam(self, *args, body_evaluated=False):
+        xs = args[:-1]
+        b = args[-1]
+        return Lambda(self, xs, b, copy(self.env), body_evaluated)
 
     def lamcase(self, lamcases):
         closure = copy(self.env)
+
         def inner(v):
             old_env = copy(self.env)
             self.env.update(closure)
@@ -227,7 +276,7 @@ class Evaluator(Interpreter):
         return str(nm) == str(self.match_arg[0])
 
     def papp(self, f, a):
-        old_ma = self.match_arg # might need copy()!
+        old_ma = self.match_arg  # might need copy()!
 
         if len(self.match_arg) == 1:
             self.match_arg = self.match_arg[0]

@@ -57,7 +57,9 @@ class LineNumCodeInput(BoxLayout):
         self.add_widget(self.line_numbers)
         self.add_widget(self.code_input)
 
+        # update graphics
         Clock.schedule_once(lambda _: self.set_font_size(32), 0.1)
+        Clock.schedule_once(lambda _: self.update_graphics(), 0.3)
 
     def get_line_numbers(self):
         line_count = self.code_input.text.count("\n") + 1

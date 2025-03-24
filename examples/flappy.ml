@@ -5,16 +5,14 @@ import lib.state;
 let velSt = mkSt |0, 0|;
 
 let mkPipe : Vec -> Obj;
-let mkPipe = \pos ->
+let mkPipe pos =
 	rect pos |width/10, height|
 ;
 
 let onUp : Unit -> Unit;
-let onUp = \_ ->
-	let _a = setSt |0,10| velSt;
-	();
+let onUp _ = setSt |0,10| velSt;
 
-let movePipe = \p ->
+let movePipe p =
 	if vget 0 p < 0
 	then |width,
 		if randint 0 1 == 0
@@ -22,24 +20,22 @@ let movePipe = \p ->
 		else -(randint (height/1.5) (height/2))|
 	else p+|-5,0|;
 
-let deathCond = \player -> \pipes ->
+let deathCond player pipes =
 	# when player hits floor
 	vget 1 (getPos player) < 0
 	# player hits pipe
 	|| any (map (collide player) pipes)
 ;
 
-let handleDeath = \player->\pipes->when
-	(deathCond player pipes)(\_->
-		let _ = setTick (\_p -> ());
-		let _ = imap (\x -> \p -> setPos p |x*(width/3), height|) pipes;
-		let _ = setPos player |width/2,height/2|;
-		()
-	)
+let handleDeath player pipes =
+	if (deathCond player pipes) then do
+		setTick (\_ -> ())
+		imap (\x p -> setPos p |x*(width/3), height|) pipes
+		setPos player |width/2,height/2|
 ;
 
 let tick : Obj -> List Obj -> Unit -> Unit;
-let tick = \player -> \pipes -> \_ -> do
+let tick player pipes _ = do
 	
 	# make pipes move to the left
 	map (mapPos movePipe) pipes

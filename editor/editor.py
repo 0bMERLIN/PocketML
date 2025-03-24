@@ -131,3 +131,7 @@ class Editor(Widget):
                     + ("[OPEN]" if fname.endswith(current_filename) else "")
                     + "\n"
                 )
+
+    def save_all(self):
+        for f in self.file_tabs.values():
+            f.content.save()

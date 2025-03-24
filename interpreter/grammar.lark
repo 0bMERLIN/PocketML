@@ -16,7 +16,7 @@ PRODOP: "/" | "*" | "°"
     | product PRODOP atom -> infix_op
     | "-" atom -> neg
 
-?atom: "\\" NAME "->" expr -> lam
+?atom: "\\" NAME+ "->" expr -> lam
     | "\\" "case" lamcases -> lamcase
     | atom0
     | atom atom -> app
@@ -30,14 +30,14 @@ PRODOP: "/" | "*" | "°"
     | "import" _sep{NAME, "."} ";" expr -> _import
     | "module" "(" ("*" | _sep{export, ","}) ")" -> module // no empty modules allowed!
     | "case" expr "|" _sep{case, "|"} -> match
-    | "if" expr "then" expr "else" expr -> ite
+    | "if" expr "then" expr ("else" expr)? -> ite
     | NAME -> var
-    | "let" NAME "=" expr ";" expr -> let
+    | "let" "rec" NAME NAME* "=" expr ";" expr -> letrec
+    | "let" NAME NAME* "=" expr ";" expr -> let
     | "let" NAME ":" type ";" expr -> letdecl
     | "data" NAME NAME* "=" constructors ";" expr -> typedef
     | "data" NAME NAME* ";" expr -> typedecl
     | "type" NAME NAME* "=" type ";" expr -> typealias
-    | "let" "rec" NAME "=" expr ";" expr -> letrec
     | "(" expr ")"
     | NUMBER -> num
     | "{" entry ("," entry)* "}" -> record

@@ -25,9 +25,11 @@ if __name__ == "__main__":
         e = EditorApp()
         e.run()
         e.editor.save_current_files()
+        e.editor.save_all()
 
     except KeyboardInterrupt:
         e.editor.save_current_files()
+        e.editor.save_all()
 
         try:
             sys.exit(130)

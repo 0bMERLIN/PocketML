@@ -1,4 +1,11 @@
+cache;
+
+import lib.std;
+
 %%
+import time
+t1 = time.time()
+
 EDITOR = self.env["editor"]
 from kivy.graphics import Color,Rectangle,Ellipse
 from kivy.core.window import Window
@@ -63,11 +70,11 @@ __EXPORTS__={
 	"onrel": setaction("on_release"),
 	"width":Window.width,
 	"height":Window.height-120,
-	"collide":lambda a:lambda b:collide(a,b)
+	"collide":lambda a:lambda b:collide(a,b),
 }
 %%;
 
-import lib.std;
+let time : Unit -> Number;
 
 let width : Number;
 let height : Number;

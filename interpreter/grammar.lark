@@ -24,7 +24,7 @@ PRODOP: "/" | "*" | "°"
 ?atom0: atom0 "." NAME -> access
     | "(" tupleelems ")" -> _tuple
     | "|" tupleelems "|" -> nparray
-    | "[" tupleelems "]" -> list
+    | "[" listelems "]" -> list
     | "do" "{" _sep{expr, ";"}  (";")?"}" -> do
     | none_expr -> none
     | "import" _sep{NAME, "."} ";" expr -> _import
@@ -38,6 +38,7 @@ PRODOP: "/" | "*" | "°"
     | "data" NAME NAME* "=" constructors ";" expr -> typedef
     | "data" NAME NAME* ";" expr -> typedecl
     | "type" NAME NAME* "=" type ";" expr -> typealias
+    | "cache" ";" expr -> cache
     | "(" expr ")"
     | NUMBER -> num
     | "{" entry ("," entry)* "}" -> record
@@ -46,6 +47,7 @@ PRODOP: "/" | "*" | "°"
     | /%(.|[\n])+%/ -> inlinepython
 
 tupleelems: expr "," (expr ("," expr)*)?
+listelems: expr ("," expr)* |
 
 lamcases: _sep{case, "|"}
 none_expr: "(" ")"

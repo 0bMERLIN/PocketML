@@ -1,7 +1,6 @@
 from copy import copy, deepcopy
-import json
-import time
 from typing import Tuple
+from interpreter.cache import Cache
 from lark import ParseTree, v_args
 from lark.visitors import Interpreter
 from dataclasses import dataclass as dat
@@ -9,7 +8,6 @@ from interpreter.parser import parse_file
 from interpreter.path import storage_path
 from interpreter.typ import *
 import os
-import hashlib
 
 DBG = False
 
@@ -55,41 +53,8 @@ class ModuleData:
         )
 
 
-def get_file_hash(filename):
-    hasher = hashlib.sha256()
-    with open(filename, "rb") as f:
-        hasher.update(f.read())
-    return hasher.hexdigest()
-
-
 # store filename, types & file hash
-global_type_cache: Dict[str, Tuple[ModuleData, str]] = {}
-
-
-def load_module(filename) -> ModuleData:
-    """
-    Load a file. Raise PMLTypeError if the file
-    does not return a record representing
-    its exports.
-    """
-
-    if (
-        CACHING
-        and filename in global_type_cache
-        and get_file_hash(filename) == global_type_cache[filename][1]
-    ):
-        print("[USED CACHE]", filename)
-        return global_type_cache[filename][0]
-
-    _, m = load_file(filename)
-    if not isinstance(m, ModuleData):
-        raise PMLTypeError(
-            f"Cannot load file {filename} as a module that returns:\n{m}"
-        )
-
-    global_type_cache[filename] = (m, get_file_hash(filename))
-
-    return m
+global_module_cache: Cache[Tuple[ModuleData, ParseTree]] = Cache()
 
 
 BUILTIN_TYPES = {
@@ -118,21 +83,42 @@ BUILTIN_TYPES = {
 BUILTIN_KINDS = {"Bool": 0, "Number": 0, "Unit": 0, "String": 0}
 
 
-def load_file(filename) -> Tuple[ParseTree, Typ]:
+def load_file(filename) -> Tuple[ParseTree, ModuleData]:
     """
     Parse a file and typecheck it.
     Returns result type of the expression in the file
     and the parse tree.
     """
+    with open(filename) as f:
+        txt = f.read()
 
-    tree = parse_file(filename)
+    # check if cached
+    if global_module_cache.cached(filename):
+        print("[TYPED]", filename)
+        return (
+            global_module_cache.get(filename)[1],
+            global_module_cache.get(filename)[0],
+        )
+
+    tree = parse_file(filename, txt)
 
     # typecheck
     typechecker = Typechecker(BUILTIN_TYPES, BUILTIN_KINDS)
 
     try:
-        res = solve(typechecker.constraints, typechecker.visit(tree))
-        return (tree, res)
+        m = solve(typechecker.constraints, typechecker.visit(tree))
+
+        if not isinstance(m, ModuleData):
+            m = ModuleData(
+                copy(typechecker.env),
+                copy(typechecker.type_env),
+                copy(typechecker.type_aliases),
+            )
+
+        global_module_cache.cache(filename, (m, tree))
+        print("[TYPED]", filename)
+
+        return (tree, m)
     except PMLTypeError as e:
         raise PMLTypeError(f"Type error ({filename}):\n" + str(e))
 
@@ -151,6 +137,9 @@ class Typechecker(Interpreter):
         self.constraints += [(a, b, line)]
 
     # ===================== module system
+    def cache(self, next):
+        return self.visit(next)
+
     def typeexport(self, tname):
         if str(tname) not in self.type_env:
             raise PMLTypeError(
@@ -191,7 +180,7 @@ class Typechecker(Interpreter):
         )
         filename += ".ml"
 
-        m = load_module(filename)
+        m = load_file(filename)[1]
         old_env = copy(self.env)
         old_tenv = copy(self.type_env)
         old_taliases = copy(self.type_aliases)
@@ -209,10 +198,11 @@ class Typechecker(Interpreter):
     # ===================== expressions
     def list(self, elems):
         types = self.visit_children(elems)
-        tv = newtv(elems.meta.line)
+        line = elems.meta.line if hasattr(elems, "line") else -1
+        tv = newtv(line)
         for t in types:
             self.constr(tv, t, t.line)
-        return Typ("List", [tv], elems.meta.line)
+        return Typ("List", [tv], line)
 
     def nparray(self, elems):
         types = self.visit_children(elems)
@@ -291,6 +281,7 @@ class Typechecker(Interpreter):
 
     #
     def let(self, *args):
+
         x = args[0]
         params = args[1:-2]
         e, b = args[-2], args[-1]
@@ -495,13 +486,8 @@ class Typechecker(Interpreter):
             raise PMLTypeError(f"Unknown type variable {x} (line {x.line})")
         return TVar(str(x), x.line)
 
-    def ttyp(self, name, params=None):
-        if params == None:
-            params = []
-        elif len(params.children) == 1:
-            params = [self.visit(params)]
-        else:
-            params = self.visit_children(params)
+    def ttyp(self, name, *params):
+        params = [self.visit(p) for p in params]
 
         # alias
         if str(name) in self.type_aliases:
@@ -519,6 +505,7 @@ class Typechecker(Interpreter):
         # type
         if str(name) in self.type_env:
             if self.type_env[str(name)] != len(params):
+                print(params)
                 raise PMLTypeError(
                     f"Type {name} takes {self.type_env[name]} "
                     + f"parameters, {len(params)} given (line {name.line})"

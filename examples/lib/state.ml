@@ -1,3 +1,5 @@
+cache;
+
 %%
 def mkSt(x):
 	class State:

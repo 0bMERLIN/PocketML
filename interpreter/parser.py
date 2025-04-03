@@ -1,4 +1,5 @@
 import os
+import re
 from lark import Lark, ParseError, ParseTree
 import interpreter.path as path
 
@@ -128,6 +129,32 @@ def preprocess(source_code: str):
     return result
 
 
+def nocheckpreprocess(txt: str):
+    """
+    Remove all code except for declarations, when nocheck is activated.
+    """
+    if txt.startswith("nocheck;"):
+        acc = ""
+        for l in txt.splitlines():
+            if re.match("let [a-zA-Z_0-9]+ :", l) != None or l.strip(" ").startswith(
+                ("module", "data", "type")
+            ):
+                acc += (
+                    l
+                    + (
+                        ""
+                        if l.strip(" ").endswith(";")
+                        or l.strip(" ").startswith("module")
+                        else ";"
+                    )
+                    + "\n"
+                )
+            else:
+                acc += "\n"
+        return acc
+    return txt
+
+
 print("CURDIR", os.listdir(os.curdir))
 with open("interpreter/grammar.lark") as f:
     grammar = f.read()
@@ -135,15 +162,18 @@ with open("interpreter/grammar.lark") as f:
 DBG = False
 
 
-def parse_file(filename) -> ParseTree:
+def parse_file(filename, txt="") -> ParseTree:
     parser = Lark(grammar, parser="earley", propagate_positions=True)
-    with open(filename) as f:
-        txt = f.read()
-        txt = preprocess(txt)
-        if DBG:
-            for line in txt.split("\n"):
-                print("-", line)
-        return parser.parse(txt)
+    
+    if txt == "":
+        with open(filename) as f:
+            txt = f.read()
+    
+    txt = preprocess(txt)
+    if DBG:
+        for line in txt.split("\n"):
+            print("-", line)
+    return parser.parse(txt)
 
 
 def get_imports(filename):
@@ -166,8 +196,7 @@ def get_imports(filename):
             + "/".join(modulepath)
             + ".ml"
         )
-        if os.path.exists(fname): acc += [fname]
-    
+        if os.path.exists(fname):
+            acc += [fname]
 
     return acc
-

@@ -203,11 +203,9 @@ greet "there!"
 
 
 #### 2.7 Modules
-PocketML projects are organized into files
-which contain either scripts or modules.
-A script exports no variables and _does something_.
-A module additionally exports variables, types
-and type aliases:
+PocketML projects are organized into modules.
+A module exports variables, types and type aliases.
+The explicit module declaration can limit what is exported:
 
 ```sml
 let greet x = print2 "Hi," x;
@@ -225,6 +223,17 @@ module (*)
 Modules inside a directory can be addressed using `.`:
 ```python
 import directory.mymodule;
+```
+
+The `cache` statement can be used with pure modules (ones, that do not have side effects).
+Cached modules only get executed when they are changed.
+This result in a performance increase when rerunning code in the editor
+or when a module is imported several times. It is best to only cache library code
+that does not change often.
+```sml
+cache;
+let _ = print "I only get called once until the file changes again!";
+module (*)
 ```
 
 #### 2.8 Python interop

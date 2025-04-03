@@ -1,4 +1,7 @@
+cache;
+
 %%
+import time
 
 def mkdict(t):
 	if t == None: return {}
@@ -74,8 +77,11 @@ __EXPORTS__={
 	#"map":mymap,
 	"imap":imap,
 	"foldr":lambda f:lambda a:lambda l:foldr(f,a,l),
-	"randint": lambda a:lambda b:random.randint(*sorted([int(a),int(b)]))
+	"randint": lambda a:lambda b:random.randint(*sorted([int(a),int(b)])),
+	"time": lambda _: time.time()
 }%%;
+
+let time : Unit -> Number;
 
 data List a
 	= Cons a (List a)
@@ -94,27 +100,35 @@ let neq = \a->\b->not (equal a b);
 
 let float : a -> Number;
 let int : a -> Number;
-let neg = \x -> -x;
-let rec mull = \case
-	  Nil -> 0
-	| Cons x xs -> add x (mull xs);
 
+let neg : Number -> Number;
+let neg = \x -> -x;
+
+let id : a -> a;
 let id = \x -> x;
-let when = \cond -> \func -> if cond
-	then func () else ();
+
+let when : Bool -> (Unit -> Unit) -> Unit;
+let when cond func = if cond then func () else ();
 
 data Maybe a = Nothing | Just a;
-let maybe = \d -> \m -> case m
+
+let maybe : a -> Maybe a -> a;
+let maybe d m = case m
 	| Just x -> x
 	| Nothing -> d;
-let bind = \m->\f->case m
+
+let bind : Maybe a -> (a -> Maybe a) -> Maybe a;
+let bind m f = case m
 	| Just x -> f x
 	| Nothing -> Nothing;
-let fmap = \g -> \case
+
+let fmap : (a -> a) -> Maybe a -> Maybe a;
+let fmap g = \case
 	Just x -> Just (g x)
 	| Nothing -> Nothing;
 
 data Dict a;
+
 # tuple of (String,b)
 let dict : a -> Dict b;
 let dictGet : Dict a -> String -> Maybe a;
@@ -126,6 +140,7 @@ let rec append = \a -> \l -> case l
 	| Nil -> Nil;
 
 let foldr : (b -> a -> b) -> b -> List a -> b;
+
 let map : (a -> b) -> (List a) -> List b;
 let map = \f -> \case
 	  Cons x xs -> Cons (f x) (map f xs)

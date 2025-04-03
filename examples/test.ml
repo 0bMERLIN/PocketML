@@ -1,3 +1,5 @@
-let f = \x y -> ("a" + x, 1 + y);
+import lib.std;
 
-print (f "A" 2)
+let _ = print (time ());
+
+module (*)

@@ -4,6 +4,8 @@ import lib.state;
 
 let velSt = mkSt |0, 0|;
 
+let twenty = 20;
+
 let mkPipe : Vec -> Obj;
 let mkPipe pos =
 	rect pos |width/10, height|

@@ -3,6 +3,14 @@ from interpreter.typecheck import load_file
 from interpreter.evaluator import Evaluator
 
 
+def conv_list(l):
+    # convert a PML list to a python list
+
+    if l[0] == "Nil":
+        return []
+    return [l[1]] + conv_list(l[2])
+
+
 def prettify(v):
     """
     Turn a runtime value into a string.
@@ -13,13 +21,21 @@ def prettify(v):
     ):
         return "(" + ", ".join([*map(str, v.values())]) + ")"
 
+    # list
+    if type(v) == tuple and len(v) != 0 and v[0] in ["Cons", "Nil"]:
+        l = conv_list(v)
+        return "[" + ", ".join(list(map(prettify, l))) + "]"
+
     # custom data type
     if type(v) == tuple and len(v) != 0 and type(v[0]) == str:
         res = str(v[0]) + " " + " ".join(map(str, v[1:]))
         return f"({res})" if len(v) > 1 else res
 
-    return str(v)
+    # number
+    if type(v) == float:
+        return str(int(v) if v.is_integer() else v)
 
+    return str(v)
 
 def run_file(filename, output, env={}):
 
@@ -44,11 +60,14 @@ def run_file(filename, output, env={}):
             "print": lambda *args: output(*[*map(prettify, args)]),
             "print2": lambda a: lambda b: output(a, b),
             "printa": lambda xs: output(*xs.values())
-        }
+        },
+        filename
     )
     evaluator.env.update(env.items())
 
     try:
         evaluator.visit(tree)
+
+        print("[RAN]", filename)
     except Exception as e:
         raise Exception(f"Runtime error ({filename}):\n" + str(e))

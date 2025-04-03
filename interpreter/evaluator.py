@@ -1,9 +1,11 @@
 from copy import copy, deepcopy
 from dataclasses import dataclass
 import sys
+import time
 from typing import List
 
 import numpy as np
+from interpreter.cache import Cache
 from lark import v_args
 from lark.visitors import Interpreter
 
@@ -37,13 +39,27 @@ class Lambda:
         return self.apply(*args)
 
 
+# a cache of loaded modules' envs
+module_cache: Cache[dict] = Cache()
+
+
 @v_args(inline=True)
 class Evaluator(Interpreter):
-    def __init__(self, env):
+    def __init__(self, env, filename):
         self.env = env
         self.toplevel = False  # is the current node a toplevel node?
+        self.filename = filename
 
     # ========== MODULE SYSTEM
+    def cache(self, next):
+        if module_cache.cached(self.filename):
+            res = module_cache.get(self.filename)
+        else:
+            res = self.visit(next)
+            module_cache.cache(self.filename, res)
+
+        return res
+
     def _import(self, args):
         modulepath = args.children[:-1]
         e = args.children[-1]
@@ -55,8 +71,16 @@ class Evaluator(Interpreter):
         filename += ".ml"
 
         tree = parse_file(filename)
+
+        old_filename = self.filename
+        self.filename = filename
         m = self.visit(tree)
+        self.filename = old_filename
+
         self.env.update(m)
+        
+        print("[RAN]", filename)
+
         return self.visit(e)
 
     def valueexport(self, nm):
@@ -95,6 +119,8 @@ class Evaluator(Interpreter):
         if op == "/":
             return x / y
         if op == "==":
+            if type(x) == np.ndarray:
+                return list(x) == list(y)
             return x == y
         if op == "!=":
             return x != y

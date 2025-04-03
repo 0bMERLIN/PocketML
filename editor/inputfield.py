@@ -9,7 +9,7 @@ from editor.codeinput import LineNumCodeInput
 from interpreter.interpreter import run_file
 from interpreter.parser import get_imports
 from interpreter.typ import PMLTypeError
-from interpreter.typecheck import BUILTIN_KINDS, BUILTIN_TYPES, load_module
+from interpreter.typecheck import BUILTIN_KINDS, BUILTIN_TYPES, load_file
 
 from utils import BTN_H, BTN_W, relpath, word_at_index
 
@@ -53,7 +53,7 @@ class InputField(Widget):
         """
         typ = None
         try:
-            typ = load_module(filename)
+            typ = load_file(filename)[1]
         except PMLTypeError as e:
             return None
 
@@ -73,7 +73,10 @@ class InputField(Widget):
             self.code_input.code_input.text, self.code_input.code_input.cursor_index()
         )
 
-        t = "Variable not found. Might not be a global variable.\nIntellisense also only works on modules!"
+        if current_symbol in ["", None]:
+            return
+
+        t = "Variable not found. Might not be a global variable."
 
         # see if name is in builtins
         builtins = dict(list(BUILTIN_TYPES.items()) + list(BUILTIN_KINDS.items()))
@@ -90,8 +93,8 @@ class InputField(Widget):
                 + " : "
                 + (" -> ".join(["*"] * (t + 1)) if type(t) == int else str(t))
             )
-        except:
-            self.gettype_button.text = "[ERROR]"
+        except Exception as e:
+            self.gettype_button.text = str(e)
 
     def __init__(self, filename, editor, **kwargs):
         super().__init__(**kwargs)

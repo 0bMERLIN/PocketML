@@ -13,7 +13,7 @@ if platform != "android":
 def word_at_index(s, index):
     words = list(re.finditer(r'[a-zA-Z_][a-zA-Z_0-9]*', s))  # Find words using regex
     for match in words:
-        if match.start() <= index < match.end():  # Check if index falls inside the word
+        if match.start() <= index <= match.end():  # Check if index falls inside the word
             return match.group()
     return None  # If index is out of range
 

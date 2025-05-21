@@ -50,8 +50,8 @@ let binop = \f -> \env -> \x -> \y ->
 	Just (f a b)));
 
 let eval = \env -> \exp -> case exp
-	| Num m -> Just (float m)
 	| Add x y -> binop add env x y
+	| Num myyy -> Just (float myyy)
 	| Mul x y -> binop mul env x y
 	| Var nm -> dictGet env nm
 	| Let nm e b ->
@@ -64,14 +64,9 @@ let eval = \env -> \exp -> case exp
 
 let test = "1 + 3";
 
-let res = eval (dict ()) (parse test);
+let res = eval (mkDict ()) (parse test);
 
-let main =
-	case res
-	| Nothing -> print "Error!"
-    | Just x -> print
-    	(test + " => " + (str x))
-;
+let main = print res;
 
  module (*)
 

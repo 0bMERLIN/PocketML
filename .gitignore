@@ -1,3 +1,4 @@
 
 /.buildozer
 **/__pycache__/
+output.py

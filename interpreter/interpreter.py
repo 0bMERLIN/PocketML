@@ -1,6 +1,11 @@
+from copy import copy
 from math import sqrt
+from interpreter.compiler import compile
 from interpreter.typecheck import load_file
 from interpreter.evaluator import Evaluator
+import time
+
+from utils import SHOW_COMPILE_TIME
 
 
 def conv_list(l):
@@ -28,7 +33,7 @@ def prettify(v):
 
     # custom data type
     if type(v) == tuple and len(v) != 0 and type(v[0]) == str:
-        res = str(v[0]) + " " + " ".join(map(str, v[1:]))
+        res = str(v[0].strip("PML_")) + " " + " ".join(map(str, v[1:]))
         return f"({res})" if len(v) > 1 else res
 
     # number
@@ -37,37 +42,66 @@ def prettify(v):
 
     return str(v)
 
-def run_file(filename, output, env={}):
 
-    tree, _ = load_file(filename)
+def builtin_env(output):
+    # TODO: migrate this into the compiled code!
+    builtins = {
+        "PML_and": lambda x: lambda y: x and y,
+        "PML_or": lambda x: lambda y: x or y,
+        "PML_add": lambda x: lambda y: x + y,
+        "PML_sub": lambda x: lambda y: x - y,
+        "PML_mul": lambda x: lambda y: x * y,
+        "PML_pow": lambda x: lambda y: x**y,
+        "PML_sqrt": lambda x: sqrt(x),
+        "PML_inc": lambda x: x + 1,
+        "PML_dec": lambda x: x - 1,
+        "PML_True": True,
+        "PML_False": False,
+        "PML_equal": lambda x: lambda y: x == y,
+        "PML_lt": lambda x: lambda y: x < y,
+        "PML_print": lambda *args: output(*[*map(prettify, args)]),
+        "PML_print2": lambda a: lambda b: output(a, b),
+        "PML_printa": lambda xs: output(*xs.values()),
+        "PML_print_raw": print
+    }
 
-    # run
-    evaluator = Evaluator(
-        {
-            "and": lambda x: lambda y: x and y,
-            "or": lambda x: lambda y: x or y,
-            "add": lambda x: lambda y: x + y,
-            "sub": lambda x: lambda y: x - y,
-            "mul": lambda x: lambda y: x * y,
-            "pow": lambda x: lambda y: x**y,
-            "sqrt": lambda x: sqrt(x),
-            "inc": lambda x: x + 1,
-            "dec": lambda x: x - 1,
-            "True": True,
-            "False": False,
-            "equal": lambda x: lambda y: x == y,
-            "lt": lambda x: lambda y: x < y,
-            "print": lambda *args: output(*[*map(prettify, args)]),
-            "print2": lambda a: lambda b: output(a, b),
-            "printa": lambda xs: output(*xs.values())
-        },
-        filename
-    )
-    evaluator.env.update(env.items())
+    return builtins
 
-    try:
-        evaluator.visit(tree)
 
-        print("[RAN]", filename)
-    except Exception as e:
-        raise Exception(f"Runtime error ({filename}):\n" + str(e))
+def run_file(filename, output, env={}, logger=print):
+    
+
+    env = copy(env)
+    env.update(globals())
+    env.update(builtin_env(output))
+
+    res = file_to_python(filename, logger=logger)
+    exec(res, env)
+
+
+def run_compiled(output, env={}):
+    """Run a program compiled into output.py"""
+    env = copy(env)
+    env.update(globals())
+    env.update(builtin_env(output))
+    
+    with open("output.py") as f:
+        src = f.read()
+        exec(src, env)
+
+
+
+def file_to_python(filename, logger=print):
+    tree, _ = load_file(filename, logger)
+
+    t1 = time.time()
+    res = compile(tree)
+    t2 = time.time()
+    if SHOW_COMPILE_TIME:
+        logger(f"[COMPILE] ({filename})\t", round(t2 - t1, 4))
+
+    with open("output.py", "w+") as f:
+        f.write(res)
+
+    print("")
+    return res

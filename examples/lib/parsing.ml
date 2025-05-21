@@ -13,12 +13,12 @@ def tree2tup(tree,lines=False,tokens=False):
             cs = tuple(to_tup(c)
             	for c in node.children)
             if lines:
-                return (node.data\
+                return ("PML_"+node.data\
                 		.capitalize(),
                 	(node.meta.line,
                 	node.meta.column),
                 	*cs)
-            return (node.data\
+            return ("PML_"+node.data\
             		.capitalize(),*cs)
         elif isinstance(node, Token) \
         		and tokens:
@@ -38,16 +38,12 @@ def tree2tup(tree,lines=False,tokens=False):
     return to_tup(tree)
 globals().update(locals())
 
-def parser(gr):
+def PML_parser(gr):
 	p = lark.Lark(gr,
 		propagate_positions=True)
 	def parse(s):
 		return tree2tup(p.parse(s))
 	return parse
-
-__EXPORTS__ = {
-	"parser":parser,
-}
 
 %%%;
 

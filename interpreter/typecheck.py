@@ -1,4 +1,5 @@
 from copy import copy, deepcopy
+import time
 from typing import Tuple
 from interpreter.cache import Cache
 from lark import ParseTree, v_args
@@ -8,6 +9,8 @@ from interpreter.parser import parse_file
 from interpreter.path import storage_path
 from interpreter.typ import *
 import os
+
+from utils import SHOW_CACHE_USES, SHOW_COMPILE_TIME
 
 DBG = False
 
@@ -78,12 +81,13 @@ BUILTIN_TYPES = {
             TRecord({f"_{n}": tvar(f"a{n}") for n in range(10)}, -1, baked=True), t_unit
         )
     ),
+    "PML_print_raw": Scheme.generalize(t_fn(tvar("a"), t_unit))
 }
 
 BUILTIN_KINDS = {"Bool": 0, "Number": 0, "Unit": 0, "String": 0}
 
 
-def load_file(filename) -> Tuple[ParseTree, ModuleData]:
+def load_file(filename, logger=print) -> Tuple[ParseTree, ModuleData]:
     """
     Parse a file and typecheck it.
     Returns result type of the expression in the file
@@ -94,19 +98,28 @@ def load_file(filename) -> Tuple[ParseTree, ModuleData]:
 
     # check if cached
     if global_module_cache.cached(filename):
-        print("[TYPED]", filename)
+        if SHOW_CACHE_USES:
+            print("----> used type cache", filename)
+        if SHOW_COMPILE_TIME:
+            logger(f"[CACHED] ({filename})\t", 0)
         return (
             global_module_cache.get(filename)[1],
             global_module_cache.get(filename)[0],
         )
 
+    t1 = time.time()
     tree = parse_file(filename, txt)
+    t2 = time.time()
+    if SHOW_COMPILE_TIME:
+        logger(f"[PARSING] ({filename})\t", round(t2 - t1, 4))
 
     # typecheck
-    typechecker = Typechecker(BUILTIN_TYPES, BUILTIN_KINDS)
+    typechecker = Typechecker(BUILTIN_TYPES, BUILTIN_KINDS, logger)
 
     try:
+        t1 = time.time()
         m = solve(typechecker.constraints, typechecker.visit(tree))
+        t2 = time.time()
 
         if not isinstance(m, ModuleData):
             m = ModuleData(
@@ -116,7 +129,8 @@ def load_file(filename) -> Tuple[ParseTree, ModuleData]:
             )
 
         global_module_cache.cache(filename, (m, tree))
-        print("[TYPED]", filename)
+        if SHOW_COMPILE_TIME:
+            logger(f"[TYPED] ({filename})\t", round(t2 - t1, 4))
 
         return (tree, m)
     except PMLTypeError as e:
@@ -125,13 +139,14 @@ def load_file(filename) -> Tuple[ParseTree, ModuleData]:
 
 @v_args(True)
 class Typechecker(Interpreter):
-    def __init__(self, env, tenv):
+    def __init__(self, env, tenv, logger=print):
         self.env = env
         self.type_env = tenv
         self.type_aliases = {}
         self.constraints = []
         self.allow_free_tvars = False
         self.current_typedef_type = None
+        self.logger = logger
 
     def constr(self, a, b, line):
         self.constraints += [(a, b, line)]
@@ -180,7 +195,7 @@ class Typechecker(Interpreter):
         )
         filename += ".ml"
 
-        m = load_file(filename)[1]
+        m = load_file(filename, logger=self.logger)[1]
         old_env = copy(self.env)
         old_tenv = copy(self.type_env)
         old_taliases = copy(self.type_aliases)

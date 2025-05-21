@@ -16,7 +16,7 @@ def remove_comments_and_strings(s):
             if s[i] == "\n" and not string and not python:
                 comment = False
 
-        elif s[i] == "%" and not string:
+        elif s[i:i+2] == r"%%" and not string:
             python = not python
 
         elif s[i] == '"' and s[i - 1] != "\\":
@@ -161,7 +161,6 @@ with open("interpreter/grammar.lark") as f:
 
 DBG = False
 
-
 def parse_file(filename, txt="") -> ParseTree:
     parser = Lark(grammar, parser="earley", propagate_positions=True)
     
@@ -173,7 +172,12 @@ def parse_file(filename, txt="") -> ParseTree:
     if DBG:
         for line in txt.split("\n"):
             print("-", line)
-    return parser.parse(txt)
+    
+    try:
+        return parser.parse(txt)
+    except Exception as e:
+        e.args = (str(e)+"=========",)
+        raise e
 
 
 def get_imports(filename):

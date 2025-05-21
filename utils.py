@@ -4,6 +4,15 @@ import re
 from kivy.core.window import Window
 from kivy import platform
 
+# settings
+VERBOSE = False
+SHOW_COMPILE_TIME = True
+SHOW_CACHE_USES = False
+if VERBOSE:
+    SHOW_CACHE_USES = True
+
+
+#
 BTN_H = Window.height/15
 BTN_W = Window.width/4
 if platform != "android":
@@ -17,23 +26,13 @@ def word_at_index(s, index):
             return match.group()
     return None  # If index is out of range
 
-
 def curry(func):
-    """A decorator that curries the given function.
-
-    @curried
-    def a(b, c):
-        return (b, c)
-
-    a(c=1)(2)  # returns (2, 1)
-    """
-
     @functools.wraps(func)
-    def _curried(*args, **kwargs):
-        return functools.partial(func, *args, **kwargs)
-
-    return _curried
-
+    def curried(*args):
+        if len(args) >= func.__code__.co_argcount:
+            return func(*args)
+        return lambda *more_args: curried(*(args + more_args))
+    return curried
 
 def relpath(path):
     """

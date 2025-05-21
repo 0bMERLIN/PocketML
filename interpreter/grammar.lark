@@ -43,8 +43,8 @@ PRODOP: "/" | "*" | "°"
     | NUMBER -> num
     | "{" entry ("," entry)* "}" -> record
     | (STRING | /"""(.|[\n])+"""/) -> string
-    | /%%(.|[\n])+%%/ ";" expr -> python
-    | /%(.|[\n])+%/ -> inlinepython
+    | /%%%(.|[\n])+%%%/ ";" expr -> python
+    | /%%(.|[\n])+%%/ -> inlinepython
 
 tupleelems: expr "," (expr ("," expr)*)?
 listelems: expr ("," expr)* |

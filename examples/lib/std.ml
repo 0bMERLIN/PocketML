@@ -1,9 +1,7 @@
-cache;
-
-%%
+%%%
 import time
 
-def mkdict(t):
+def PML_mkDict(t):
 	if t == None: return {}
 	xs = list(t.values())
 	acc = {}
@@ -14,11 +12,11 @@ def mkdict(t):
 	return acc
 
 def mklist(xs):
-	if xs == []: return ("Nil",)
-	return ("Cons",xs[0],mklist(xs[1:]))
+	if xs == []: return ("PML_Nil",)
+	return ("PML_Cons",xs[0],mklist(xs[1:]))
 
-EDITOR = self.env["editor"] if "editor" in self.env else None
-def cls(_):
+EDITOR = globals()["editor"] if "editor" in globals() else None
+def PML_cls(_):
 	global EDITOR
 	EDITOR.terminalout.text=""
 
@@ -27,22 +25,22 @@ def error(s):
 
 def mymap(f):
 	def inner(l):
-		if l[0] == "Nil":
-			return ("Nil",)
+		if l[0] == "PML_Nil":
+			return ("PML_Nil",)
 		else:
-			return ("Cons",f(l[1]),mymap(f)(l[2]))
+			return ("PML_Cons",f(l[1]),mymap(f)(l[2]))
 	return inner
 
-def imap(f, i=0):
+def PML_imap(f, i=0):
 	def inner(l):
-		if l[0] == "Nil":
-			return ("Nil",)
+		if l[0] == "PML_Nil":
+			return ("PML_Nil",)
 		else:
-			return ("Cons",f(i)(l[1]),imap(f,i=i+1)(l[2]))
+			return ("PML_Cons",f(i)(l[1]),PML_imap(f,i=i+1)(l[2]))
 	return inner
 
 def foldr(f,a,l):
-	if l[0] == "Nil": return a
+	if l[0] == "PML_Nil": return a
 	else:
 		return foldr(f, f(a)(l[1]), l[2])
 
@@ -50,36 +48,33 @@ import time
 import sys
 import numpy as np
 import random
+import os.path
 globals().update(locals())
 
 tup = lambda l:dict(zip(
 		[f"_{i}" for i in range(100)],l
 	))
 
-__EXPORTS__={
-	"float":float,
-	"int":int,
-	"str":str,
-	"time":lambda _: time.time(),
-	"cls":cls,
-	"not":lambda x: not x,
-	"dict":mkdict,
-	"dictGet": lambda d: (lambda k: ("Just", d[k])
-		if k in d else ("Nothing",)),
-	"dictInsert":lambda s:lambda d:lambda x: dict(list(d.items())+[(s,x)]),
-	"list": lambda xs: mklist(list(xs.values())),
-	"vec":lambda xs:np.array(list(xs.values())),
-	"vget":lambda i:lambda xs: xs[int(i)],
-	"setreclimit":lambda x:sys.setrecursionlimit(int(x)),
-	"tup1":tup,"tup2":tup,"tup3":tup,
-	"tup4":tup,
-	"error": error,
-	#"map":mymap,
-	"imap":imap,
-	"foldr":lambda f:lambda a:lambda l:foldr(f,a,l),
-	"randint": lambda a:lambda b:random.randint(*sorted([int(a),int(b)])),
-	"time": lambda _: time.time()
-}%%;
+PML_time = lambda _: time.time()
+PML_not = lambda x: not x
+PML_dictGet =  lambda d: (lambda k: ("Just", d[k]) if k in d else ("Nothing",))
+PML_dictInsert = lambda s:lambda d:lambda x: dict(list(d.items())+[(s,x)])
+PML_dictEmpty = {}
+PML_vec = lambda xs:np.array(list(xs.values()))
+PML_vget = lambda i:lambda xs: xs[int(i)]
+PML_setreclimit = lambda x:sys.setrecursionlimit(int(x))
+PML_tup1 = tup
+PML_tup2 = tup
+PML_tup3 = tup
+PML_tup4 = tup
+PML_foldr = lambda f:lambda a:lambda l:foldr(f,a,l)
+PML_randint = lambda a:lambda b:random.randint(*sorted([int(a),int(b)]))
+PML_time = lambda _: time.time()
+PML_fileexists = os.path.exists
+PML_range = lambda a: lambda b: mklist([*range(int(a),int(b))])
+PML_float = float
+
+%%%;
 
 let time : Unit -> Number;
 
@@ -92,7 +87,10 @@ let time : Unit -> Number;
 let setreclimit : Number -> Unit;
 let error : String -> a;
 let str : a -> String;
+let fileexists : String -> Bool;
+
 let randint : Number -> Number -> Number;
+let range : Number -> Number -> List Number;
 
 let not : Bool -> Bool;
 let eq = equal;
@@ -106,6 +104,9 @@ let neg = \x -> -x;
 
 let id : a -> a;
 let id = \x -> x;
+
+let const : a -> b -> a;
+let const x y = x;
 
 let when : Bool -> (Unit -> Unit) -> Unit;
 let when cond func = if cond then func () else ();
@@ -130,7 +131,10 @@ let fmap g = \case
 data Dict a;
 
 # tuple of (String,b)
-let dict : a -> Dict b;
+let mkDict : a -> Dict b;
+
+let dictEmpty : Dict a;
+
 let dictGet : Dict a -> String -> Maybe a;
 let dictInsert : String -> Dict a -> a -> Dict a;
 

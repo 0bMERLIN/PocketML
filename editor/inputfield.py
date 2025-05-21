@@ -1,17 +1,21 @@
 import os
 import traceback
+import threading
 
 from kivy.uix.widget import Widget
 from kivy.uix.button import Button
 from kivy.core.window import Window
+from kivy.uix.progressbar import ProgressBar
+from kivy.clock import Clock
 
 from editor.codeinput import LineNumCodeInput
-from interpreter.interpreter import run_file
+from interpreter.interpreter import file_to_python, run_compiled, run_file
 from interpreter.parser import get_imports
 from interpreter.typ import PMLTypeError
 from interpreter.typecheck import BUILTIN_KINDS, BUILTIN_TYPES, load_file
 
 from utils import BTN_H, BTN_W, relpath, word_at_index
+
 
 class InputField(Widget):
     """A code editor that can invoke the interpreter"""
@@ -23,18 +27,59 @@ class InputField(Widget):
     def run_file(self):
         self.save()
 
-        def inner(*xs):
+        def output(*xs):
             self.editor.terminalout.text += " ".join(map(str, xs))
             self.editor.terminalout.text += "\n"
 
-        try:
-            self.editor.terminalout.text = "Compiled successfully.\n"
+        def report(msg):
+            """Thread safe function for reporting to terminalout"""
+
+            def helper(_):
+                self.editor.terminalout.text = msg + "\n"
+
+            Clock.schedule_once(helper)
+
+        def comp_done():
             self.editor.graphicalout.clear_widgets()
-            run_file(self.filename, inner, {"editor": self.editor})
-        except PMLTypeError as e:
-            self.editor.terminalout.text = e.args[0] + "\n"
-        except Exception as e:
-            self.editor.terminalout.text = traceback.format_exc() + "\n"
+            self.editor.graphicalout.clearUpdate()
+            self.run_button.disabled = False
+
+        def comp(*args, **kwargs):
+            try:
+                file_to_python(*args, **kwargs)
+            except PMLTypeError as e:
+                report(e.args[0])
+                Clock.schedule_once(lambda _: comp_done())
+                return
+            except Exception as e:
+                report(e.args[0] + "\n" + traceback.format_exc())
+                Clock.schedule_once(lambda _: comp_done())
+                return
+
+            self.loading_bar.value = self.loading_bar.max
+            Clock.schedule_once(lambda _: comp_done())
+            Clock.schedule_once(
+                lambda _: (
+                    output("Compiled successfully."),
+                    run_compiled(output, env={"editor": self.editor}),
+                )
+            )
+
+        self.loading_bar.value = 0
+        self.loading_bar.max = 5
+        args = (self.filename,)
+        kwargs = {
+            "logger": lambda *x: (
+                self.advance_loading_bar(float(" ".join(map(str, x)).split(" ")[-1])),
+                print(*x),
+            ),
+        }
+        run_file_thread = threading.Thread(target=comp, args=args, kwargs=kwargs)
+        run_file_thread.start()
+        self.run_button.disabled = True
+
+    def advance_loading_bar(self, t: float):
+        self.loading_bar.value += t
 
     def close(self):
         tab = self.editor.file_tabs[self.filename]
@@ -45,6 +90,7 @@ class InputField(Widget):
 
     def stop_program(self):
         self.editor.graphicalout.clearUpdate()
+        self.editor.graphicalout.clear_widgets()
 
     def find_type(self, nm, filename):
         """
@@ -160,15 +206,17 @@ class InputField(Widget):
             text="Redo",
             size_hint=(1, 1),
             size=(BTN_W / 2, BTN_H),
-            pos=(Window.width - BTN_W / 2, code_input_y - 2*BTN_H),
+            pos=(Window.width - BTN_W / 2, code_input_y - 2 * BTN_H),
         )
 
         self.undo_button = Button(
             text="Undo",
             size_hint=(1, 1),
             size=(BTN_W / 2, BTN_H),
-            pos=(Window.width - BTN_W, code_input_y - 2*BTN_H),
+            pos=(Window.width - BTN_W, code_input_y - 2 * BTN_H),
         )
+
+        self.loading_bar = ProgressBar(max=0, size=(Window.width, BTN_H))
 
         if os.path.exists(filename):
             self.code_input.code_input.text = open(filename).read()
@@ -197,3 +245,4 @@ class InputField(Widget):
         self.add_widget(self.gettype_button)
         self.add_widget(self.undo_button)
         self.add_widget(self.redo_button)
+        self.add_widget(self.loading_bar)

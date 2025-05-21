@@ -1,6 +1,4 @@
-cache;
-
-%%
+%%%
 def mkSt(x):
 	class State:
 		def __init__(self, x): self.x = x
@@ -19,13 +17,12 @@ def mapSt(f):
 def getSt(s):
 	return s.x
 
-__EXPORTS__ = {
-	"getSt":getSt,
-	"mkSt": mkSt,
-	"setSt":setSt,
-	"mapSt":mapSt
-}
-%%;
+PML_getSt = getSt
+PML_mkSt = mkSt
+PML_setSt = setSt
+PML_mapSt = mapSt
+
+%%%;
 
 data State a;
 let mkSt : a -> State a;

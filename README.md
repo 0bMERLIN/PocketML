@@ -225,45 +225,31 @@ Modules inside a directory can be addressed using `.`:
 import directory.mymodule;
 ```
 
-The `cache` statement can be used with pure modules (ones, that do not have side effects).
-Cached modules only get executed when they are changed.
-This result in a performance increase when rerunning code in the editor
-or when a module is imported several times. It is best to only cache library code
-that does not change often.
-```sml
-cache;
-let _ = print "I only get called once until the file changes again!";
-module (*)
-```
-
 #### 2.8 Python interop
 PocketML is an interpreted language based on python. It
 has access to most features of python and the
 libraries `numpy`, `pygments`, `lark`, and `kivy`.
 Python code can be included in PocketML code using
-`%% ... %%`. The `__EXPORTS__` variable
-can be used to transfer data from python
-to PocketML:
+`%%% ... %%%`. PocketML uses the `PML_[varname]` naming scheme internally. Python functions exported to PocketML should be named accordingly.
 
 ```sml
-%%
+%%%
 def half(x):
     return x / 2
-__EXPORTS__ = {"half": half}
-%%;
+
+PML_half = half
+%%%;
 
 let half : Number -> Number;
 
 print (half 2)
 ```
 Python code can also be used to compute values
-in PocketML code using the inline `% ... %` syntax.
+in PocketML code using the inline `%% ... %%` syntax.
 Python types are largely compatible with PocketML types.
 ```sml
-print %f"PocketML does not have f-strings but python does {'!'*10}"%
+print %%f"PocketML does not have f-strings but python does {'!'*10}"%%
 ```
->Note: Python does not have access to variables from
-PocketML!
 
 #### 2.9 The editor
 
@@ -273,13 +259,13 @@ Use the `Editor` tab in the top toolbar
 to edit files. Close files by long pressing the
 file tab. Results show up in either
 the `Graphics` tab for graphics or the `Text Out`
-tab for text output. Manage project files and directories
+tab for text output. The info box above the keyboard shows the type
+of the symbol the cursor is on when clicked (no live type checking yet,
+because the typechecker is too slow). Manage project files and directories
 in the `Files` tab. For advanced file management
 use a File manager app that can access the
 `InternalStorage/Android/data/org.myapp.test/files/`
-directory. The info box above the keyboard shows the type
-of the symbol the cursor is on when clicked (no live type checking yet,
-because the typechecker is too slow).
+directory.
 
 ##### Extending and hacking!
 PocketML`s editor is accessible to PocketML by using python interop.
@@ -288,9 +274,11 @@ the editor object. It contains the "terminalout"
 and "graphicalout" objects.
 ```python
 %%
-EDITOR = self.env["editor"]
+EDITOR = globals()["editor"]
+
 def cls(_):
-    # clears the terminal
+    # example usage:
+    # clear the terminal
 	global EDITOR
 	EDITOR.terminalout.text = ""
 %%;

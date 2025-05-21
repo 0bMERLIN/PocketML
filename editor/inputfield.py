@@ -39,10 +39,22 @@ class InputField(Widget):
 
             Clock.schedule_once(helper)
 
+        def clear():
+            """Clear terminalout (not thread safe)"""
+            self.editor.terminalout.text = ""
+
         def comp_done():
             self.editor.graphicalout.clear_widgets()
             self.editor.graphicalout.clearUpdate()
             self.run_button.disabled = False
+
+        def run():
+            try:
+                run_compiled(output, env={"editor": self.editor})
+            except Exception as e:
+                report(e.args[0] + "\n" + traceback.format_exc())
+                Clock.schedule_once(lambda _: comp_done())
+                return
 
         def comp(*args, **kwargs):
             try:
@@ -60,8 +72,9 @@ class InputField(Widget):
             Clock.schedule_once(lambda _: comp_done())
             Clock.schedule_once(
                 lambda _: (
+                    clear(),
                     output("Compiled successfully."),
-                    run_compiled(output, env={"editor": self.editor}),
+                    run(),
                 )
             )
 

@@ -100,7 +100,10 @@ class Editor(Widget):
         return tab
 
     def create_term_tab(self):
-        self.terminalout = TextInput()
+        self.terminalout = TextInput(
+            background_color=(0.01, 0.01, 0.01),
+            foreground_color=(0.9, 0.9, 0.9),
+        )
         tab = TabbedPanelItem(text="Text Out")
         tab.add_widget(self.terminalout)
         self.tab_panel.add_widget(tab)

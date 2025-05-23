@@ -1,8 +1,6 @@
-let x = 120;
+import lib.std;
 
-%%%
+let h = "!" ° 10;
+let _ = print h;
 
-PML_print(PML_x)
-
-%%%;
-()
+module (*)

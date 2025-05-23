@@ -55,6 +55,7 @@ tup = lambda l:dict(zip(
 		[f"_{i}" for i in range(100)],l
 	))
 
+PML_str = str
 PML_time = lambda _: time.time()
 PML_not = lambda x: not x
 PML_dictGet =  lambda d: (lambda k: ("Just", d[k]) if k in d else ("Nothing",))

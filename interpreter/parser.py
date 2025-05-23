@@ -16,7 +16,7 @@ def remove_comments_and_strings(s):
             if s[i] == "\n" and not string and not python:
                 comment = False
 
-        elif s[i:i+2] == r"%%" and not string:
+        elif s[i : i + 2] == r"%%" and not string:
             python = not python
 
         elif s[i] == '"' and s[i - 1] != "\\":
@@ -29,7 +29,25 @@ def remove_comments_and_strings(s):
     return res
 
 
-def preprocess(source_code: str):
+def preprocess_do_blocks(source_code: str):
+    """
+    Turn do blocks like
+    ```
+    do
+        let x = 10
+        let y = 20
+        print (x + y)
+    ```
+    into
+    ```
+    do {
+        let x = 10;
+        let y = 20;
+        print (x + y);
+    }
+    ```
+    """
+
     # prep input
     comment_free_src = remove_comments_and_strings(source_code)
     original_lines = source_code.splitlines()
@@ -155,28 +173,68 @@ def nocheckpreprocess(txt: str):
     return txt
 
 
-print("CURDIR", os.listdir(os.curdir))
-with open("interpreter/grammar.lark") as f:
-    grammar = f.read()
-
 DBG = False
 
+OPS = {
+    -1: ["$", "<<", ">>"],
+    0: ["||", "&&"],
+    1: ["==", "!=", "<", ">", ">=", "<="],
+    2: ["+", "-"],
+    3: ["*", "/", "°"],
+}
+
+
+def add_infix_operators(g):
+    """
+    Add the infix operators from the OPS table
+    to the grammar `g`.
+    """
+
+    # generate operator table
+    res = "\n"
+
+    OPS_sorted = [OPS[i] for i in sorted(OPS)]
+    for i, _ in enumerate(OPS_sorted):
+        ops = " | ".join(map(lambda o: f'"{o}"', OPS_sorted[i]))
+        res += f"OP{i}: {ops}\n"
+        next = "atom" if i == len(OPS_sorted) - 1 else f"op{i+1}"
+        res += f"?op{i}: {next} | op{i} OP{i} {next} -> infix_op"
+
+        # the last infix layer contains prefix operators like negation
+        if i == len(OPS_sorted) - 1:
+            res += '| "-" atom -> neg'
+        res += "\n"
+
+    res += "\n"
+
+    # add it to the grammar
+    g = g.replace("%%%OPERATOR_TABLE%%%", res)
+    return g
+
+
 def parse_file(filename, txt="") -> ParseTree:
+    # read/create grammar
+    with open("interpreter/grammar.lark") as f:
+        grammar = f.read()
+
+    grammar = add_infix_operators(grammar)
+
+    # parse
     parser = Lark(grammar, parser="earley", propagate_positions=True)
-    
+
     if txt == "":
         with open(filename) as f:
             txt = f.read()
-    
-    txt = preprocess(txt)
+
+    txt = preprocess_do_blocks(txt)
     if DBG:
         for line in txt.split("\n"):
             print("-", line)
-    
+
     try:
         return parser.parse(txt)
     except Exception as e:
-        e.args = (str(e)+"=========",)
+        e.args = (str(e) + "=========",)
         raise e
 
 

@@ -1,3 +1,4 @@
+import traceback
 from kivy.core.window import Window, Keyboard
 from kivy.uix.widget import Widget
 from kivy.graphics import Ellipse, Rectangle, Color
@@ -10,11 +11,12 @@ from utils import curry
 class GraphicalOut(Widget):
     """Canvas accessible to PocketML code."""
 
-    def __init__(self, **kwargs):
+    def __init__(self, editor, **kwargs):
         super().__init__(**kwargs)
         self.screen = Widget()
         self.update_event = None
         self.pressed_keys = []
+        self.editor = editor
 
     def enable_kb(self):
         self._keyboard = Window.request_keyboard(self._keyboard_closed, self)
@@ -62,9 +64,21 @@ class GraphicalOut(Widget):
             Clock.unschedule(self.update_event)
         self.state = state
 
+        def report(msg):
+            """Thread safe function for reporting to terminalout"""
+
+            def helper(_):
+                self.editor.terminalout.text = msg + "\n"
+
+            Clock.schedule_once(helper)
+
         def helper(_):
             self.canvas.__enter__()
-            self.state = f(self.state)(list(map(lambda k: k[0], self.pressed_keys)))
+            try:
+                self.state = f(self.state)(list(map(lambda k: k[0], self.pressed_keys)))
+            except Exception as e:
+                report(e.args[0] + "\n" + traceback.format_exc())
+                Clock.unschedule(self.update_event)
             self.canvas.__exit__()
 
         self.update_event = Clock.schedule_interval(helper, 1 / 60)

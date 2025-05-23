@@ -94,7 +94,7 @@ class Editor(Widget):
 
     def create_run_tab(self):
         tab = TabbedPanelItem(text="Graphics")
-        self.graphicalout = GraphicalOut()
+        self.graphicalout = GraphicalOut(self)
         tab.add_widget(self.graphicalout)
         self.tab_panel.add_widget(tab)
         return tab

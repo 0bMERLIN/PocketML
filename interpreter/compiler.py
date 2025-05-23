@@ -17,6 +17,9 @@ def curry(func):
         return lambda *more_args: curried(*(args + more_args))
     return curried
 
+    
+def compose(f,g):
+    return lambda x: f(g(x))
 
 """
 
@@ -63,7 +66,7 @@ def postprocess(src: str):
 
 @v_args(inline=True)
 class Compiler(Interpreter):
-    
+
     def __init__(self):
         self.res = ""
         self.var_n = 0
@@ -147,15 +150,20 @@ class Compiler(Interpreter):
         return self.emitv(f"np.array([{', '.join(es)}])")
 
     def infix_op(self, a, op, b):
+
+        if op == "$":
+            return self.emitv(self.visit(a) + "(" + self.visit(b) + ")")
+
+        if op == "<<":
+            return self.emitv(f"compose({self.visit(a)}, {self.visit(b)})")
+		
+        if op == ">>":
+            return self.emitv(f"compose({self.visit(b)}, {self.visit(a)})")
+
         ops = {"*": "*", "°": "*", "||": "or", "&&": "and"}
+
         return self.emitv(
-            "("
-            + self.visit(a)
-            + " "
-            + (ops[op] if op in ops else op)
-            + " "
-            + self.visit(b)
-            + ")"
+            f"({self.visit(a)} {ops[op] if op in ops else op} {self.visit(b)})"
         )
 
     def do(self, *stmts):
@@ -277,7 +285,7 @@ class Compiler(Interpreter):
         return self.emitv("{" + ",".join([f'"{a}":{b}' for a, b in items]) + "}")
 
     def access(self, e, nm):
-        return self.emitv(self.visit(e) + "." + str(nm))
+        return self.emitv(self.visit(e) + "['" + str(nm) + "']")
 
     def typedecl(self, *args):
         return self.visit(args[-1])

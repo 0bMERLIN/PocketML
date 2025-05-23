@@ -81,7 +81,7 @@ BUILTIN_TYPES = {
             TRecord({f"_{n}": tvar(f"a{n}") for n in range(10)}, -1, baked=True), t_unit
         )
     ),
-    "PML_print_raw": Scheme.generalize(t_fn(tvar("a"), t_unit))
+    "PML_print_raw": Scheme.generalize(t_fn(tvar("a"), t_unit)),
 }
 
 BUILTIN_KINDS = {"Bool": 0, "Number": 0, "Unit": 0, "String": 0}
@@ -238,6 +238,20 @@ class Typechecker(Interpreter):
         elif op in ["==", "!="]:
             self.constr(at, bt, b.meta.line)
             return Typ("Bool", [], a.meta.line)
+        elif op == "$":
+            ret_t = newtv(a.meta.line)
+            self.constr(at, Typ("->", [bt, ret_t], a.meta.line), a.meta.line)
+            return ret_t
+        elif op in ["<<", ">>"]: # compose
+            # (<<) : (y -> z) -> (x -> y) -> (x -> z)
+            # (>>) : (x -> y) -> (y -> z) -> (x -> z)
+            x = newtv(a.meta.line)
+            y = newtv(a.meta.line)
+            z = newtv(b.meta.line)
+            self.constr(bt if op == "<<" else at, Typ("->", [x, y], a.meta.line), a.meta.line)
+            self.constr(at if op == "<<" else bt, Typ("->", [y, z], b.meta.line), b.meta.line)
+            return Typ("->", [x, z], a.meta.line)
+
         # ° can multiply anything together!
         elif op != "°":
             self.constr(at, bt, b.meta.line)
@@ -294,7 +308,7 @@ class Typechecker(Interpreter):
             del self.env[str(x)]
         return res
 
-    #
+    # regular let
     def let(self, *args):
 
         x = args[0]

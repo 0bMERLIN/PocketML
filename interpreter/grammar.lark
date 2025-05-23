@@ -1,20 +1,9 @@
 
 // ============ EXPRESSIONS
 ?start: expr
-?expr: logicop
+?expr: op0
 
-LOGICOP: "||" | "&&"
-COMPOP: "==" | "!=" | "<" | ">" | ">=" | "<="
-SUMOP: "+" | "-"
-PRODOP: "/" | "*" | "°"
-
-?logicop: comp | logicop LOGICOP comp -> infix_op
-?comp: sum | comp COMPOP sum -> infix_op
-?sum: product | sum SUMOP product -> infix_op
-
-?product: atom
-    | product PRODOP atom -> infix_op
-    | "-" atom -> neg
+%%%OPERATOR_TABLE%%%
 
 ?atom: "\\" NAME+ "->" expr -> lam
     | "\\" "case" lamcases -> lamcase
@@ -38,7 +27,7 @@ PRODOP: "/" | "*" | "°"
     | "data" NAME NAME* "=" constructors ";" expr -> typedef
     | "data" NAME NAME* ";" expr -> typedecl
     | "type" NAME NAME* "=" type ";" expr -> typealias
-    | "cache" ";" expr -> cache
+    | "cache" ";" expr -> cache // deprecated
     | "(" expr ")"
     | NUMBER -> num
     | "{" entry ("," entry)* "}" -> record

@@ -1,2 +1,1 @@
 examples/test.ml[OPEN]
-examples/pixel.ml

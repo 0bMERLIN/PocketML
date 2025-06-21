@@ -33,6 +33,8 @@ def PML_copyimg(i):
 def setpixel(texture,x,y,c):
 	try:
 		pixels = list(texture.pixels)
+		if x > texture.width or x < 0 or y < 0 or y > texture.height:
+			return
 		pos = (x+y*texture.width) * 4
 		pixels[pos:pos+4] = c
 		texture.blit_buffer(bytearray(pixels), colorfmt='rgba', bufferfmt='ubyte')

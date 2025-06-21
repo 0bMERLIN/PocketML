@@ -1,6 +1,4 @@
-import lib.std;
+let f : Num -> Num;
+let f = add 41;
 
-let h = "!" ° 10;
-let _ = print h;
-
-module (*)
+print (f 1)

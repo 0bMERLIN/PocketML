@@ -1,9 +1,9 @@
 import lib.std;
 import lib.image;
 
-%%
+%%%
 
-EDITOR = self.env["editor"]
+EDITOR = globals()["editor"]
 from kivy.graphics import Color,Rectangle,Ellipse,Rotate,PushMatrix,PopMatrix,Scale
 from kivy.core.window import Window
 import numpy as np
@@ -157,7 +157,11 @@ __EXPORTS__={
     "listen": lambda st: lambda a: lambda f: listen(st,a,f),
     "unpack": lambda a: a[1]
 }
-%%;
+
+for k,v in __EXPORTS__.items():
+	globals()["PML_"+k] = v
+
+%%%;
 
 data Attr
     = TexAttr Img
@@ -173,7 +177,9 @@ let mkRigidbody t p v size = { tex = t, pos = p, vel = v, size = size, listeners
 let rigidbodyMapPos : (Vec -> Vec) -> Rigidbody -> Rigidbody;
 let rigidbodyMapPos f r =
     let newPos = f r.pos;
-    let _ = (maybe (\_ -> ()) (dictGet r.listeners "pos")) (VecAttr newPos);
+	let m = dictGet r.listeners "pos";
+	let l = maybe (\_ -> ()) m;
+	let _ = l (VecAttr newPos);
     { tex = r.tex, pos = newPos, vel = r.vel, size = r.size, listeners = r.listeners };
 
 let rigidbodyMapTex : (Img -> Img) -> Rigidbody -> Rigidbody;

@@ -53,6 +53,7 @@ class GraphicalOut(Widget):
 
     def clear(self, _):
         self.canvas.clear()
+        self.clear_widgets()
 
     def clearUpdate(self):
         Clock.unschedule(self.update_event)

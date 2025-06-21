@@ -9,6 +9,7 @@ from utils import SHOW_CACHE_USES, curry
 
 HEADER = """
 import functools
+import numpy as np
 def curry(func):
     @functools.wraps(func)
     def curried(*args):
@@ -175,7 +176,8 @@ class Compiler(Interpreter):
         return res
 
     def _tuple(self, elems):
-        return "(" + ",".join([self.visit(e) for e in elems]) + ")"
+        xs = self.visit_children(elems)[0]
+        return "{" + ",".join([(f'"_{i}": {x}') for i,x in enumerate(xs)]) + "}"
 
     def none(self, _):
         return "None"

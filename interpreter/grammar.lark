@@ -11,8 +11,8 @@
     | atom atom -> app
 
 ?atom0: atom0 "." NAME -> access
+    | "@(" nparrayelems ")" -> nparray
     | "(" tupleelems ")" -> _tuple
-    | "|" tupleelems "|" -> nparray
     | "[" listelems "]" -> list
     | "do" "{" _sep{expr, ";"}  (";")?"}" -> do
     | none_expr -> none
@@ -21,7 +21,7 @@
     | "case" expr "|" _sep{case, "|"} -> match
     | "if" expr "then" expr ("else" expr)? -> ite
     | NAME -> var
-    | "let" "rec" NAME NAME* "=" expr ";" expr -> letrec
+    | "let" "rec" " " NAME NAME* "=" expr ";" expr -> letrec
     | "let" NAME NAME* "=" expr ";" expr -> let
     | "let" NAME ":" type ";" expr -> letdecl
     | "data" NAME NAME* "=" constructors ";" expr -> typedef
@@ -37,6 +37,7 @@
 
 tupleelems: expr "," (expr ("," expr)*)?
 listelems: expr ("," expr)* |
+nparrayelems: expr ("," expr)*
 
 lamcases: _sep{case, "|"}
 none_expr: "(" ")"

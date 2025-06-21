@@ -35,7 +35,7 @@ print (a + b)
 
 PocketML has a set of builtin types:
 Vec (numpy arrays), Number, String, Bool, Tuples,
-Lists, Dict and Maybe.
+Lists, Dict and Maybe. Num is an alias for Number and will replace it eventually.
 
 The operators *, /, +, - support
 addition of strings, numbers, and Vecs,
@@ -49,6 +49,17 @@ string multiplication, etc.).
 <tr><td>Operator</td><td>Type</td></tr>
 <tr><td>+,-,*,/</td><td>a -> a -> a</td></tr>
 <tr><td>°</td><td>a -> b -> a</td></tr>
+
+<tr><td>composition operators:</td></tr>
+<tr><td><<</td><td>(y -> z) -> (x -> y) -> (x -> z)</td></tr>
+<tr><td>>></td><td>(x -> y) -> (y -> z) -> (x -> z)</td></tr>
+<tr><td>$</td><td>(x -> y) -> x -> y</td></tr>
+
+<tr><td>logical operators / equality:</td></tr>
+<tr><td>&&, ||</td><td>Bool -> Bool -> Bool</td></tr>
+<tr><td><=, >=, <, ></td><td>Number -> Number -> Bool</td></tr>
+
+
 </table>
 
 #### 1.2.1 Builtins:
@@ -125,7 +136,7 @@ let f _ = do
 ;
 ```
 >Note: Do not confuse this do syntax
-with monadic do-notation in Haskell!
+with monadic do-notation in Haskell! This is more of a C-like block (e.g. `{ ...; ...; }`).
 The do-syntax is not perfect and might
 fail to parse in some situations. When in
 doubt use `let _ = a (); let _ = b (); ...`
@@ -139,9 +150,9 @@ print [1, 2, 3]
 # => (Cons 1 (Cons 2 (Cons 3 Nil)))
 ```
 
-Numpy arrays can be created using the `|1, 2, 3, ...|` syntax:
+Numpy arrays can be created using the `@(x1, x2, x3, ...)` syntax:
 ```python
-print (|1, 2| + |3, 4|) # => [4. 6.]
+print (@(1, 2) + @(3, 4)) # => [4. 6.]
 ```
 They have type `Vec`.
 
@@ -161,6 +172,36 @@ type Person =
 
 > Note that PocketML does not support tuple and record pattern
 matching yet!
+
+Records also support a sort of weak row-polymorphism.
+
+```sml
+let getX : { x : a } -> a;
+let getX r = r.x;
+
+print $ getX {x=10, y=20}
+```
+
+Generally a record `{x : a, y : b}` and a record `{y : b}` unify. That also means that the following example only fails at runtime.
+```sml
+let getX : { x : a, y : b } -> a;
+let getX r = r.x;
+
+print $ getX {y=20}
+```
+
+> Note: The section _Python Interop_ has an example of how this can be used to implement named default arguments.
+
+The standard library `lib.std` has functions for updating records:
+```sml
+import lib.std;
+
+let myrec = {x=1,y=2,z=3};
+
+do
+    print (with { x = 22 } myrec)
+    print (recordMap (\r -> with {x=r.x+1} r) myrec)
+```
 
 #### 2.6 Functions, recursion and let
 Variables are generally introduced using the `let`
@@ -244,11 +285,35 @@ let half : Number -> Number;
 
 print (half 2)
 ```
+
 Python code can also be used to compute values
 in PocketML code using the inline `%% ... %%` syntax.
 Python types are largely compatible with PocketML types.
 ```sml
 print %%f"PocketML does not have f-strings but python does {'!'*10}"%%
+```
+Another example:
+```python
+import lib.std;
+
+# get name and greet!
+input "Name:" (\nm -> print %%f"Hi, {PML_nm}!"%%)
+```
+
+As discussed in the sections on _records_, one can also build a function with default arguments using python interop:
+
+```sml
+let mkVec : { x : Number, y : Number, z : Number } -> Vec;
+
+%%%
+def PML_mkVec(r):
+    defaults = {"x":0,"y":0,"z":0}
+    defaults.update(r)
+    return np.array(list(defaults.values()))
+%%%;
+```
+```python
+print $ mkVec {y=20} # => [ 0 20  0]
 ```
 
 #### 2.9 The editor

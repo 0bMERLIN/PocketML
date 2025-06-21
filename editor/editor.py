@@ -72,7 +72,7 @@ class Editor(Widget):
             tab_width=BTN_W,
         )
         self.tab_panel.default_tab = self.create_editor_tab()
-        self.create_run_tab()
+        self.run_tab = self.create_run_tab()
         self.create_term_tab()
         self.create_file_mngr_tab()
 

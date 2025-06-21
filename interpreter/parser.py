@@ -16,7 +16,7 @@ def remove_comments_and_strings(s):
             if s[i] == "\n" and not string and not python:
                 comment = False
 
-        elif s[i : i + 2] == r"%%" and not string:
+        elif s[i : i + 3] == r"%%%" and not string:
             python = not python
 
         elif s[i] == '"' and s[i - 1] != "\\":
@@ -213,6 +213,10 @@ def add_infix_operators(g):
 
 
 def parse_file(filename, txt="") -> ParseTree:
+    # fail if invalid filename
+    if not os.path.isfile(filename):
+        raise ParseError(f"Module ({filename}) not found!")
+
     # read/create grammar
     with open("interpreter/grammar.lark") as f:
         grammar = f.read()

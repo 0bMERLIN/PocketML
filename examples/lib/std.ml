@@ -1,3 +1,5 @@
+import lib.input;
+
 %%%
 import time
 
@@ -12,8 +14,10 @@ def PML_mkDict(t):
 	return acc
 
 def mklist(xs):
-	if xs == []: return ("PML_Nil",)
-	return ("PML_Cons",xs[0],mklist(xs[1:]))
+	acc = ("PML_Nil",)
+	for x in reversed(xs):
+		acc = ("PML_Cons",x,acc)
+	return acc
 
 EDITOR = globals()["editor"] if "editor" in globals() else None
 def PML_cls(_):
@@ -23,13 +27,20 @@ def PML_cls(_):
 def error(s):
 	raise Exception(s)
 
-def mymap(f):
-	def inner(l):
-		if l[0] == "PML_Nil":
-			return ("PML_Nil",)
-		else:
-			return ("PML_Cons",f(l[1]),mymap(f)(l[2]))
-	return inner
+@curry
+def mymap(f,l):
+	acc = []
+	while l[0] != "PML_Nil":
+		acc += [f(l[1])]
+		l = l[2]
+	return mklist(acc)
+
+@curry
+def PML_foldr(f,acc,l):
+	while l[0] != "PML_Nil":
+		acc = f(acc, l[1])
+		l = l[2]
+	return acc
 
 def PML_imap(f, i=0):
 	def inner(l):
@@ -39,10 +50,9 @@ def PML_imap(f, i=0):
 			return ("PML_Cons",f(i)(l[1]),PML_imap(f,i=i+1)(l[2]))
 	return inner
 
-def foldr(f,a,l):
-	if l[0] == "PML_Nil": return a
-	else:
-		return foldr(f, f(a)(l[1]), l[2])
+@curry
+def PML_mapRecord(b,a):
+    return dict(list(a.items()) + list(b(a).items()))
 
 import time
 import sys
@@ -51,7 +61,7 @@ import random
 import os.path
 globals().update(locals())
 
-tup = lambda l:dict(zip(
+tup = lambda *l:dict(zip(
 		[f"_{i}" for i in range(100)],l
 	))
 
@@ -65,18 +75,19 @@ PML_vec = lambda xs:np.array(list(xs.values()))
 PML_vget = lambda i:lambda xs: xs[int(i)]
 PML_setreclimit = lambda x:sys.setrecursionlimit(int(x))
 PML_tup1 = tup
-PML_tup2 = tup
-PML_tup3 = tup
-PML_tup4 = tup
-PML_foldr = lambda f:lambda a:lambda l:foldr(f,a,l)
+PML_tup2 = lambda x:lambda y: tup(x,y)
 PML_randint = lambda a:lambda b:random.randint(*sorted([int(a),int(b)]))
 PML_time = lambda _: time.time()
 PML_fileexists = os.path.exists
 PML_range = lambda a: lambda b: mklist([*range(int(a),int(b))])
+PML_srange = lambda a: lambda b: lambda s: mklist([*range(int(a),int(b),int(s))])
 PML_float = float
+PML_map = mymap
+PML_int = int
 
 %%%;
 
+#
 let time : Unit -> Number;
 
 data List a
@@ -92,6 +103,7 @@ let fileexists : String -> Bool;
 
 let randint : Number -> Number -> Number;
 let range : Number -> Number -> List Number;
+let srange : Number -> Number -> Number -> List Number;
 
 let not : Bool -> Bool;
 let eq = equal;
@@ -111,6 +123,14 @@ let const x y = x;
 
 let when : Bool -> (Unit -> Unit) -> Unit;
 let when cond func = if cond then func () else ();
+
+let mapRecord : (a -> a) -> a -> a;
+
+let with : a -> a -> a;
+let with x = mapRecord (\_ -> x);
+
+let times : Number -> (a -> a) -> a -> a;
+let times n f x = if n <= 0 then x else times (n-1) f (f x);
 
 data Maybe a = Nothing | Just a;
 
@@ -140,16 +160,16 @@ let dictGet : Dict a -> String -> Maybe a;
 let dictInsert : String -> Dict a -> a -> Dict a;
 
 let append : a -> List a -> List a;
-let rec append = \a -> \l -> case l
+let rec append a l = case l
 	| Cons x xs -> Cons x (append a xs)
-	| Nil -> Nil;
+	| Nil -> Cons a Nil;
 
 let foldr : (b -> a -> b) -> b -> List a -> b;
 
+let extend : List a -> List a -> List a;
+let extend l xs = foldr (\acc x -> append x acc) l xs;
+
 let map : (a -> b) -> (List a) -> List b;
-let map = \f -> \case
-	  Cons x xs -> Cons (f x) (map f xs)
-	| Nil -> Nil;
 
 let imap : (Number -> a -> b) -> List a -> List b;
 
@@ -166,13 +186,31 @@ let tail = \l -> case l
 	| Cons x xs -> xs
 	| Nil -> error "tail on empty list";
 
+let tailSafe : List a -> List a;
+let tailSafe = \l -> case l
+	| Cons x xs -> xs
+	| Nil -> Nil;
+
 let len : List a -> Number;
 let rec len = \case
 	  Cons _ l -> 1 + (len l)
 	| Nil -> 0;
 
+let listAtSafe : Number -> a -> List a -> a;
+let listAtSafe n d l = if n > 0
+	then listAtSafe (n-1) d (tailSafe l)
+	else (if len l == 0 then d else head l);
+
+let zip : List a -> List b -> List (a,b);
+let rec zip xs ys =
+	if len xs == 0 || len ys == 0
+	then []
+	else Cons
+		((head xs), (head ys))
+		(zip (tail xs) (tail ys));
+
+
 # numpy arrays
-data Vec;
 let vget : Number -> Vec -> Number;
 
 let vmul : Vec -> Vec -> Vec;

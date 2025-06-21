@@ -159,6 +159,8 @@ let height : Number;
 
 data Obj;
 let rect : Vec -> Vec -> Obj;
+
+# pos,size,img
 let texrect : Vec -> Vec -> Img -> Obj;
 let circle : Vec -> Number -> Obj;
 let clear : Unit -> Unit;

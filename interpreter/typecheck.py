@@ -2,7 +2,7 @@ from copy import copy, deepcopy
 import time
 from typing import Tuple
 from interpreter.cache import Cache
-from lark import ParseTree, v_args
+from lark import ParseError, ParseTree, Token, Tree, v_args
 from lark.visitors import Interpreter
 from dataclasses import dataclass as dat
 from interpreter.parser import parse_file
@@ -81,11 +81,12 @@ BUILTIN_TYPES = {
             TRecord({f"_{n}": tvar(f"a{n}") for n in range(10)}, -1, baked=True), t_unit
         )
     ),
-    "PML_print_raw": Scheme.generalize(t_fn(tvar("a"), t_unit)),
+    "print_raw": Scheme.generalize(t_fn(tvar("a"), t_unit)),
 }
 
-BUILTIN_KINDS = {"Bool": 0, "Number": 0, "Unit": 0, "String": 0}
+BUILTIN_KINDS = {"Bool": 0, "Number": 0, "Unit": 0, "String": 0, "Vec":0, "Num":0}
 
+BUILTIN_TALIASES = { "Num": t_num}
 
 def load_file(filename, logger=print) -> Tuple[ParseTree, ModuleData]:
     """
@@ -93,6 +94,9 @@ def load_file(filename, logger=print) -> Tuple[ParseTree, ModuleData]:
     Returns result type of the expression in the file
     and the parse tree.
     """
+    if not os.path.isfile(filename):
+        raise ParseError(f"Module ({filename}) not found!")
+
     with open(filename) as f:
         txt = f.read()
 
@@ -114,7 +118,7 @@ def load_file(filename, logger=print) -> Tuple[ParseTree, ModuleData]:
         logger(f"[PARSING] ({filename})\t", round(t2 - t1, 4))
 
     # typecheck
-    typechecker = Typechecker(BUILTIN_TYPES, BUILTIN_KINDS, logger)
+    typechecker = Typechecker(BUILTIN_TYPES, BUILTIN_KINDS, BUILTIN_TALIASES, logger)
 
     try:
         t1 = time.time()
@@ -133,16 +137,18 @@ def load_file(filename, logger=print) -> Tuple[ParseTree, ModuleData]:
             logger(f"[TYPED] ({filename})\t", round(t2 - t1, 4))
 
         return (tree, m)
+    except ParseError as e:
+        raise ParseError(f"Parse error ({filename}):\n" + str(e))
     except PMLTypeError as e:
         raise PMLTypeError(f"Type error ({filename}):\n" + str(e))
 
 
 @v_args(True)
 class Typechecker(Interpreter):
-    def __init__(self, env, tenv, logger=print):
+    def __init__(self, env, tenv, taliases={}, logger=print):
         self.env = env
         self.type_env = tenv
-        self.type_aliases = {}
+        self.type_aliases = taliases
         self.constraints = []
         self.allow_free_tvars = False
         self.current_typedef_type = None
@@ -212,12 +218,13 @@ class Typechecker(Interpreter):
 
     # ===================== expressions
     def list(self, elems):
-        types = self.visit_children(elems)
         line = elems.meta.line if hasattr(elems, "line") else -1
-        tv = newtv(line)
-        for t in types:
-            self.constr(tv, t, t.line)
-        return Typ("List", [tv], line)
+        prev = newtv(line)
+        for e in elems.children:
+            t = self.visit(e)
+            self.constr(prev, t, e.meta.line)
+            prev = t
+        return Typ("List", [prev], line)
 
     def nparray(self, elems):
         types = self.visit_children(elems)
@@ -242,14 +249,18 @@ class Typechecker(Interpreter):
             ret_t = newtv(a.meta.line)
             self.constr(at, Typ("->", [bt, ret_t], a.meta.line), a.meta.line)
             return ret_t
-        elif op in ["<<", ">>"]: # compose
+        elif op in ["<<", ">>"]:  # compose
             # (<<) : (y -> z) -> (x -> y) -> (x -> z)
             # (>>) : (x -> y) -> (y -> z) -> (x -> z)
             x = newtv(a.meta.line)
             y = newtv(a.meta.line)
             z = newtv(b.meta.line)
-            self.constr(bt if op == "<<" else at, Typ("->", [x, y], a.meta.line), a.meta.line)
-            self.constr(at if op == "<<" else bt, Typ("->", [y, z], b.meta.line), b.meta.line)
+            self.constr(
+                bt if op == "<<" else at, Typ("->", [x, y], a.meta.line), a.meta.line
+            )
+            self.constr(
+                at if op == "<<" else bt, Typ("->", [y, z], b.meta.line), b.meta.line
+            )
             return Typ("->", [x, z], a.meta.line)
 
         # ° can multiply anything together!

@@ -1,5 +1,3 @@
-cache;
-
 %%%
 import math
 import wave
@@ -7,6 +5,7 @@ import struct
 from kivy.core.audio import SoundLoader
 
 MAXAMP = 32767
+PML_max_amp = MAXAMP
 
 def gen_wave(f, duration,
         filename="tone.wav",
@@ -25,6 +24,7 @@ def gen_wave(f, duration,
 
     wav_file.close()
 
+@curry
 def sound(f, duration):
     filename = "tone.wav"
     gen_wave(f, duration, filename)
@@ -38,22 +38,29 @@ def play(s):
 globals().update(locals())
 
 # Example usage
-play(sound(lambda t: MAXAMP * math.sin(2 * math.pi * 440 * t), 2))
+# play(sound(lambda t: MAXAMP * math.sin(2 * math.pi * 440 * t), 2))
+
+PML_sound = sound
+PML_play = play
 
 %%%;
 
+import lib.math;
 import lib.std;
 
 data Sound;
 
 # sound(generator, duration)
+let max_amp : Number;
 let sound : (Number -> Number) -> Number -> Sound;
 
 let beep : Number -> Number -> Sound;
 let beep freq dur = sound
-    (\t -> mull %[MAXAMP, sin]%) 2
+    (\t -> max_amp * sign (sin (2 * pi * freq * t))) dur;
 
 let play : Sound -> Unit;
+
+let _ = play $ beep 440 1;
 
 module (*)
 

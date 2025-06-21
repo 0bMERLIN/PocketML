@@ -7,8 +7,10 @@ from kivy.uix.button import Button
 from kivy.core.window import Window
 from kivy.uix.progressbar import ProgressBar
 from kivy.clock import Clock
+from lark import ParseError
 
 from editor.codeinput import LineNumCodeInput
+from editor.graphicalout import GraphicalOut
 from interpreter.interpreter import file_to_python, run_compiled, run_file
 from interpreter.parser import get_imports
 from interpreter.typ import PMLTypeError
@@ -63,6 +65,10 @@ class InputField(Widget):
                 report(e.args[0])
                 Clock.schedule_once(lambda _: comp_done())
                 return
+            except ParseError as e:
+                report(e.args[0])
+                Clock.schedule_once(lambda _: comp_done())
+                return
             except Exception as e:
                 report(e.args[0] + "\n" + traceback.format_exc())
                 Clock.schedule_once(lambda _: comp_done())
@@ -87,6 +93,13 @@ class InputField(Widget):
                 print(*x),
             ),
         }
+
+        # reset graphics
+        self.editor.run_tab.remove_widget(self.editor.graphicalout)
+        gr = GraphicalOut(self.editor)
+        self.editor.run_tab.add_widget(gr)
+        self.editor.graphicalout = gr
+
         run_file_thread = threading.Thread(target=comp, args=args, kwargs=kwargs)
         run_file_thread.start()
         self.run_button.disabled = True
@@ -103,7 +116,6 @@ class InputField(Widget):
 
     def stop_program(self):
         self.editor.graphicalout.clearUpdate()
-        self.editor.graphicalout.clear_widgets()
 
     def find_type(self, nm, filename):
         """

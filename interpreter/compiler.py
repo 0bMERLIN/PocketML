@@ -22,6 +22,69 @@ def curry(func):
 def compose(f,g):
     return lambda x: f(g(x))
 
+def conv_list(l):
+    # convert a PML list to a python list
+
+    if l[0] == "PML_Nil":
+        return []
+    return [l[1]] + conv_list(l[2])
+
+def prettify(v):
+    '''
+    Turn a runtime value into a string.
+    '''
+    # tuple
+    if type(v) == dict and all(
+        [(str(x).startswith("_") and str(x)[1:].isnumeric()) for x in v.keys()]
+    ):
+        return "(" + ", ".join([*map(prettify, v.values())]) + ")"
+
+    # list
+    if type(v) == tuple and len(v) != 0 and v[0] in ["PML_Cons", "PML_Nil"]:
+        l = conv_list(v)
+        return "[" + ", ".join(list(map(prettify, l))) + "]"
+
+    # custom data type
+    if type(v) == tuple and len(v) != 0 and type(v[0]) == str:
+        res = str(v[0].strip("PML_")) + " " + " ".join(map(prettify, v[1:]))
+        return f"({res})" if len(v) > 1 else res
+
+    # number
+    if type(v) == float:
+        return str(int(v) if v.is_integer() else v)
+
+    # str
+    if type(v) == str:
+        return f'"{v}"'
+
+    return str(v)
+
+
+def builtin_env(output):
+    builtins = {
+        "PML_and": lambda x: lambda y: x and y,
+        "PML_or": lambda x: lambda y: x or y,
+        "PML_add": lambda x: lambda y: mklist(conv_list(x) + conv_list(y)) if type(x) == tuple and x[0] in ["PML_Cons", "PML_Nil"] else x + y,
+        "PML_sub": lambda x: lambda y: x - y,
+        "PML_mul": lambda x: lambda y: x * y,
+        "PML_pow": lambda x: lambda y: x**y,
+        "PML_sqrt": lambda x: sqrt(x),
+        "PML_inc": lambda x: x + 1,
+        "PML_dec": lambda x: x - 1,
+        "PML_True": True,
+        "PML_False": False,
+        "PML_equal": lambda x: lambda y: x == y,
+        "PML_lt": lambda x: lambda y: x < y,
+        "PML_print": lambda *args: output(*[*map(prettify, args)]),
+        "PML_print2": lambda a: lambda b: output(a, b),
+        "PML_printa": lambda xs: output(*xs.values()),
+        "PML_print_raw": print
+    }
+
+    return builtins
+
+globals().update(builtin_env(PML_output))
+
 """
 
 

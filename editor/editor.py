@@ -9,6 +9,7 @@ from editor.graphicalout import GraphicalOut
 from editor.inputfield import InputField
 from kivy.core.window import Window
 
+from editor.moduleviewer import ModuleViewer
 from utils import BTN_H, BTN_W, relpath
 
 with open("current_file.txt") as f:
@@ -69,14 +70,23 @@ class Editor(Widget):
         self.tab_panel = TabbedPanel(
             size=(Window.width, Window.height),
             tab_height=BTN_H,
-            tab_width=BTN_W,
+            tab_width=Window.width/5,
         )
         self.tab_panel.default_tab = self.create_editor_tab()
         self.run_tab = self.create_run_tab()
         self.create_term_tab()
         self.create_file_mngr_tab()
+        self.create_module_viewer_tab()
 
         self.add_widget(self.tab_panel)
+
+    def create_module_viewer_tab(self):
+        tab = TabbedPanelItem(text="Docs")
+        module_viewer = ModuleViewer(self)
+        tab.add_widget(module_viewer)
+        module_viewer.size_hint = (1, 1)
+        self.tab_panel.add_widget(tab)
+        return tab
 
     def create_file_mngr_tab(self):
         tab = TabbedPanelItem(text="Files")

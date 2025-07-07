@@ -84,9 +84,10 @@ BUILTIN_TYPES = {
     "print_raw": Scheme.generalize(t_fn(tvar("a"), t_unit)),
 }
 
-BUILTIN_KINDS = {"Bool": 0, "Number": 0, "Unit": 0, "String": 0, "Vec":0, "Num":0}
+BUILTIN_KINDS = {"Bool": 0, "Number": 0, "Unit": 0, "String": 0, "Vec": 0, "Num": 0}
 
-BUILTIN_TALIASES = { "Num": t_num}
+BUILTIN_TALIASES = {"Num": t_num}
+
 
 def load_file(filename, logger=print) -> Tuple[ParseTree, ModuleData]:
     """
@@ -354,10 +355,16 @@ class Typechecker(Interpreter):
         if PRINT_LETS:
             print(x, "=", self.env[x])
 
+        # remove args
+        for a in params:
+            if a in self.env:
+                del self.env[a]
         # body
         tb = self.visit(b)
+
         if x in self.env:  # might have been redefined and already deleted
             del self.env[x]
+
         return tb
 
     def letrec(self, *args):
@@ -383,8 +390,17 @@ class Typechecker(Interpreter):
         self.env[x] = Scheme.generalize(t)
         if PRINT_LETS:
             print(x, "=", self.env[x])
+
+        # remove args
+        for a in params:
+            if a in self.env:
+                del self.env[a]
+
+        # body
         tb = self.visit(b)
+
         del self.env[x]
+
         return tb
 
     def var(self, x):

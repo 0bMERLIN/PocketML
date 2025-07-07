@@ -9,6 +9,7 @@ PML_pow = lambda a: lambda b: a**b
 PML_tan=math.tan
 PML_fac=math.factorial
 PML_exp=math.exp
+PML_ln=math.log
 PML_round=lambda x:lambda n:round(x,int(n))
 PML_mod=lambda x: lambda y: x % y
 
@@ -28,6 +29,8 @@ let sign x = if x < 0 then -1 else 1;
 let pow : Number -> Number -> Number;
 let round : Number -> Number -> Number;
 let abs x = if x < 0 then -x else x;
+let ln : Number -> Number;
+
 # sum
 let rec sigma f a b = if a > b then 0
 	else (if a == b then f b else (f a + sigma f (a+1) b));

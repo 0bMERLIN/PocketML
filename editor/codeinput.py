@@ -61,6 +61,15 @@ class LineNumCodeInput(BoxLayout):
         Clock.schedule_once(lambda _: self.set_font_size(32), 0.1)
         Clock.schedule_once(lambda _: self.update_graphics(), 0.3)
 
+        # add the key down event handler
+        Window.bind(on_key_down=self._on_key_down)
+    
+    def _on_key_down(self, window, keycode, scancode, codepoint, modifiers):
+        if chr(keycode) in 'zZ' and 'ctrl' in modifiers:
+            self.code_input.do_undo()
+            return True  # prevent default if needed
+        return False
+    
     def get_line_numbers(self):
         line_count = self.code_input.text.count("\n") + 1
         return "\n".join(str(i) for i in range(1, line_count + 1))
@@ -95,3 +104,4 @@ class LineNumCodeInput(BoxLayout):
     def sync_scroll(self, *args):
         self.line_numbers.scroll_y = self.code_input.scroll_y
         self.line_numbers._update_graphics()
+

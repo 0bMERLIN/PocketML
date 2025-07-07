@@ -1,4 +1,3 @@
-let f : Num -> Num;
-let f = add 41;
+import lib.graphing;
 
-print (f 1)
+staticView (const $ viewGraphs [sin, cos] .5 0)

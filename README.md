@@ -353,4 +353,6 @@ For a better insight into accessing the editor from code,
 refer to the `graphics.ml` library.
 
 ## Demo
-https://github.com/user-attachments/assets/004b7bec-1c1f-44db-961f-9e52f83d04ce
+https://github.com/user-attachments/assets/f015ab1a-d928-4113-b359-936a0ff46a2f
+
+

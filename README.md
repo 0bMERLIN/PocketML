@@ -6,7 +6,7 @@ tinkering / small projects. Its main feature is the editor android app.
 Use PocketML to kill boredom while waiting for the bus
 or during a boring lecture! The language is similar to Standard-ML
 and has python-interop, as well as support for numpy and kivy GUI. I recommend using the AnySoftKeyboard app, to make navigating code and inserting tabs easier.
-To see the app in action scroll down to the demos / gallery.
+<br><br>To see the app in action scroll down to the demos / gallery.
 
 ## Specifications
 

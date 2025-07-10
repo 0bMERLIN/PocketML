@@ -6,7 +6,7 @@ tinkering / small projects. Its main feature is the editor android app.
 The language is similar to Elm and has python-interop, as well as
 support for numpy and kivy.
 
-> Read the docs at https://0bmerlin.github.io/PocketML/
+> Read the docs at 👉 https://0bmerlin.github.io/PocketML/ 👈
 
 
 ## Demo

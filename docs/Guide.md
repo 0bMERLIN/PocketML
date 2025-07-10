@@ -1,6 +1,14 @@
 
 ## Language Guide
 
+#### 1.0 Installing
+I recommend downloading the APK file
+from the `bin/` directory in the [github repo](github.com/0bMERLIN/PocketML).
+
+> Note: You might have to copy the library code/example code manually if you want/need it. I do not know why buildozer sometimes leaves it out.
+
+You can also build the project yourself using the [buildozer](https://buildozer.readthedocs.io/en/latest/) tool.
+
 #### 1.1 Data Types
 PocketML uses Sum types like most other statically 
 typed functional languages:

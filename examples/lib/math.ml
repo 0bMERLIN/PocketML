@@ -18,6 +18,9 @@ PML_vecDeleteAt = lambda i: lambda a: np.delete(a, i)
 PML_vecAt = lambda i: lambda a: a[i]
 PML_vecSlice = lambda start: lambda end: lambda a: a[start:end]
 PML_vecLen = len
+PML_vecIMap = lambda f: lambda v: np.array(list(map(lambda t:f(t[0])(t[1]),enumerate(list(v)))))
+PML_vecZeros = lambda l: np.zeros(l)
+PML_vecFromList = lambda l: np.array(conv_list(l))
 
 %%%;
 
@@ -36,12 +39,23 @@ let rec sigma f a b = if a > b then 0
 	else (if a == b then f b else (f a + sigma f (a+1) b));
 let fac : Number -> Number;
 let exp : Number -> Number;
+
+let min : Number -> Number -> Number;
 let min x y = if x < y then x else y;
+
+let max : Number -> Number -> Number;
 let max x y = if x > y then x else y;
+
 let mod : Number -> Number -> Number;
 
-let divisible : Number -> Number -> Bool;
+let divisible : Number -> Number -> Bool; # a divisible by b?
 let divisible a b = mod a b == 0;
+
+let odd : Number -> Bool;
+let odd x = not (divisible x 2);
+
+let even : Number -> Bool;
+let even x = divisible x 2;
 
 # numpy array vector operations
 let vecAppend : Number -> Vec -> Vec;
@@ -49,6 +63,14 @@ let vecDeleteAt : Number -> Vec -> Vec;
 let vecAt : Number -> Vec -> Number;
 let vecSlice : Number -> Number -> Vec -> Vec;
 let vecLen : Vec -> Number;
+let vecZeros : Number -> Vec;
+let vecFromList : List Number -> Vec;
+
+let vecIMap : (Number -> Number -> Number) -> Vec -> Vec; # fn(i,x)
+
+let vecIFor : (Number -> Number -> Unit) -> Vec -> Unit;
+let vecIFor f v =
+	const () $ vecIMap (\i x-> const 0 (f i x)) v;
 
 let vecAtSafe : Number -> Number -> Vec -> Number;
 let vecAtSafe n d v = if vecLen v <= n || n < 0 then d else vecAt n v;

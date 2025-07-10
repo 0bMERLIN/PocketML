@@ -22,11 +22,7 @@ let cols = [
 	@(0,255,255,255)
 ];
 
-let tup2 : a -> b -> (a,b); # ????
-
-let viewGraphs : List (Number->Number)
-	-> Number -> Number -> Number
-	-> Widget;
+let viewGraphs : List (Number->Number) -> Number -> Number -> Number -> Widget; # Args: fns, zoom, x, y
 
 let viewGraphs fs zoom xoff yoff =
 	let axes = [

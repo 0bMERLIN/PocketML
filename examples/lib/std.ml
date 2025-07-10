@@ -112,10 +112,27 @@ PML_int = int
 PML_sort = lambda l: mklist(sorted(conv_list(l)))
 PML_listeq = lambda a: lambda b: conv_list(a)==conv_list(b)
 PML_printl=lambda l: PML_print(str(conv_list(l)))
+PML_setUpdate = lambda s: lambda f: editor.graphicalout.setUpdate(s, lambda s: lambda _: f(s))
+
+@curry
+def PML_setTickInterval(i,s,f):
+	@curry
+	def helper(ts, _):
+		t, s = ts
+		if time.time()-t > i:
+			return time.time(), f(s)
+		return t,s
+	editor.graphicalout.setUpdate(
+		(time.time(),s), helper)
+
+PML_split = lambda s: lambda cs: mklist(s.split(cs))
+PML_replace = lambda o: lambda n: lambda s: s.replace(o,n)
 
 %%%;
 
 let time : Unit -> Number;
+let setTickInterval : Number -> state -> (state->state) -> Unit;
+let setUpdate : state -> (state->state) ->Unit;
 
 data List a
 	= Cons a (List a)
@@ -147,6 +164,9 @@ let int : a -> Number;
 
 let neg : Number -> Number;
 let neg = \x -> -x;
+
+let between : Number-> Number -> Number -> Bool;# a b c -> a < c < b
+let between a b x = a <= x && x <= b;
 
 let id : a -> a;
 let id = \x -> x;
@@ -210,6 +230,12 @@ let concat = foldr (\acc l -> extend acc l) [];
 let reverse : List a -> List a;
 
 let map : (a -> b) -> (List a) -> List b;
+let foreach2D : Number -> Number -> (Number->Number-> Unit) -> Unit; # w h f
+let foreach2D w h f = 
+	let _ = map (\x ->
+		map (\y -> f x y) (range 0 w))
+		(range 0 w);
+	();
 
 let nub : List a -> List a;
 
@@ -256,7 +282,11 @@ let contains : a -> List a -> Bool;
 let foldr : (b -> a -> b) -> b -> List a -> b;
 
 let filter : (a -> Bool) -> List a -> List a;
-let filter f l = foldr (\acc x -> if f x then Cons x acc else acc) [] l;
+let filter f l = foldr (\acc x -> if f x then append x acc else acc) [] l;
+
+# strings
+let split : String -> String -> List String;# str chars -> list
+let replace : String -> String -> String -> String; # old new str
 
 # numpy arrays
 let vget : Number -> Vec -> Number;

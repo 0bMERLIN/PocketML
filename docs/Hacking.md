@@ -63,12 +63,12 @@ The PocketML editor is accessible to the language by using python interop.
 The editor object can be accessed directly by the name `editor`. It contains the "terminalout"
 and "graphicalout" objects.
 ```python
-%%
+%%%
 def cls(_):
     # example usage:
     # clear the terminal
     editor.terminalout.text = ""
-%%;
+%%%;
 ()
 ```
 `editor.graphicalout` is the kivy object for the "Graphics" tab in the editor and can be added to / manipulated like any other kivy object.

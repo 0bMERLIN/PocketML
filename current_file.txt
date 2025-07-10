@@ -1,1 +1,1 @@
-examples/bouncybtn.ml[OPEN]
+examples/gol.ml[OPEN]

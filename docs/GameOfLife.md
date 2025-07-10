@@ -143,7 +143,7 @@ setTick 0 update view
 ```
 
 
-#### 1.7 End result
+#### 1.7 Add patterns
 I have added a gosper glider gun:
 ```sml
 let _ = do
@@ -152,5 +152,7 @@ let _ = do
 ```
 `gosper` is a really big list, so you'll have to see the source code (gol.ml)
 for the details :).
+
+#### 1.8 End result / Gallery
 
 ![An image of the end result (Glider gun)](gameoflife.png)

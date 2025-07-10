@@ -35,7 +35,7 @@ let i = image @(w,w);
 To determine if a cell should live or die, we need to know the number of
 living neighbours. To access the neighbours we will use offsets from the
 position of the cell we want to check:
-```
+```python
 let offsets = [
     @(-1,-1),@(0,-1), @(1,-1),
     @(-1,0),@(1,0), # The middle row has only two cells, because
@@ -87,11 +87,9 @@ using `imgMap` from lib.image. We'll color live pixels white and dead ones black
 > Note: This mutates our image, which is a sin in
 > functional languages, but we'll go with it to
 > increase performance
-```
+
+```sml
 let tick img =
-	# save the image in a buffer, to
-	# stop neighbours from being
-	# overwritten.
 	let buf = imgBuf img;
 	imgMap img (\x y cell ->
 		let n = nAlive buf @(x,y);
@@ -109,7 +107,8 @@ can make a function to add cell patterns from a 2D list:
 > loop with enumerate in python.
 > The builtin `map` functions are also fast because they use python for loops
 > internally.
-```
+
+```python
 let addPattern img v p=imap (\y l-> imap # rows
 	(\x c-> setpixel img (v+@(x,y)) # columns
 		(@(c,c,c,255) ° 255)
@@ -123,6 +122,7 @@ Let's count the ticks since the app started to slow down the
 games tick/update rate a little:
 > Note: Our state is `Number` in this case (the number of ticks)!
 > We'll increase (`inc`) it every frame.
+
 ```sml
 let update : Event -> Number -> Number;
 let update e t = case e

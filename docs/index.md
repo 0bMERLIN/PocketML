@@ -6,7 +6,7 @@ The language is similar to Elm and is based on a python backend.
 
 
 ## Guides
-- [Language Guide](Guide.md)
+- [Language/Installation Guide](Guide.md)
 - [Programming in PocketML: The Game of Life](GameOfLife.md)
 - [Programming in PocketML: Making a calculator GUI](CalcGUI.md)
 - [Hacking / Python interop](Hacking.md)

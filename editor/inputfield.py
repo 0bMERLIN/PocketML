@@ -174,8 +174,9 @@ class InputField(Widget):
         self.editor = editor
         self.filename = relpath(filename)
 
-        code_input_h = Window.height / 3 + BTN_H
-        code_input_y = Window.height - code_input_h - BTN_H * 2
+        margin = 20
+        code_input_h = Window.height / 3 + BTN_H - margin
+        code_input_y = Window.height - code_input_h - BTN_H * 2 - margin
 
         self.stop_button = Button(
             text="Stop",

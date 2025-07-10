@@ -120,7 +120,7 @@ class Editor(Widget):
         return tab
 
     def create_new_file_tab(self, filename):
-        if filename in self.file_tabs:
+        if relpath(filename) in self.file_tabs:
             return
 
         i = InputField(filename, self)

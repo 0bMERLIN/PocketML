@@ -221,7 +221,7 @@ annotation is required:
 ```sml
 let rec sum = \x -> case x
     | Nil -> 0
-	| Cons x xs -> add x (sum xs);
+    | Cons x xs -> add x (sum xs);
 
 print (sum [1,2,3,4])
 ```
@@ -230,7 +230,7 @@ Or alternatively:
 let sum : (List Number) -> Number
 let sum = \case
     | Nil -> 0
-	| Cons x xs -> add x (sum xs);
+    | Cons x xs -> add x (sum xs);
 
 print (sum [1,2,3,4])
 ```
@@ -345,8 +345,8 @@ EDITOR = globals()["editor"]
 def cls(_):
     # example usage:
     # clear the terminal
-	global EDITOR
-	EDITOR.terminalout.text = ""
+    global EDITOR
+    EDITOR.terminalout.text = ""
 %%;
 ()
 ```

@@ -5,7 +5,7 @@ tinkering / small projects. Its main feature is the editor android app.
 The language is similar to Elm and is based on a python backend.
 
 ## Guides
-- [Features & Type system](docs/Features.ml)
+- [Features & Type system](docs/Features.md)
 - [Language Guide](docs/Guide.md)
 - [Hacking / Python interop](docs/Hacking.md)
 

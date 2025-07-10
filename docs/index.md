@@ -5,9 +5,9 @@ tinkering / small projects. Its main feature is the editor android app.
 The language is similar to Elm and is based on a python backend.
 
 ## Guides
-- [Features & Type system](docs/Features.md)
-- [Language Guide](docs/Guide.md)
-- [Hacking / Python interop](docs/Hacking.md)
+- [Features & Type system](Features.md)
+- [Language Guide](Guide.md)
+- [Hacking / Python interop](Hacking.md)
 
 ## Libraries
 > Note: Neither of these are fully integrated, but can be accessed fully through python blocks. The most important functions are available directly in PocketML.

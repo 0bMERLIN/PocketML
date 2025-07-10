@@ -40,7 +40,7 @@ import lib.std;
 input "Name:" (\nm -> print %%f"Hi, {PML_nm}!"%%)
 ```
 
-As discussed in the [Language Guide](docs/Guide.md) on _records_, one can also build a function with default arguments using python interop:
+As discussed in the [Language Guide](Guide.md) on _records_, one can also build a function with default arguments using python interop:
 
 ```sml
 let mkVec : { x : Number, y : Number, z : Number } -> Vec;

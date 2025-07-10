@@ -5,7 +5,7 @@ I think most people in this space are familiar with Game of Life, but heres a qu
 
 Conways Game of Life is a grid based simulation of cells. They can die, live or come to life. The rules are very simple but give rise to emergent organic-looking behaviour. Game of Life is actually Turing complete.
 
-<img src="https://en.wikipedia.org/wiki/File:Gospers_glider_gun.gif">
+<img src="https://upload.wikimedia.org/wikipedia/commons/e/e5/Gospers_glider_gun.gif">
 
 
 The rules are as follows:

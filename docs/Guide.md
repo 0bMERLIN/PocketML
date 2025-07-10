@@ -5,6 +5,10 @@
 I recommend downloading the APK file
 from the `bin/` directory in the [github repo](github.com/0bMERLIN/PocketML).
 
+The editor also works on linux. Clone the repo.
+Run `main.py` in `python3.10` (or higher version) and
+install any libraries python complains about.
+
 > Note: You might have to copy the library code/example code manually if you want/need it. I do not know why buildozer sometimes leaves it out.
 
 You can also build the project yourself using the [buildozer](https://buildozer.readthedocs.io/en/latest/) tool.

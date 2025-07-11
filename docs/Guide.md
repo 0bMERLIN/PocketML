@@ -3,7 +3,7 @@
 
 #### 1.0 Installing
 I recommend downloading the APK file
-from the `bin/` directory in the [github repo](github.com/0bMERLIN/PocketML).
+from the `bin/` directory in the [github repo](https://github.com/0bMERLIN/PocketML).
 
 The editor also works on linux. Clone the repo.
 Run `main.py` in `python3.10` (or higher version) and

@@ -4,6 +4,7 @@ PocketML is a functional statically-typed language designed for
 tinkering / small projects. Its main feature is the editor android app.
 The language is similar to Elm and is based on a python backend.
 
+Visit the [PocketML](https://github.com/0bMERLIN/PocketML) repository.
 
 ## Guides
 - [Language/Installation Guide](Guide.md)

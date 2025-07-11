@@ -3,6 +3,7 @@
 from kivy.graphics import Color,Rectangle,Ellipse,Rotate,PushMatrix,PopMatrix,Scale,Line
 from kivy.uix.button import Button
 from kivy.core.window import Window
+from kivy.uix.label import Label
 import numpy as np
 
 from editor.graphicalout import GraphicalOut
@@ -97,6 +98,10 @@ def button(text,pos,size):
 	return editor.graphicalout.button(
 		text,floats(pos),floats(size))
 
+def label(text,pos,size):
+	l = Label(text=text,pos=pos,size=size)
+	editor.graphicalout.add_widget(l)
+	return l
 
 def color(c):
 	editor.graphicalout.__class__.color(list(c))
@@ -106,7 +111,7 @@ from kivy.graphics import Color, Rectangle
 
 ######### VDOM
 
-BTNS = {}
+WIDGETS = {}
 n_used=0
 ff=True # first frame?
 EVENTS = []
@@ -129,22 +134,25 @@ def btn_rel(name):
 def draw(v):
 	global n_used, ff
 
-	if v[0] == "PML_Btn":
+	if v[0] in ["PML_Btn","PML_Label"]:
 		_,txt,name,pos,size = v
-		if name in BTNS:
-			[b,_] = BTNS[name]
+		if name in WIDGETS:
+			[b,_] = WIDGETS[name]
 			b.pos=floats(pos)
 			b.size=floats(size)
 			b.text=txt
-			BTNS[name][1] = True # used
-		else: # new btn
+			WIDGETS[name][1] = True # used
+		elif v[0] == "PML_Btn": # new btn
 			b = button(
 				txt,floats(pos),floats(size))
 			b.bind(
 			 on_press=lambda _:btn_press(name))
 			b.bind(
 		 	on_release=lambda _:btn_rel(name))
-			BTNS[name] = [b,True]
+			WIDGETS[name] = [b,True]
+		elif v[0] == "PML_Label":
+			l = label(txt,floats(pos),floats(size))
+			WIDGETS[name]=[l,True]
 	
 	if v[0] in ("PML_Rect", "PML_TRect"):
 		_,pos,size,c=v
@@ -164,13 +172,15 @@ def draw(v):
 	 	for w in to_list(l):
 	 		draw(w)
 
+DOUPDATE = False
+
 @curry
 def set_tick(state, update, view):
 
 	def helper(s):
 
 		# prep
-		global n_used,ff,EVENTS
+		global n_used,ff,EVENTS,DOUPDATE
 		n_used = 0
 		
 		# prep events
@@ -185,16 +195,20 @@ def set_tick(state, update, view):
 			s = update(EVENTS.pop())(s)
 		
 		# draw
-		if id(s_old) != id(s) or ff:
-			editor.graphicalout.canvas.clear()
+		if id(s_old) != id(s) or ff or DOUPDATE:
 			editor.graphicalout.canvas.before.clear()
 			v = view(s)
+			for b in WIDGETS:
+				WIDGETS[b][1] = False
 			draw(v)
+			DOUPDATE = False
 
 		# remove old btns
-		for b in BTNS:
-			if not BTNS[b][1]:
-				del BTNS[b]
+		for b in list(WIDGETS.keys()):
+			if not WIDGETS[b][1]:
+				WIDGETS[b][0].opacity = 0
+				editor.graphicalout.remove_widget(WIDGETS[b][0])
+				del WIDGETS[b]
 
 		ff = False
 		return s
@@ -212,6 +226,11 @@ PML_width = Window.width
 PML_height = Window.height
 PML_stop = lambda _: editor.graphicalout.clearUpdate()
 
+def PML_forceUpdate(s):
+	global DOUPDATE
+	DOUPDATE = True
+	return s
+
 %%%;
 
 import lib.std;
@@ -223,6 +242,7 @@ data Widget
 	= Rect Vec Vec Color
 	| TRect Vec Vec Img
 	| Btn String String Vec Vec
+	| Label String String Vec Vec
 	| Line (List Vec) Number Color
 	| Many (List Widget)
 ;
@@ -236,6 +256,8 @@ data Event
 ;
 
 let setTick : a -> (Event -> a -> a) -> (a -> Widget) -> Unit;
+
+let forceUpdate : state -> state;
 
 let stop : Unit -> Unit;
 

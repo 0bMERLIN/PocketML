@@ -30,7 +30,7 @@ let tan : Number -> Number;
 let pi : Number;
 let sign x = if x < 0 then -1 else 1;
 let pow : Number -> Number -> Number;
-let round : Number -> Number -> Number;
+let round : Number -> Number -> Number; # x n_digits
 let abs x = if x < 0 then -x else x;
 let ln : Number -> Number;
 

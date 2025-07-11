@@ -51,15 +51,8 @@ let _ = do
 	addPattern i @(15, 20) gosper
 ;
 
-# Our state is `Number` in this case (the number of ticks)!
-let update : Event -> Number -> Number;
-let update e t = case e
-    | Tick -> do
-        when (divisible t 5) (\_ -> tick i)
-        inc t
-;
-
-let view _ = TRect @(0,0) @(width,width) i;
-
-setTick 0 update view
+setTick 0 (\e t -> case e | Tick ->
+	let _ = when (divisible t 5)
+		(\_ -> tick i);
+	inc t) (\_ -> TRect @(150,800) @(700,700) i)
 

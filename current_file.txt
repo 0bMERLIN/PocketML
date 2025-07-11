@@ -1,1 +1,1 @@
-examples/gol.ml[OPEN]
+examples/calcgui.ml[OPEN]

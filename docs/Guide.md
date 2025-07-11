@@ -36,11 +36,17 @@ case 1
     | 1 -> "One"
     | _ -> "Something else"
 ```
-And many other structure (except for numpy arrays):
+And sum types (except for numpy arrays):
 ```sml
 case Just 1
     | Just x -> print x
     | Nothing -> ()
+```
+Lists are also sum types:
+```sml
+case [1,2,3]
+    | Cons x _ -> print x
+    | Nil -> print "empty..."
 ```
 
 Use if-then-else for branching:

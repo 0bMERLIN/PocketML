@@ -139,7 +139,10 @@ let setUpdate : state -> (state->state) ->Unit;
 
 data List a
 	= Cons a (List a)
-	| Nil;
+	| Nil
+	# The default list type generated
+	# by `[...]`
+;
 
 let cls : Unit -> Unit;
 let time : Unit -> Number;
@@ -207,8 +210,9 @@ let fmap g = \case
 
 data Dict a;
 
-# record of b
-let mkDict : a -> Dict b;
+let mkDict : a -> Dict b
+# WARNING: `a` should always be a record.
+;
 
 let dictEmpty : Dict a;
 

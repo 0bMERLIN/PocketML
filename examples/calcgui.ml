@@ -11,7 +11,7 @@ def PML_eval(s):
 %%%;
 let eval : String -> String;
 
-type State = String;
+type State = String; # my state
 
 let init = "";
 

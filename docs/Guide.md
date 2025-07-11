@@ -206,3 +206,26 @@ Modules inside a directory can be addressed using `.`:
 ```python
 import directory.mymodule;
 ```
+
+#### 1.8 Doc comments
+The editor has a builtin search panel for looking up types or searching for a function with a certain type.
+Any comments _before_ the semicolon in a declaration will be included as a doc comment:
+
+```python
+data List a
+	= Cons a (List a)
+	| Nil
+	# The default list type generated
+	# by `[...]`
+;
+
+let mkDict : a -> Dict b
+    # WARNING: `a` should always be a record.
+;
+
+type Color = Vec
+	# Just a vector...
+;
+```
+
+Most of the standard library is written in a self-documenting way to save on excessive comment clutter when searching in the doc panel.

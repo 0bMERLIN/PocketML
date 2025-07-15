@@ -4,6 +4,7 @@ package.name = myapp
 package.domain = org.test
 source.dir = .
 source.include_exts = py,png,jpg,kv,atlas,lark,lang,txt
+source.include_patterns = examples/**/*
 version = 0.1
 requirements = python3,kivy,lark,pygments,numpy
 orientation = portrait
@@ -17,7 +18,9 @@ ios.kivy_ios_branch = master
 ios.ios_deploy_url = https://github.com/phonegap/ios-deploy
 ios.ios_deploy_branch = 1.10.0
 ios.codesign.allowed = false
-android.permissions = READ_EXTERNAL_STORAGE, WRITE_EXTERNAL_STORAGE
+android.permissions = INTERNET, READ_EXTERNAL_STORAGE, WRITE_EXTERNAL_STORAGE
+# %(source.dir)s/data/icon.png
+icon = %(source.dir)s/assets/icon.png
 
 [buildozer]
 log_level = 2

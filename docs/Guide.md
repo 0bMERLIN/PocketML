@@ -9,7 +9,7 @@ The editor also works on linux. Clone the repo.
 Run `main.py` in `python3.10` (or higher version) and
 install any libraries python complains about.
 
-> Note: You might have to copy the library code/example code manually if you want/need it. I do not know why buildozer sometimes leaves it out.
+> Note: On first startup the app will some time to load, while the library and example files are downloaded from the github repo. The loading time depends on your internet connection. Put a file into `Internal Storage/Android/data/org.test.myapp/files/` (over USB) if you want to stop the app from installing the default files.
 
 You can also build the project yourself using the [buildozer](https://buildozer.readthedocs.io/en/latest/) tool.
 

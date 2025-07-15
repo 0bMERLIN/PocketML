@@ -22,8 +22,8 @@ class Lexer(RegexLexer):
         # Core
         'abstype', 'and', 'andalso', 'as', 'case', 'datatype', 'do', 'else',
         'end', 'exception', 'fn', 'fun', 'handle', 'if', 'in', 'infix',
-        'infixr', 'let', 'local', 'nonfix', 'of', 'op', 'open', 'orelse',
-        'raise', 'rec', 'then', 'type', 'val', 'with', 'withtype', 'while',
+        'infixr', 'let', 'local', 'nonfix', 'of', 'op', 'import', 'orelse',
+        'raise', 'rec', 'then', 'type', "data", 'val', 'with', 'withtype', 'while',
         # Modules
         'eqtype', 'functor', 'include', 'sharing', 'sig', 'signature',
         'struct', 'structure', 'where',

@@ -1,2 +1,1 @@
-examples/calcgui.ml[OPEN]
-examples/bouncybtn.ml
+examples/examples/calcgui.ml[OPEN]

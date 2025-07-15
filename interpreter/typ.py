@@ -54,9 +54,12 @@ class Typ:
             raise PMLTypeError(
                 f"Cannot unify non-record type {self} with record {t} (line {line})"
             )
-        if t.name != self.name:
+
+        nm1 = self.name.split(".")[-1]
+        nm2 = t.name.split(".")[-1]
+        if nm1 != nm2:
             fn_warn = ""
-            if t.name == "->" or self.name == "->":
+            if nm2 == "->" or nm1 == "->":
                 fn_warn = "\n(Probably applied non-function as a function or passed too many arguments!)"
             raise PMLTypeError(
                 f"Cannot unify ({self.name}) with ({t.name}) (line {line})" + fn_warn

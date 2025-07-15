@@ -22,6 +22,12 @@ data Maybe a
     | Nothing
 ```
 
+You can also declare that a type exists, for example to represent a value from a function implemented in python (see "Hacking / Python interop" page).
+
+```haskell
+data PythonObject;
+```
+
 Type aliases can be used to abbreviate
 the names of other data types:
 ```sml
@@ -178,7 +184,7 @@ print (sum [1,2,3,4])
 which is equivalent to `\x -> case x ...`.
 
 Functions can also be introduced using let:
-```
+```ocaml
 let greet x = print2 "Hello," x;
 greet "there!"
 ```
@@ -188,16 +194,27 @@ greet "there!"
 PocketML projects are organized into modules.
 A module exports variables, types and type aliases.
 The explicit module declaration can limit what is exported:
+> Note: Constructors must be exported explicitly
 
-```sml
+```ocaml
 let greet x = print2 "Hi," x;
 let pi = 4;
-module (greet, pi)
+
+data MyType =
+    MyConstructor Number;
+
+module
+    ( greet
+    , pi
+    , type MyType
+    , MyConstructor
+    )
 ```
+
 Modules can also use `(*)` to export _all_
 types and variables.
 
-```sml
+```ocaml
 let greet x = print2 "Hi," x;
 let pi = 4;
 module (*)
@@ -205,6 +222,17 @@ module (*)
 Modules inside a directory can be addressed using `.`:
 ```python
 import directory.mymodule;
+```
+
+Imports can also be selective (only importing _some_ names from a module).
+Modules can also be aliased (given an explicit name).
+
+```haskell
+import lib.math (sin) as Math;
+import lib.calculus as Calc;
+import lib.std;
+
+print $ (Calc.diff sin 1) Math.pi
 ```
 
 #### 1.8 Doc comments
@@ -229,3 +257,7 @@ type Color = Vec
 ```
 
 Most of the standard library is written in a self-documenting way to save on excessive comment clutter when searching in the doc panel.
+
+---
+
+For more information consult the "Docs" tab in the editor app that is available for android and linux.

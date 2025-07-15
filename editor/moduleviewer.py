@@ -203,6 +203,10 @@ class ModuleViewer(BoxLayout):
         acc = []
         for path, lineno, txt in definitions:
             s = f"{path}:{lineno}: {txt}"
+
+            with open("definitions.txt", "a") as f:
+                f.write(f"{path}: {txt}\n")
+            
             if matches(s, query):
                 acc += [(path, lineno, txt.replace(";", "").strip())]
         return acc

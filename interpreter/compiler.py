@@ -164,10 +164,50 @@ class Compiler(Interpreter):
     def cache(self, next):
         return self.visit(next)
 
+    def import_module_path(self, *path):
+        # return the path items as a list of strings
+        # from the path lark.Tree object.
+        return [str(p) for p in path]
+
+    def import_as(self, alias):
+        # return the alias as a string from the lark.Tree object.
+        return str(alias)
+
+    def valueimport(self, x):
+        return str(x)
+
+    def typeimport(self, x):
+        return "type " + str(x)
+
+    def import_list(self, *items):
+        return [self.visit(c) for c in items]
+
+    def parse_import(self, args):
+        # get filename
+        has_import_list = "import_list" in [c.data for c in args.children]
+        has_alias = "import_as" in [c.data for c in args.children]
+        
+        modulepath = self.visit(args.children[0])
+
+        # get import list if it is there
+        import_list = None
+        if has_import_list:
+            import_list = self.visit(args.children[1])
+        
+        # get alias if it is there
+        alias = None
+        if has_alias:
+            alias = self.visit(args.children[2 if has_import_list else 1])
+        
+        return modulepath, import_list, alias
+
     def _import(self, args):
-        #####
-        modulepath = args.children[:-1]
+        # TODO: handle names from module colliding with current environment
+
+        modulepath, import_list, alias = self.parse_import(args)
         e = args.children[-1]
+        
+        #####
         filename = (
             storage_path
             + ("/" if storage_path[-1] != "/" else "")
@@ -182,21 +222,47 @@ class Compiler(Interpreter):
         else:
             tree = parse_file(filename)
 
-        #####
-        return (
-            "\n__EXPORTS__={}\n"
-            + self.visit(tree)
-            + "\nglobals().update(__EXPORTS__)\n"
-            + self.visit(e)
-        )
+        # create the appropriate __EXPORTS__ dict, if import list is given
+        exports = {}
+        if import_list is not None:
+            for item in import_list:
+                if not item.startswith("type "):
+                    # imported module gets compiled, inserted and
+                    # sets a __EXPORTS__ variable.
+                    # Generate new __EXPORTS__ dict including
+                    # only items from import_list.
+                    exports[item] = f"__EXPORTS__[\"PML_{item}\"]"
+
+        self.emit("\n__EXPORTS__={}\n")
+        self.visit(tree)
+        # if module alias, replace __EXPORTS__ with { "[alias]" : __EXPORTS__ }
+        self.emit("\nglobals().update({ " + f'"PML_{alias}" : __EXPORTS__' + " })")
+
+        # handle import list
+        exports_compiled = "{" + ", ".join([ f"'PML_{k}' : {v}" for k, v in exports.items()]) + "}"
+        self.emit(f"\nglobals().update(__EXPORTS__)\n"
+                if import_list is None else f"\nglobals().update({exports_compiled})")
+        # body
+        return self.visit(e)
 
     def valueexport(self, nm):
-        return ""
+        return str(nm)
 
     def typeexport(self, _):
-        return ""
+        return "type DONOTEXPORT"
 
     def module(self, *exports):
+        exports = [self.visit(e) for e in exports]
+        # if exports is empty export everything
+        if len(exports) == 0:
+            self.emit("__EXPORTS__ = {k:v for k,v in globals().items() if k.startswith('PML_')}\n")
+            return ""
+
+        # put all value exports in a dict
+        exports = [f'{e}' for e in exports if not e.startswith("type ")]
+        exports = [f'"PML_{e}": PML_{e}' for e in exports]
+
+        self.emit("__EXPORTS__ = {" + ", ".join(exports) + "}\n")
         return ""
 
     # ========== EXPRESSIONS
@@ -350,7 +416,7 @@ class Compiler(Interpreter):
         return self.emitv("{" + ",".join([f'"{a}":{b}' for a, b in items]) + "}")
 
     def access(self, e, nm):
-        return self.emitv(self.visit(e) + "['" + str(nm) + "']")
+        return self.emitv(self.visit(e) + "['" + str(nm) + f"' if '{str(nm)}' in " + self.visit(e) + " else 'PML_" + str(nm) + "']")
 
     def typedecl(self, *args):
         return self.visit(args[-1])
@@ -410,7 +476,7 @@ class Compiler(Interpreter):
 
         def helper(f):
             if isinstance(f, Tree) and f.data == "pconstrname":
-                return ('"PML_' + str(f.children[0]) + '"',)
+                return ('"PML_' + str(f.children[-1]) + '"',)
 
             elif isinstance(f, Tree) and f.data == "papp":
                 a1 = tuple(map(self.visit, f.children[1:]))

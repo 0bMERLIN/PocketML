@@ -16,7 +16,7 @@
     | "[" listelems "]" -> list
     | "do" "{" _sep{expr, ";"}  (";")?"}" -> do
     | none_expr -> none
-    | "import" _sep{NAME, "."} ";" expr -> _import
+    | "import" import_module_path import_list? import_as? ";" expr -> _import
     | "module" "(" ("*" | _sep{export, ","}) ")" -> module // no empty modules allowed!
     | "case" expr "|" _sep{case, "|"} -> match
     | "if" expr "then" expr ("else" expr)? -> ite
@@ -39,6 +39,11 @@ tupleelems: expr "," (expr ("," expr)*)?
 listelems: expr ("," expr)* |
 nparrayelems: expr ("," expr)*
 
+import_list: "(" _sep{import_item, ","} ")"
+?import_item: "type" NAME -> typeimport | NAME -> valueimport
+import_as: "as" UPPERNAME
+import_module_path: _sep{NAME, "."}
+
 lamcases: _sep{case, "|"}
 none_expr: "(" ")"
 
@@ -50,15 +55,17 @@ none_expr: "(" ")"
 ?case: pattern "->" expr
 
 ?pattern: pattern patternatom -> papp
-    | UPPERNAME -> pconstrname
+    | pconstrname
     | patternatom
 ?patternatom: "_" -> pwildcard
     | LOWERNAME -> pvar
     | "(" pattern ")"
     | NUMBER -> pnum
     | STRING -> pstr
-    | UPPERNAME -> pconstrname
+    | pconstrname
 
+// just like typename
+pconstrname: (NAME ".")? UPPERNAME
 
 // records
 entry: NAME "=" expr
@@ -68,16 +75,18 @@ constructor: UPPERNAME typeatom*
 
 
 // ========= TYPES
+typename: (NAME ".")? UPPERNAME
+
 ?type: typeatom1
     | typeatom1 "->" type -> tfun
 
 ?typeatom1: typeatom
-    | UPPERNAME typeatom* -> ttyp
+    | typename typeatom* -> ttyp
 
 ?typeatom: LOWERNAME -> tvar
     | "(" tupletelems ")" -> ttuple
     | "(" type ")"
-    | UPPERNAME -> ttyp
+    | typename -> ttyp
     | "{" tentry ("," tentry)* "}" -> trecord
 
 tupletelems: type "," (type ("," type)*)?

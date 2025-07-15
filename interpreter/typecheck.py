@@ -20,6 +20,14 @@ CACHING = True
 PRINT_LETS = False
 
 
+# enum: which namespace is a name from (is it a typealias, type, value etc.)
+class NamespaceType:
+    TYPE = 0
+    TYPE_ALIAS = 1
+    VALUE = 2
+    MODULE = 3
+
+
 @dat
 class ModuleData:
     env: Dict[str, Typ]
@@ -40,6 +48,19 @@ class ModuleData:
             return self.type_env[nm]
         if nm in self.type_aliases:
             return self.type_aliases[nm]
+
+    def get_type_or_kind_with_namespace(self, nm,line) -> Tuple[object, NamespaceType]:
+        """
+        Try to find a name.
+        WARNING: If not found return None.
+        """
+        if nm in self.env:
+            return self.env[nm], NamespaceType.VALUE
+        if nm in self.type_aliases:
+            return (self.type_aliases[nm], self.type_env[nm]), NamespaceType.TYPE_ALIAS
+        if nm in self.type_env:
+            return self.type_env[nm], NamespaceType.TYPE
+        return None
 
     def get_all_types_and_kinds(self):
         return dict(
@@ -150,6 +171,7 @@ class Typechecker(Interpreter):
         self.env = env
         self.type_env = tenv
         self.type_aliases = taliases
+        self.imported_modules = {}
         self.constraints = []
         self.allow_free_tvars = False
         self.current_typedef_type = None
@@ -191,10 +213,49 @@ class Typechecker(Interpreter):
         exports = [self.visit(e) for e in exports]
         return sum(exports, start=ModuleData({}, {}, {}))
 
-    def _import(self, args):
+    def import_module_path(self, *path):
+        # return the path items as a list of strings
+        # from the path lark.Tree object.
+        return [str(p) for p in path]
+
+    def import_as(self, alias):
+        # return the alias as a string from the lark.Tree object.
+        return str(alias)
+
+    def valueimport(self, x):
+        return str(x)
+
+    def typeimport(self, x):
+        return "type " + str(x)
+
+    def import_list(self, *items):
+        return [self.visit(c) for c in items]
+
+    def parse_import(self, args):
         # get filename
-        modulepath = args.children[:-1]
+        has_import_list = "import_list" in [c.data for c in args.children]
+        has_alias = "import_as" in [c.data for c in args.children]
+
+        modulepath = self.visit(args.children[0])
+
+        # get import list if it is there
+        import_list = None
+        if has_import_list:
+            import_list = self.visit(args.children[1])
+
+        # get alias if it is there
+        alias = None
+        if has_alias:
+            alias = self.visit(args.children[2 if has_import_list else 1])
+
+        return modulepath, import_list, alias
+
+    def _import(self, args):
+        modulepath, import_list, alias = self.parse_import(args)
+
         e = args.children[-1]
+        line = e.meta.line if hasattr(e, "meta") else e.line
+
         filename = (
             storage_path
             + ("/" if storage_path[-1] != "/" else "")
@@ -207,15 +268,79 @@ class Typechecker(Interpreter):
         old_tenv = copy(self.type_env)
         old_taliases = copy(self.type_aliases)
 
-        self.env.update(m.env)
-        self.type_env.update(m.type_env)
-        self.type_aliases.update(m.type_aliases)
+        # add imported module to the environment
+        if import_list is None and alias is None:
+            self.env.update(m.env)
+            self.type_env.update(m.type_env)
+            self.type_aliases.update(m.type_aliases)
+        elif import_list is not None:
+            for item in import_list:
+                if isinstance(item, str):
+                    # type import
+                    if item.startswith("type "):
+                        item = item.removeprefix("type ")
+                        if item not in m.type_env:
+                            raise PMLTypeError(
+                                f"Type {item} not found in module {filename} (line {line})"
+                            )
+                        self.type_env[item] = m.type_env[item]
+                        if item in m.type_aliases:
+                            self.type_aliases[item] = m.type_aliases[item]
+                    else:
+                        # value import
+                        if item not in m.env:
+                            raise PMLTypeError(
+                                f"Variable {item} not found in module {filename} (line {line})"
+                            )
+                        self.env[item] = m.env[item]
+
+        if alias is not None:
+            # if alias is given, add the module as a single item
+            self.imported_modules[alias] = ModuleData(m.env, m.type_env, m.type_aliases)
+
         res = self.visit(e)
 
+        # restore old envs
         self.env = old_env
-        self.env = old_tenv
-        self.env = old_taliases
+        self.type_env = old_tenv
+        self.type_aliases = old_taliases
+        if alias is not None:
+            if alias in self.imported_modules:
+                del self.imported_modules[alias]
+
         return res
+
+    def find_name_with_namespace(self, name: str, line: int) -> Tuple[object, NamespaceType]:
+        """
+        Find a name in the current environment or imported modules.
+        name can be regular name or a dotted name (e.g. "math.sin").
+        """
+        # name from a module? (e.g "math.sin")
+        if "." in name:
+            # use get_type_or_kind_with_namespace to get the type or kind
+            module_name, item_name = name.split(".", 1)
+            if module_name in self.imported_modules:
+                res = self.imported_modules[
+                    module_name
+                ].get_type_or_kind_with_namespace(item_name, line)
+                if res is None:
+                    raise PMLTypeError(
+                        f"Name {item_name} not found in module {module_name} (line {line})"
+                    )
+                return res
+            else:
+                raise PMLTypeError(f"Module {module_name} not found (line {line})")
+
+        # name from the current module
+        if name in self.env:
+            return self.env[name].inst(), NamespaceType.VALUE
+        if name in self.type_aliases:
+            return (self.type_aliases[name], self.type_env[name]), NamespaceType.TYPE_ALIAS
+        if name in self.type_env:
+            return self.type_env[name], NamespaceType.TYPE
+
+        # not found
+        raise PMLTypeError(f"Name {name} not found (line {line})")
 
     # ===================== expressions
     def list(self, elems):
@@ -404,9 +529,22 @@ class Typechecker(Interpreter):
         return tb
 
     def var(self, x):
-        if x not in self.env:
-            raise PMLTypeError(f"Variable {x} not defined (line {x.line})")
-        return self.env[x].inst()
+        """
+        x is always toplevel name.
+        `access` prevents `var` from executing on a module name.
+        """
+
+        # get name using find_name_with_namespace
+        name = str(x)
+        res, ns = self.find_name_with_namespace(name, x.line)
+
+        if ns != NamespaceType.VALUE:
+            # if it is not a value, raise an error
+            raise PMLTypeError(
+                f"Name {name} is not a value, but a type. (line {x.line})"
+            )
+
+        return res.inst()
 
     def app(self, f, x):
         tv0 = newtv(f.meta.line)
@@ -469,6 +607,18 @@ class Typechecker(Interpreter):
         return TRecord(dict(ts), entries[0].meta.line)
 
     def access(self, e, nm):
+        ename = str(e.children[0])
+        # if e is a modules name (e.g. str(e) in self.imported_modules):
+        if ename in self.imported_modules:
+            # find using find_name_with_namespace
+            res, ns = self.find_name_with_namespace(ename + "." + str(nm), e.meta.line)
+            if ns != NamespaceType.VALUE:
+                raise PMLTypeError(
+                    f"Name {nm} is not a value, but a type. (line {nm.line})"
+                )
+            return res.inst()
+
+        #
         tv = newtv(e.meta.line)
         self.constr(
             TRecord({str(nm): tv}, e.meta.line, access_check=True),
@@ -478,6 +628,7 @@ class Typechecker(Interpreter):
         return tv
 
     # ===================== patterns
+
     def match(self, arg, *cs):
         oldenv = dict(self.env)
 
@@ -516,11 +667,26 @@ class Typechecker(Interpreter):
     def pstr(self, x):
         return Typ("String", [], x.line)
 
-    def pconstrname(self, nm):
-        if str(nm) not in self.env:
-            raise PMLTypeError(f"Constructor {nm} not defined. (line {nm.line})")
-        t = self.env[str(nm)].inst()
-        return t
+    def pconstrname(self, *args):
+        # pconstrname: (NAME ".")? UPPERNAME
+        name = None
+        if len(args) == 1:
+            name = args[0]
+        else:
+            # concatenate the name parts
+            name = ".".join(str(a) for a in args)
+
+        # find name using find_name_with_namespace
+        line = args[0].line if len(args) > 0 else -1
+        res, ns = self.find_name_with_namespace(name, line)
+        if ns != NamespaceType.VALUE:
+            # if it is not a value, raise an error
+            raise PMLTypeError(
+                f"Name {name} is not a value, but a type. (line {line})"
+            )
+        
+        # if it is a value, return its type
+        return res.inst()
 
     def papp(self, f, a):
         at = self.visit(a)
@@ -542,38 +708,58 @@ class Typechecker(Interpreter):
             raise PMLTypeError(f"Unknown type variable {x} (line {x.line})")
         return TVar(str(x), x.line)
 
-    def ttyp(self, name, *params):
+    def typename(self, *args):
+        if len(args) == 1:
+            name = args[0]
+        else:
+            # concatenate the name parts
+            name = ".".join(str(a) for a in args)
+        return name
+
+    def ttyp(self, nm, *params):
         params = [self.visit(p) for p in params]
+        name = self.visit(nm)
+        line = nm.line if hasattr(nm, "line") else nm.meta.line
+
+
+        # try to find name using find_name_with_namespace
+        res, ns = self.find_name_with_namespace(str(name), line)
+        if ns != NamespaceType.TYPE and ns != NamespaceType.TYPE_ALIAS:
+            # if it is not a type or type alias, raise an error
+            raise PMLTypeError(
+                f"Name {name} is not a type, but a value. (line {line})"
+            )
 
         # alias
-        if str(name) in self.type_aliases:
-            if self.type_env[str(name)] != len(params):
+        if ns == NamespaceType.TYPE_ALIAS:
+            n_params = res[1] if type(res) == tuple else res
+            if n_params != len(params):
                 raise PMLTypeError(
-                    f"Type alias {name} takes {self.type_env[name]} "
-                    + f"parameters, {len(params)} given (line {name.line})"
+                    f"Type alias {name} takes {n_params} "
+                    + f"parameters, {len(params)} given (line {line})"
                 )
-            t: Typ = self.type_aliases[str(name)]
+            t: Typ = res[0]
             substs = zip(t.free_tvars(), params)
             for a, b in substs:
                 t = t.subst(a, b)
             return t
 
         # type
-        if str(name) in self.type_env:
-            if self.type_env[str(name)] != len(params):
-                print(params)
+        if ns == NamespaceType.TYPE:
+            n_params = res[1] if type(res) == tuple else res
+            if n_params != len(params):
                 raise PMLTypeError(
-                    f"Type {name} takes {self.type_env[name]} "
-                    + f"parameters, {len(params)} given (line {name.line})"
+                    f"Type {name} takes {n_params} "
+                    + f"parameters, {len(params)} given (line {line})"
                 )
             return Typ(
                 str(name),
                 params,
-                name.line,
+                line,
             )
 
-        # not found
-        raise PMLTypeError(f"Type {name} not defined (line {name.line})")
+        # not possible
+        raise Exception("This should not happen: type or type alias not found. (ttyp)")
 
     def constructor(self, name, *params):
         params = [*map(self.visit, params)]

@@ -129,3 +129,7 @@ One thing I will consider using this design pattern for, is to get rid of all th
 ---
 
 Thank you very much for reading 'til the end. I might write some more blog posts if I come across another interesting concept I can bring into PocketML.
+
+
+### Correction / Update
+After more research & discussion, this seems to be more of a dictionary-passing implementation of type-classes + module functors. PocketML might get opaque types in the future to harness the power of modular abstraction. Better (qualified/selective) imports have now been added to the language to allow for cleaner namespaces.

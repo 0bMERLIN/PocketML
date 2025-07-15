@@ -1,6 +1,3 @@
-import tesa (type Two) as Tesa;
+import lib.std;
 
-let x : Two String;
-let x = ("A","B");
-
-print x
+print (time ())

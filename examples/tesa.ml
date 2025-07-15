@@ -1,3 +1,8 @@
-type Two a = (a,a);
+type PosNum = Number;
 
-module (type Two)
+let posNum x = x;
+
+data PosNum;
+let posNum : Number -> PosNum;
+
+module (type PosNum, posNum)

@@ -776,6 +776,9 @@ class Typechecker(Interpreter):
         params = args[1:-1]
         body = args[-1]
         self.type_env[str(name)] = len(params)
+
+        if str(name) in self.type_aliases:
+            del self.type_aliases[str(name)]
         return self.visit(body)
 
     def typealias(self, *args):
@@ -797,7 +800,6 @@ class Typechecker(Interpreter):
 
         res = self.visit(args[-1])
         del self.type_env[str(name)]
-        del self.type_aliases[str(name)]
         return res
 
     def typedef(self, *args):

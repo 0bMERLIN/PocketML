@@ -8,12 +8,12 @@ import time
 from utils import SHOW_COMPILE_TIME
 
 
-def conv_list(l):
+def convlist(l):
     # convert a PML list to a python list
 
     if l[0] == "Nil":
         return []
-    return [l[1]] + conv_list(l[2])
+    return [l[1]] + convlist(l[2])
 
 
 def run_file(filename, output, env={}, logger=print):

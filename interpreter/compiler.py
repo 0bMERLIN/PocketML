@@ -22,13 +22,18 @@ def curry(func):
 def compose(f,g):
     return lambda x: f(g(x))
 
-def conv_list(l):
+def convlist(l):
     # convert a PML list to a python list
-
     if l[0] == "PML_Nil":
         return []
-    return [l[1]] + conv_list(l[2])
+    return [l[1]] + convlist(l[2])
 
+def mklist(xs):
+	acc = ("PML_Nil",)
+	for x in reversed(xs):
+		acc = ("PML_Cons",x,acc)
+	return acc
+    
 def prettify(v):
     '''
     Turn a runtime value into a string.
@@ -41,7 +46,7 @@ def prettify(v):
 
     # list
     if type(v) == tuple and len(v) != 0 and v[0] in ["PML_Cons", "PML_Nil"]:
-        l = conv_list(v)
+        l = convlist(v)
         return "[" + ", ".join(list(map(prettify, l))) + "]"
 
     # custom data type
@@ -64,7 +69,7 @@ def builtin_env(output):
     builtins = {
         "PML_and": lambda x: lambda y: x and y,
         "PML_or": lambda x: lambda y: x or y,
-        "PML_add": lambda x: lambda y: mklist(conv_list(x) + conv_list(y)) if type(x) == tuple and x[0] in ["PML_Cons", "PML_Nil"] else x + y,
+        "PML_add": lambda x: lambda y: mklist(convlist(x) + convlist(y)) if type(x) == tuple and x[0] in ["PML_Cons", "PML_Nil"] else x + y,
         "PML_sub": lambda x: lambda y: x - y,
         "PML_mul": lambda x: lambda y: x * y,
         "PML_pow": lambda x: lambda y: x**y,
@@ -75,10 +80,10 @@ def builtin_env(output):
         "PML_False": False,
         "PML_equal": lambda x: lambda y: x == y,
         "PML_lt": lambda x: lambda y: x < y,
-        "PML_print": lambda *args: output(*[*map(prettify, args)]),
+        "PML_print": lambda *args: output(*[*map(lambda x: prettify(x) if type(x) != str else x, args)]),
         "PML_print2": lambda a: lambda b: output(a, b),
         "PML_printa": lambda xs: output(*xs.values()),
-        "PML_print_raw": print
+        "PML_print_raw": output
     }
 
     return builtins
@@ -289,6 +294,9 @@ class Compiler(Interpreter):
 		
         if op == ">>":
             return self.emitv(f"compose({self.visit(b)}, {self.visit(a)})")
+
+        if op == "+":
+            return self.emitv(f"PML_add({self.visit(a)})({self.visit(b)})")
 
         ops = {"*": "*", "°": "*", "||": "or", "&&": "and"}
 

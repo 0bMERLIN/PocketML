@@ -31,7 +31,7 @@ def PML_imap(f, i=0):
 	return inner
 
 def PML_reverse(l):
-	return mklist(list(reversed(conv_list(l))))
+	return mklist(list(reversed(convlist(l))))
 
 @curry
 def PML_contains(x,l):
@@ -40,7 +40,7 @@ def PML_contains(x,l):
 
 def PML_nub(l):
 	acc = []
-	pyl = conv_list(l)
+	pyl = convlist(l)
 	for x in pyl:
 		if x not in acc:
 			acc += [x]
@@ -49,7 +49,7 @@ def PML_nub(l):
 PML_range = lambda a: lambda b: mklist([*range(int(a),int(b))])
 PML_srange = lambda a: lambda b: lambda s: mklist([*range(int(a),int(b),int(s))])
 PML_map = mymap
-PML_sort = lambda l: mklist(sorted(conv_list(l)))
+PML_sort = lambda l: mklist(sorted(convlist(l)))
 
 def PML_error(msg):
 	raise Exception("PocketML Runtime Error: "+str(msg))

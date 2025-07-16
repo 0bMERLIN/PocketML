@@ -20,9 +20,11 @@ PML_vecSlice = lambda start: lambda end: lambda a: a[start:end]
 PML_vecLen = len
 PML_vecIMap = lambda f: lambda v: np.array(list(map(lambda t:f(t[0])(t[1]),enumerate(list(v)))))
 PML_vecZeros = lambda l: np.zeros(l)
-PML_vecFromList = lambda l: np.array(conv_list(l))
+PML_vecFromList = lambda l: np.array(convlist(l))
 
 %%%;
+
+import lib.util (not, const);
 
 let sin : Number -> Number;
 let cos : Number -> Number;

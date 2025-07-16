@@ -1,3 +1,1 @@
-import lib.std;
-
-print (time ())
+printa ("A","B","C")

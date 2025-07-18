@@ -33,7 +33,9 @@ def PML_size(arr):
 
 @curry
 def PML_get(idx, arr):
-	return arr.__getitem__(*convlist(idx))
+	if len(convlist(idx)) != len(arr.shape):
+		raise Exception(f"lib.numpy: Cannot index into an array with shape {arr.shape} using indices {convlist(idx)}!")
+	return arr.item(*convlist(idx))
 
 @curry
 def PML_slice(start,end,arr):
@@ -55,8 +57,18 @@ def PML_set(idx, x, arr):
 
 PML_vectorize = np.vectorize
 
+@curry
+def PML_ivectorize(func, array):
+    result = np.empty_like(array)
+    for idx, val in np.ndenumerate(array):
+        result[idx] = func(mklist(list(idx)))(val)
+    return result
+
 def PML_sum(arr):
 	return np.sum(arr)
+
+def PML_flatten(arr):
+	return arr.flatten()
 
 @curry
 def PML_dot(a,b):
@@ -69,62 +81,87 @@ def PML_reshape(size, arr):
 
 PML_transpose = np.transpose
 
+def PML_delete(i, arr):
+	return np.delete(arr,i)
+
+@curry
+def PML_concatenate(ax, a, b):
+	try:
+		return np.concatenate((a,b),ax)
+	except:
+		raise Exception("Cannot concatenate on axis " + str(ax))
+
+
 %%%;
 import lib.list (type List, map, zip);
-import lib.math (min, max);
+import lib.math (min, max, type Vec);
 import lib.util (uncurry2);
 
-data Array;
 type Size = List Number;
 type Index = List Number;
 
 # construction
-let array : List Number -> Array;
+let array : List Number -> Vec;
 
-let zeros : Size -> Array;
-let full : Size -> Number -> Array;
-let linspace : Number -> Number -> Number -> Array
+let zeros : Size -> Vec;
+let full : Size -> Number -> Vec;
+let linspace : Number -> Number -> Number -> Vec
 	# start, end, nsteps
 ;
 
+let vectorize : (Number -> Number) -> Vec -> Vec;
+
 # getters / info
-let toList : Array -> List Number
+let toList : Vec -> List Number
 	# only 1-dim.!
 ;
 
-let size : Array -> Size # <=> arr.shape in numpy!
+let size : Vec -> Size
+	# <=> arr.shape in numpy!
 ;
 
-let get : Index -> Array -> Number;
-let slice : Index -> Index -> Array -> Array
+let get : Index -> Vec -> Number;
+let slice : Index -> Index -> Vec -> Vec
 	# - start, end, input_array
 	# - fails if out of bounds
 ;
 
-let sliceInc : Index -> Index -> Array -> Array
+let sliceInc : Index -> Index -> Vec -> Vec
 	# like slice but end index is included.
 ;
 let sliceInc s e a = slice s (map inc e) a;
 
-let slicePartial : Index -> Index -> Array -> Array
+let slicePartial : Index -> Index -> Vec -> Vec
 	# same as slice, but return all
 	# elements in index range instead
 	# of failing
 ;
 let slicePartial s e a =
 	let start = map (max 0) s;
-	let end = map (uncurry2 min)
-		$ zip (size a) e;
+	let end = map (uncurry2 min)$zip (size a) e;
 	slice start end a
 ;
 
 # operations
-let set : Index -> Number -> Array -> Array;
-let vectorize : (Number -> Number) -> Array -> Array;
-let sum : Array -> Number;
-let dot : Array -> Array -> Number;
+let set : Index -> Number -> Vec -> Vec;
+let ivectorize : (Index -> Number -> Number) -> Vec -> Vec;
 
-let reshape : Size -> Array -> Array;
-let transpose : Array -> Array;
+let sum : Vec -> Number;
+let dot : Vec -> Vec -> Number;
+let flatten : Vec -> Vec;
+let delete : Number -> Vec -> Vec
+	# args: i, arr
+	# remove the element at i
+	# only for flat Vecs
+;
+
+let concatenate : Number -> Vec -> Vec -> Vec
+	# args: axis, arr1, arr2
+;
+
+let reshape : Size -> Vec -> Vec;
+let transpose : Vec -> Vec;
+
+let _ = print $ concatenate 0 @(1,2) @(3,4);
 
 module (*)

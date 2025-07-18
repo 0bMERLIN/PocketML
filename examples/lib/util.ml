@@ -42,7 +42,7 @@ PML_int = int
 PML_setUpdate = lambda s: lambda f: editor.graphicalout.setUpdate(s, lambda s: lambda _: f(s))
 
 @curry
-def PML_setTickInterval(i,s,f):
+def PML_setInterval(i,s,f):
 	@curry
 	def helper(ts, _):
 		t, s = ts
@@ -52,10 +52,16 @@ def PML_setTickInterval(i,s,f):
 	editor.graphicalout.setUpdate(
 		(time.time(),s), helper)
 
+def PML_printl(l):
+	PML_print(" ".join(list(map(str, convlist(l)))))
+
 %%%;
 
 let time : Unit -> Number;
-let setTickInterval : Number -> state -> (state->state) -> Unit;
+let setInterval : Number -> state -> (state->state) -> Unit
+	# args: n, state, tick
+	# run tick every n seconds.
+;
 let setUpdate : state -> (state->state) ->Unit;
 
 let cls : Unit -> Unit;
@@ -99,5 +105,12 @@ let with x = mapRecord (\_ -> x);
 
 let times : Number -> (a -> a) -> a -> a;
 let times n f x = if n <= 0 then x else times (n-1) f (f x);
+
+let ftee : (a -> Unit) -> (a -> a) -> a -> a;
+let ftee t g x =
+	let res = g x; const res (t res);
+
+data List a;
+let printl : List a -> Unit;
 
 module (*)

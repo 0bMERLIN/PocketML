@@ -1,40 +1,46 @@
 
-// ============ EXPRESSIONS
 ?start: expr
 ?expr: op0
 
 %%%OPERATOR_TABLE%%%
 
+// lambdas and lambda-case
 ?atom: "\\" NAME+ "->" expr -> lam
     | "\\" "case" lamcases -> lamcase
-    | atom0
+    | atom1
     | atom atom -> app
 
-?atom0: atom0 "." NAME -> access
-    | "@(" nparrayelems ")" -> nparray
-    | "(" tupleelems ")" -> _tuple
-    | "[" listelems "]" -> list
+// statement expressions like let, if, etc.
+?atom1: atom2 "." NAME -> access
     | "do" "{" _sep{expr, ";"}  (";")?"}" -> do
-    | none_expr -> none
     | "import" import_module_path import_list? import_as? ";" expr -> _import
     | "module" "(" ("*" | _sep{export, ","}) ")" -> module // no empty modules allowed!
     | "case" expr "|" _sep{case, "|"} -> match
     | "if" expr "then" expr ("else" expr)? -> ite
-    | NAME -> var
     | "let" "rec" " " NAME NAME* "=" expr ";" expr -> letrec
     | "let" NAME NAME* "=" expr ";" expr -> let
     | "let" NAME ":" type ";" expr -> letdecl
     | "data" NAME NAME* "=" constructors ";" expr -> typedef
     | "data" NAME NAME* ";" expr -> typedecl
     | "type" NAME NAME* "=" type ";" expr -> typealias
-    | "cache" ";" expr -> cache // deprecated
+//    | "cache" ";" expr -> cache // deprecated
+    | /%%%(.|[\n])+%%%/ ";" expr -> python
+    | atom2
+
+// literals, variables and expressions in parentheses
+?atom2: "@(" nparrayelems ")" -> nparray
+    | "(" tupleelems ")" -> _tuple
+    | "[" listelems "]" -> list
+    | none_expr -> none
+    | NAME -> var
     | "(" expr ")"
     | NUMBER -> num
-    | "{" entry ("," entry)* "}" -> record
     | (STRING | /"""(.|[\n])+"""/) -> string
-    | /%%%(.|[\n])+%%%/ ";" expr -> python
     | /%%(.|[\n])+%%/ -> inlinepython
+    | "{" entry ("," entry)* "}" -> record
 
+
+// helper expressions
 tupleelems: expr "," (expr ("," expr)*)?
 listelems: expr ("," expr)* |
 nparrayelems: expr ("," expr)*
@@ -64,7 +70,6 @@ none_expr: "(" ")"
     | STRING -> pstr
     | pconstrname
 
-// just like typename
 pconstrname: (NAME ".")? UPPERNAME
 
 // records
@@ -73,8 +78,7 @@ entry: NAME "=" expr
 constructors: _sep{constructor, "|"}
 constructor: UPPERNAME typeatom*
 
-
-// ========= TYPES
+// types
 typename: (NAME ".")? UPPERNAME
 
 ?type: typeatom1
@@ -93,14 +97,14 @@ tupletelems: type "," (type ("," type)*)?
 
 tentry: NAME ":" type
 
-// ============== HELPERS
+// tokens & templates
 
 _sep{x, sep}: x (sep x)*
 
 UPPERNAME: /[A-Z]/(NAME?)
 LOWERNAME: /[a-z]/(NAME?)
 
-// sml style comments (* blabla *)
+// python-like comments
 COMMENT: /#.*/
 
 %ignore COMMENT

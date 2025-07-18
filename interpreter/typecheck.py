@@ -232,6 +232,14 @@ class Typechecker(Interpreter):
         return [self.visit(c) for c in items]
 
     def parse_import(self, args):
+        """
+        Returns the different parts of an import tree.
+        Returns a tuple of (modulepath, import_list, alias).
+        - modulepath: a list of strings representing the path to the module.
+        - import_list: a list of strings representing the items to import.
+        - alias: a string representing the alias of the module, or None if not given.
+        """
+
         # get filename
         has_import_list = "import_list" in [c.data for c in args.children]
         has_alias = "import_as" in [c.data for c in args.children]
@@ -310,7 +318,7 @@ class Typechecker(Interpreter):
 
         return res
 
-    def find_name_with_namespace(self, name: str, line: int) -> Tuple[object, NamespaceType]:
+    def resolve_name(self, name: str, line: int) -> Tuple[object, NamespaceType]:
         """
         Find a name in the current environment or imported modules.
         name can be regular name or a dotted name (e.g. "math.sin").
@@ -536,7 +544,7 @@ class Typechecker(Interpreter):
 
         # get name using find_name_with_namespace
         name = str(x)
-        res, ns = self.find_name_with_namespace(name, x.line)
+        res, ns = self.resolve_name(name, x.line)
 
         if ns != NamespaceType.VALUE:
             # if it is not a value, raise an error
@@ -611,7 +619,7 @@ class Typechecker(Interpreter):
         # if e is a modules name (e.g. str(e) in self.imported_modules):
         if ename in self.imported_modules:
             # find using find_name_with_namespace
-            res, ns = self.find_name_with_namespace(ename + "." + str(nm), e.meta.line)
+            res, ns = self.resolve_name(ename + "." + str(nm), e.meta.line)
             if ns != NamespaceType.VALUE:
                 raise PMLTypeError(
                     f"Name {nm} is not a value, but a type. (line {nm.line})"
@@ -678,7 +686,7 @@ class Typechecker(Interpreter):
 
         # find name using find_name_with_namespace
         line = args[0].line if len(args) > 0 else -1
-        res, ns = self.find_name_with_namespace(name, line)
+        res, ns = self.resolve_name(name, line)
         if ns != NamespaceType.VALUE:
             # if it is not a value, raise an error
             raise PMLTypeError(
@@ -723,7 +731,7 @@ class Typechecker(Interpreter):
 
 
         # try to find name using find_name_with_namespace
-        res, ns = self.find_name_with_namespace(str(name), line)
+        res, ns = self.resolve_name(str(name), line)
         if ns != NamespaceType.TYPE and ns != NamespaceType.TYPE_ALIAS:
             # if it is not a type or type alias, raise an error
             raise PMLTypeError(

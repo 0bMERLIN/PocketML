@@ -1,12 +1,9 @@
 from copy import copy
-from math import sqrt
 from interpreter.compiler import compile
 from interpreter.typecheck import load_file
-from interpreter.evaluator import Evaluator
 import time
 
 from utils import SHOW_COMPILE_TIME
-
 
 def convlist(l):
     # convert a PML list to a python list

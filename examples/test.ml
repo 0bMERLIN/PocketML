@@ -1,1 +1,3 @@
-printa ("A","B","C")
+let t = (print, 2, 3);
+
+t._0 "hi"

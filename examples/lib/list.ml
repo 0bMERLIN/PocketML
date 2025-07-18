@@ -54,7 +54,31 @@ PML_sort = lambda l: mklist(sorted(convlist(l)))
 def PML_error(msg):
 	raise Exception("PocketML Runtime Error: "+str(msg))
 
+@curry
+def PML_chunksOf(n,l):
+	cur = []
+	acc = []
+	for x in convlist(l):
+		cur += [x]
+		if len(cur) >= n:
+			acc += [mklist(cur)]
+			cur=[]
+	return mklist(acc)
+
+@curry
+def PML_take(n,l):
+	acc= []
+	while n > 0 and l[0] != "PML_Nil":
+		if l[0] == "PML_Cons":
+			acc += [l[1]]
+			l = l[2]
+		n-=1
+	return mklist(acc)
+
 %%%;
+
+import lib.maybe;
+import lib.util (times);
 
 data List a
 	= Cons a (List a)
@@ -66,7 +90,9 @@ data List a
 let error : String -> a;
 
 let range : Number -> Number -> List Number;
-let srange : Number -> Number -> Number -> List Number;
+let srange : Number -> Number -> Number -> List Number
+	# start, end, step
+;
 let sort : List a -> List a;
 
 let append : a -> List a -> List a;
@@ -120,10 +146,15 @@ let rec len = \case
 	  Cons _ l -> 1 + (len l)
 	| Nil -> 0;
 
-let listAtSafe : Number -> a -> List a -> a;
-let listAtSafe n d l = if n > 0
-	then listAtSafe (n-1) d (tailSafe l)
-	else (if len l == 0 then d else head l);
+let listAtSafe : Number -> List a -> Maybe a;
+let listAtSafe n l = if n > 0
+	then listAtSafe (n-1) (tailSafe l)
+	else (if len l == 0 then Nothing else Just (head l));
+
+let listAt : Number -> List a -> a;
+let listAt i l = case listAtSafe i l
+	| Just x -> x
+	| Nothing -> error "Index out of bounds.";
 
 let zip : List a -> List b -> List (a,b);
 let rec zip xs ys =
@@ -133,12 +164,13 @@ let rec zip xs ys =
 		((head xs), (head ys))
 		(zip (tail xs) (tail ys));
 
-let contains : a -> List a -> Bool;
+let take : Number -> List a -> List a;
 
-let foldr : (b -> a -> b) -> b -> List a -> b;
+let chunksOf : Number -> List a -> List (List a);
+
+let contains : a -> List a -> Bool;
 
 let filter : (a -> Bool) -> List a -> List a;
 let filter f l = foldr (\acc x -> if f x then append x acc else acc) [] l;
-
 
 module (*)

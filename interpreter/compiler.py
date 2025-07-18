@@ -191,19 +191,19 @@ class Compiler(Interpreter):
         # get filename
         has_import_list = "import_list" in [c.data for c in args.children]
         has_alias = "import_as" in [c.data for c in args.children]
-        
+
         modulepath = self.visit(args.children[0])
 
         # get import list if it is there
         import_list = None
         if has_import_list:
             import_list = self.visit(args.children[1])
-        
+
         # get alias if it is there
         alias = None
         if has_alias:
             alias = self.visit(args.children[2 if has_import_list else 1])
-        
+
         return modulepath, import_list, alias
 
     def _import(self, args):
@@ -211,7 +211,7 @@ class Compiler(Interpreter):
 
         modulepath, import_list, alias = self.parse_import(args)
         e = args.children[-1]
-        
+
         #####
         filename = (
             storage_path
@@ -236,7 +236,7 @@ class Compiler(Interpreter):
                     # sets a __EXPORTS__ variable.
                     # Generate new __EXPORTS__ dict including
                     # only items from import_list.
-                    exports[item] = f"__EXPORTS__[\"PML_{item}\"]"
+                    exports[item] = f'__EXPORTS__["PML_{item}"]'
 
         self.emit("\n__EXPORTS__={}\n")
         self.visit(tree)
@@ -244,9 +244,14 @@ class Compiler(Interpreter):
         self.emit("\nglobals().update({ " + f'"PML_{alias}" : __EXPORTS__' + " })")
 
         # handle import list
-        exports_compiled = "{" + ", ".join([ f"'PML_{k}' : {v}" for k, v in exports.items()]) + "}"
-        self.emit(f"\nglobals().update(__EXPORTS__)\n"
-                if import_list is None else f"\nglobals().update({exports_compiled})")
+        exports_compiled = (
+            "{" + ", ".join([f"'PML_{k}' : {v}" for k, v in exports.items()]) + "}"
+        )
+        self.emit(
+            f"\nglobals().update(__EXPORTS__)\n"
+            if import_list is None
+            else f"\nglobals().update({exports_compiled})"
+        )
         # body
         return self.visit(e)
 
@@ -260,11 +265,13 @@ class Compiler(Interpreter):
         exports = [self.visit(e) for e in exports]
         # if exports is empty export everything
         if len(exports) == 0:
-            self.emit("__EXPORTS__ = {k:v for k,v in globals().items() if k.startswith('PML_')}\n")
+            self.emit(
+                "__EXPORTS__ = {k:v for k,v in globals().items() if k.startswith('PML_')}\n"
+            )
             return ""
 
         # put all value exports in a dict
-        exports = [f'{e}' for e in exports if not e.startswith("type ")]
+        exports = [f"{e}" for e in exports if not e.startswith("type ")]
         exports = [f'"PML_{e}": PML_{e}' for e in exports]
 
         self.emit("__EXPORTS__ = {" + ", ".join(exports) + "}\n")
@@ -291,7 +298,7 @@ class Compiler(Interpreter):
 
         if op == "<<":
             return self.emitv(f"compose({self.visit(a)}, {self.visit(b)})")
-		
+
         if op == ">>":
             return self.emitv(f"compose({self.visit(b)}, {self.visit(a)})")
 
@@ -314,7 +321,7 @@ class Compiler(Interpreter):
 
     def _tuple(self, elems):
         xs = self.visit_children(elems)[0]
-        return "{" + ",".join([(f'"_{i}": {x}') for i,x in enumerate(xs)]) + "}"
+        return "{" + ",".join([(f'"_{i}": {x}') for i, x in enumerate(xs)]) + "}"
 
     def none(self, _):
         return "None"
@@ -424,7 +431,16 @@ class Compiler(Interpreter):
         return self.emitv("{" + ",".join([f'"{a}":{b}' for a, b in items]) + "}")
 
     def access(self, e, nm):
-        return self.emitv(self.visit(e) + "['" + str(nm) + f"' if '{str(nm)}' in " + self.visit(e) + " else 'PML_" + str(nm) + "']")
+        return self.emitv(
+            self.visit(e)
+            + "['"
+            + str(nm)
+            + f"' if '{str(nm)}' in "
+            + self.visit(e)
+            + " else 'PML_"
+            + str(nm)
+            + "']"
+        )
 
     def typedecl(self, *args):
         return self.visit(args[-1])

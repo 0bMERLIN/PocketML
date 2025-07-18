@@ -62,7 +62,7 @@ let eval = \env -> \exp -> case exp
 
 ######################### tests
 
-let test = "1 + 3";
+let test = "let x = 1 + 3; x*2";
 
 let res = eval (mkDict ()) (parse test);
 

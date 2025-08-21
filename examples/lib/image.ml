@@ -209,7 +209,7 @@ data Uniform
 	| UniformVec3 String Vec
 	| UniformVec4 String Vec
 	| UniformTex0 String Img
-	# -- hide
+	# --hide
 	# TODO
 ;
 

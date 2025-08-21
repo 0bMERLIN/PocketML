@@ -92,7 +92,7 @@ data List a
 ;
 
 let error : String -> a
-	# -- hide
+	# --hide
 ;
 
 ### ### Creating lists

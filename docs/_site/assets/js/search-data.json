@@ -27,179 +27,424 @@
     
     "relUrl": "/Hacking.html"
   },"4": {
+    "doc": "Library Documentation",
+    "title": "Library Documentation",
+    "content": "This is the documentation for the libraries available in PocketML. ",
+    "url": "/LibDocs.html",
+    
+    "relUrl": "/LibDocs.html"
+  },"5": {
+    "doc": "Library Documentation",
+    "title": "Libraries",
+    "content": ". | math Advanced mathematical functions, functions on Numbers . | either Either type for errors etc. | tea Graphics framework inspired by TEA. Uses kivy and VDOM-diffing internally. Supports GUIs, canvas graphics &amp; shaders . | image A library for kivy textures. An Img is a kivy texture. Images can be loaded from disk or created programmatically. | shaders Internally used for working with kivy glsl shaders . | parsing A lark-based parser. Generated data compatible with a sum type of the form data Expr = CapitalizedRuleName ... | ... | maybe Maybe type with monad implementation . | numpy A library for using numpy in PocketML. | string Functions for working with the builtin String type. | sound Library for kivys sound system. | dict Dictionaries with String-keys. Internally python dicts. | graphing Plotting functions in 2D using the TEA framework. Generates a TEA-widget. | calculus Basic numeric calculus functions like differentiation, integration, series. | list A simple linked list implementation. | ugraph A simplistic Undirected graph. | std Imports lib.string, lib.maybe, lib.list, lib.util, lib.dict. Use for brevity. | util Util functions for the OS, kivy process, network and more. | input Simple binding for getting input from terminalout. | . ",
+    "url": "/LibDocs.html#libraries",
+    
+    "relUrl": "/LibDocs.html#libraries"
+  },"6": {
+    "doc": "calculus",
+    "title": "calculus.ml",
+    "content": "Basic numeric calculus functions like differentiation, integration, series. ",
+    "url": "/LibDocs/calculus.html#calculusml",
+    
+    "relUrl": "/LibDocs/calculus.html#calculusml"
+  },"7": {
+    "doc": "calculus",
+    "title": "Definitions",
+    "content": "Differentiation &amp; Integration . diff : (Number -&gt; Number) -&gt; Number -&gt; (Number -&gt; Number) . args: func, n returns: n-th derivative of func. integral : (Number -&gt; Number) -&gt; Number -&gt; Number -&gt; Number . args: func, x_start, x_end . Series expansions (Taylor, Fourier etc.) . taylor : (Number -&gt; Number) -&gt; Number -&gt; Number -&gt; (Number -&gt; Number) . args: f, n, x0, x . fourier : (Number -&gt; Number) -&gt; Number -&gt; (Number -&gt; Number) . args: f, m, x . ",
+    "url": "/LibDocs/calculus.html#definitions",
+    
+    "relUrl": "/LibDocs/calculus.html#definitions"
+  },"8": {
+    "doc": "calculus",
+    "title": "calculus",
+    "content": " ",
+    "url": "/LibDocs/calculus.html",
+    
+    "relUrl": "/LibDocs/calculus.html"
+  },"9": {
+    "doc": "dict",
+    "title": "dict.ml",
+    "content": "Dictionaries with String-keys. Internally python dicts. ",
+    "url": "/LibDocs/dict.html#dictml",
+    
+    "relUrl": "/LibDocs/dict.html#dictml"
+  },"10": {
+    "doc": "dict",
+    "title": "Definitions",
+    "content": "Creation . data Dict a . mkDict : List (String, a) -&gt; Dict a . Accessing . dictItems : Dict a -&gt; List (String, a) . dictGet : Dict a -&gt; String -&gt; Maybe a . dictInsert : String -&gt; Dict a -&gt; a -&gt; Dict a . ",
+    "url": "/LibDocs/dict.html#definitions",
+    
+    "relUrl": "/LibDocs/dict.html#definitions"
+  },"11": {
+    "doc": "dict",
+    "title": "dict",
+    "content": " ",
+    "url": "/LibDocs/dict.html",
+    
+    "relUrl": "/LibDocs/dict.html"
+  },"12": {
+    "doc": "either",
+    "title": "either.ml",
+    "content": "Either type for errors etc. ",
+    "url": "/LibDocs/either.html#eitherml",
+    
+    "relUrl": "/LibDocs/either.html#eitherml"
+  },"13": {
+    "doc": "either",
+    "title": "Definitions",
+    "content": "Definitions / Working with Either . data Either a b = Left a | Right b . unRight : Either a b -&gt; b . fromMaybe : b -&gt; Maybe a -&gt; Either b a . Monad definition . bind : Either e a -&gt; (a -&gt; Either e b) -&gt; Either e b . flatMap : (a -&gt; Either e b) -&gt; Either e a -&gt; Either e b . fmap : (a -&gt; b) -&gt; Either e a -&gt; Either e b . pure : a -&gt; Either e a . ",
+    "url": "/LibDocs/either.html#definitions",
+    
+    "relUrl": "/LibDocs/either.html#definitions"
+  },"14": {
+    "doc": "either",
+    "title": "either",
+    "content": " ",
+    "url": "/LibDocs/either.html",
+    
+    "relUrl": "/LibDocs/either.html"
+  },"15": {
+    "doc": "graphing",
+    "title": "graphing.ml",
+    "content": "Plotting functions in 2D using the TEA framework. Generates a TEA-widget. ",
+    "url": "/LibDocs/graphing.html#graphingml",
+    
+    "relUrl": "/LibDocs/graphing.html#graphingml"
+  },"16": {
+    "doc": "graphing",
+    "title": "Definitions",
+    "content": "Functions . viewGraphs : List (Number-&gt;Number) -&gt; Number -&gt; Number -&gt; Number -&gt; Widget . ",
+    "url": "/LibDocs/graphing.html#definitions",
+    
+    "relUrl": "/LibDocs/graphing.html#definitions"
+  },"17": {
+    "doc": "graphing",
+    "title": "graphing",
+    "content": " ",
+    "url": "/LibDocs/graphing.html",
+    
+    "relUrl": "/LibDocs/graphing.html"
+  },"18": {
+    "doc": "image",
+    "title": "image.ml",
+    "content": "A library for kivy textures. An Img is a kivy texture. Images can be loaded from disk or created programmatically. ",
+    "url": "/LibDocs/image.html#imageml",
+    
+    "relUrl": "/LibDocs/image.html#imageml"
+  },"19": {
+    "doc": "image",
+    "title": "Definitions",
+    "content": "Definitions &amp; Creating images/buffers . data Img . data Buffer . type Color = Vec . setpixel : Img -&gt; Vec -&gt; Color -&gt; Unit . image : Vec -&gt; Img . imgLoad : String -&gt; Img . imgBuf : Img -&gt; Buffer . Functions . imgSize : Img -&gt; Vec . imgCopy : Img -&gt; Img . imgMap : Img -&gt; (Number-&gt;Number-&gt;Color-&gt;Color) -&gt; Unit . imgGet : Buffer -&gt; Vec -&gt; Vec . imgSave : String -&gt; Img -&gt; Unit . imgClear : Img -&gt; Color -&gt; Unit . imgMapRect: Vec -&gt; Vec -&gt; Img -&gt; (Number-&gt;Number-&gt;Color-&gt;Color) -&gt; Unit . args: size, pos, img, func . imgSmooth : Img -&gt; Img . imgFlipH : Img -&gt; Img . imgFlipV : Img -&gt; Img . imgShade : Img -&gt; String -&gt; Img . mkAtlas : List Img -&gt; Img . ",
+    "url": "/LibDocs/image.html#definitions",
+    
+    "relUrl": "/LibDocs/image.html#definitions"
+  },"20": {
+    "doc": "image",
+    "title": "image",
+    "content": " ",
+    "url": "/LibDocs/image.html",
+    
+    "relUrl": "/LibDocs/image.html"
+  },"21": {
+    "doc": "input",
+    "title": "input.ml",
+    "content": "Simple binding for getting input from terminalout. ",
+    "url": "/LibDocs/input.html#inputml",
+    
+    "relUrl": "/LibDocs/input.html#inputml"
+  },"22": {
+    "doc": "input",
+    "title": "Definitions",
+    "content": "input : String -&gt; (String -&gt; Unit) -&gt; Unit . ",
+    "url": "/LibDocs/input.html#definitions",
+    
+    "relUrl": "/LibDocs/input.html#definitions"
+  },"23": {
+    "doc": "input",
+    "title": "input",
+    "content": " ",
+    "url": "/LibDocs/input.html",
+    
+    "relUrl": "/LibDocs/input.html"
+  },"24": {
+    "doc": "list",
+    "title": "list.ml",
+    "content": "A simple linked list implementation. ",
+    "url": "/LibDocs/list.html#listml",
+    
+    "relUrl": "/LibDocs/list.html#listml"
+  },"25": {
+    "doc": "list",
+    "title": "Definitions",
+    "content": "Types . data List a = Cons a (List a) | Nil . The default list type generated by [...] . Creating lists . range : Number -&gt; Number -&gt; List Number . srange : Number -&gt; Number -&gt; Number -&gt; List Number . start, end, step . Accessors . tail : List a -&gt; List a . tailSafe : List a -&gt; List a . head : List a -&gt; a . len : List a -&gt; Number . listAtSafe : Number -&gt; List a -&gt; Maybe a . listAt : Number -&gt; List a -&gt; a . take : Number -&gt; List a -&gt; List a . chunksOf : Number -&gt; List a -&gt; List (List a) . contains : a -&gt; List a -&gt; Bool . Sorting, etc. sort : List a -&gt; List a . nub : List a -&gt; List a . Manipulating lists . append : a -&gt; List a -&gt; List a . foldr : (b -&gt; a -&gt; b) -&gt; b -&gt; List a -&gt; b . extend : List a -&gt; List a -&gt; List a . concat : List (List a) -&gt; List a . filter : (a -&gt; Bool) -&gt; List a -&gt; List a . reverse : List a -&gt; List a . map : (a -&gt; b) -&gt; (List a) -&gt; List b . foreach2D : Number -&gt; Number -&gt; (Number-&gt;Number-&gt; Unit) -&gt; Unit . imap : (Number -&gt; a -&gt; b) -&gt; List a -&gt; List b . any : List Bool -&gt; Bool . zip : List a -&gt; List b -&gt; List (a,b) . ",
+    "url": "/LibDocs/list.html#definitions",
+    
+    "relUrl": "/LibDocs/list.html#definitions"
+  },"26": {
+    "doc": "list",
+    "title": "list",
+    "content": " ",
+    "url": "/LibDocs/list.html",
+    
+    "relUrl": "/LibDocs/list.html"
+  },"27": {
+    "doc": "math",
+    "title": "math.ml",
+    "content": "Advanced mathematical functions, functions on Numbers . ",
+    "url": "/LibDocs/math.html#mathml",
+    
+    "relUrl": "/LibDocs/math.html#mathml"
+  },"28": {
+    "doc": "math",
+    "title": "Definitions",
+    "content": "Trig . sin : Number -&gt; Number . cos : Number -&gt; Number . tan : Number -&gt; Number . pi : Number . Misc. pow : Number -&gt; Number -&gt; Number . round : Number -&gt; Number -&gt; Number . ln : Number -&gt; Number . fac : Number -&gt; Number . exp : Number -&gt; Number . min : Number -&gt; Number -&gt; Number . max : Number -&gt; Number -&gt; Number . Predicates / Checking properties of numbers . mod : Number -&gt; Number -&gt; Number . divisible : Number -&gt; Number -&gt; Bool . odd : Number -&gt; Bool . even : Number -&gt; Bool . Random . noise : Vec -&gt; Number . ",
+    "url": "/LibDocs/math.html#definitions",
+    
+    "relUrl": "/LibDocs/math.html#definitions"
+  },"29": {
+    "doc": "math",
+    "title": "math",
+    "content": " ",
+    "url": "/LibDocs/math.html",
+    
+    "relUrl": "/LibDocs/math.html"
+  },"30": {
+    "doc": "maybe",
+    "title": "maybe.ml",
+    "content": "Maybe type with monad implementation . ",
+    "url": "/LibDocs/maybe.html#maybeml",
+    
+    "relUrl": "/LibDocs/maybe.html#maybeml"
+  },"31": {
+    "doc": "maybe",
+    "title": "Definitions",
+    "content": "Type &amp; Creating / unwrapping . data Maybe a = Nothing | Just a . maybe : a -&gt; Maybe a -&gt; a . Monad implementation . flatMap : (a -&gt; Maybe b) -&gt; Maybe a -&gt; Maybe b . bind : Maybe a -&gt; (a -&gt; Maybe b) -&gt; Maybe b . pure : a -&gt; Maybe a . fmap : (a -&gt; b) -&gt; Maybe a -&gt; Maybe b . mapM : (a -&gt; Maybe b) -&gt; List a -&gt; Maybe (List b) . ",
+    "url": "/LibDocs/maybe.html#definitions",
+    
+    "relUrl": "/LibDocs/maybe.html#definitions"
+  },"32": {
+    "doc": "maybe",
+    "title": "maybe",
+    "content": " ",
+    "url": "/LibDocs/maybe.html",
+    
+    "relUrl": "/LibDocs/maybe.html"
+  },"33": {
+    "doc": "numpy",
+    "title": "numpy.ml",
+    "content": "A library for using numpy in PocketML. ",
+    "url": "/LibDocs/numpy.html#numpyml",
+    
+    "relUrl": "/LibDocs/numpy.html#numpyml"
+  },"34": {
+    "doc": "numpy",
+    "title": "Definitions",
+    "content": "Type Aliases . type Size = List Number . type Index = List Number . Creating arrays . array : List Number -&gt; Vec . zeros : Size -&gt; Vec . full : Size -&gt; Number -&gt; Vec . linspace : Number -&gt; Number -&gt; Number -&gt; Vec . start, end, nsteps . Getters . toList : Vec -&gt; List Number . only 1-dim.! . size : Vec -&gt; Size . &lt;=&gt; arr.shape in numpy! . get : Index -&gt; Vec -&gt; Number . slice : Index -&gt; Index -&gt; Vec -&gt; Vec . | start, end, input_array | fails if out of bounds | . sliceInc : Index -&gt; Index -&gt; Vec -&gt; Vec . like slice but end index is included. slicePartial : Index -&gt; Index -&gt; Vec -&gt; Vec . same as slice, but return all elements in index range instead of failing . Manipulating Vecs . set : Index -&gt; Number -&gt; Vec -&gt; Vec . vectorize : (Number -&gt; Number) -&gt; Vec -&gt; Vec . ivectorize : (Index -&gt; Number -&gt; Number) -&gt; Vec -&gt; Vec . sum : Vec -&gt; Number . dot : Vec -&gt; Vec -&gt; Number . flatten : Vec -&gt; Vec . delete : Number -&gt; Vec -&gt; Vec . args: i, arr remove the element at i only for flat Vecs . concatenate : Number -&gt; Vec -&gt; Vec -&gt; Vec . args: axis, arr1, arr2 . reshape : Size -&gt; Vec -&gt; Vec . transpose : Vec -&gt; Vec . ",
+    "url": "/LibDocs/numpy.html#definitions",
+    
+    "relUrl": "/LibDocs/numpy.html#definitions"
+  },"35": {
+    "doc": "numpy",
+    "title": "numpy",
+    "content": " ",
+    "url": "/LibDocs/numpy.html",
+    
+    "relUrl": "/LibDocs/numpy.html"
+  },"36": {
+    "doc": "parsing",
+    "title": "parsing.ml",
+    "content": "A lark-based parser. Generated data compatible with a sum type of the form data Expr = CapitalizedRuleName ... | ... ",
+    "url": "/LibDocs/parsing.html#parsingml",
+    
+    "relUrl": "/LibDocs/parsing.html#parsingml"
+  },"37": {
+    "doc": "parsing",
+    "title": "Definitions",
+    "content": "Types . type GrammarError = String . type ParseError = String . Creating parsers . parser : String -&gt; Either GrammarError ( String -&gt; Either ParseError a ) . args: grammar, string . ",
+    "url": "/LibDocs/parsing.html#definitions",
+    
+    "relUrl": "/LibDocs/parsing.html#definitions"
+  },"38": {
+    "doc": "parsing",
+    "title": "parsing",
+    "content": " ",
+    "url": "/LibDocs/parsing.html",
+    
+    "relUrl": "/LibDocs/parsing.html"
+  },"39": {
+    "doc": "shaders",
+    "title": "shaders.ml",
+    "content": "Internally used for working with kivy glsl shaders . ",
+    "url": "/LibDocs/shaders.html#shadersml",
+    
+    "relUrl": "/LibDocs/shaders.html#shadersml"
+  },"40": {
+    "doc": "shaders",
+    "title": "Definitions",
+    "content": " ",
+    "url": "/LibDocs/shaders.html#definitions",
+    
+    "relUrl": "/LibDocs/shaders.html#definitions"
+  },"41": {
+    "doc": "shaders",
+    "title": "shaders",
+    "content": " ",
+    "url": "/LibDocs/shaders.html",
+    
+    "relUrl": "/LibDocs/shaders.html"
+  },"42": {
+    "doc": "sound",
+    "title": "sound.ml",
+    "content": "Library for kivys sound system. ",
+    "url": "/LibDocs/sound.html#soundml",
+    
+    "relUrl": "/LibDocs/sound.html#soundml"
+  },"43": {
+    "doc": "sound",
+    "title": "Definitions",
+    "content": "Types . data Sound . Generating Sounds . max_amp : Number . sound : (Number -&gt; Number) -&gt; Number -&gt; Sound . beep : Number -&gt; Number -&gt; Sound . Playback . play : Sound -&gt; Unit . example: play $ beep 440 1 . ",
+    "url": "/LibDocs/sound.html#definitions",
+    
+    "relUrl": "/LibDocs/sound.html#definitions"
+  },"44": {
+    "doc": "sound",
+    "title": "sound",
+    "content": " ",
+    "url": "/LibDocs/sound.html",
+    
+    "relUrl": "/LibDocs/sound.html"
+  },"45": {
+    "doc": "std",
+    "title": "std.ml",
+    "content": "Imports lib.string, lib.maybe, lib.list, lib.util, lib.dict. Use for brevity. ",
+    "url": "/LibDocs/std.html#stdml",
+    
+    "relUrl": "/LibDocs/std.html#stdml"
+  },"46": {
+    "doc": "std",
+    "title": "Definitions",
+    "content": " ",
+    "url": "/LibDocs/std.html#definitions",
+    
+    "relUrl": "/LibDocs/std.html#definitions"
+  },"47": {
+    "doc": "std",
+    "title": "std",
+    "content": " ",
+    "url": "/LibDocs/std.html",
+    
+    "relUrl": "/LibDocs/std.html"
+  },"48": {
+    "doc": "string",
+    "title": "string.ml",
+    "content": "Functions for working with the builtin String type. ",
+    "url": "/LibDocs/string.html#stringml",
+    
+    "relUrl": "/LibDocs/string.html#stringml"
+  },"49": {
+    "doc": "string",
+    "title": "Definitions",
+    "content": "str : a -&gt; String . split : String -&gt; String -&gt; List String . replace : String -&gt; String -&gt; String -&gt; String . isNumeric : String -&gt; Bool . strIn : String -&gt; String -&gt; Bool . strLen : String -&gt; Number . str : a -&gt; String . strHead : String -&gt; String . strTail : String-&gt; String . ",
+    "url": "/LibDocs/string.html#definitions",
+    
+    "relUrl": "/LibDocs/string.html#definitions"
+  },"50": {
+    "doc": "string",
+    "title": "string",
+    "content": " ",
+    "url": "/LibDocs/string.html",
+    
+    "relUrl": "/LibDocs/string.html"
+  },"51": {
+    "doc": "tea",
+    "title": "tea.ml",
+    "content": "Graphics framework inspired by TEA. Uses kivy and VDOM-diffing internally. Supports GUIs, canvas graphics &amp; shaders . ",
+    "url": "/LibDocs/tea.html#teaml",
+    
+    "relUrl": "/LibDocs/tea.html#teaml"
+  },"52": {
+    "doc": "tea",
+    "title": "Definitions",
+    "content": "Types . type Color = Vec . data Uniform = UniformFloat String Number | UniformInt String Number | UniformVec2 String Vec | UniformVec3 String Vec | UniformVec4 String Vec | UniformTex0 String Img . data Widget = Rect Color Vec Vec | TRect Img Vec Vec | SRect String (List Uniform) Vec Vec | Btn String String Vec Vec | Slider String Number Number Number Number Vec Vec | Label String String Vec Vec | Line (List Vec) Number Color | Many (List Widget) . WIDGET_DOCS : doc . Attributes for Widgets: Rect : color, size, pos TRect : texture, size, pos Btn : name, text, size, pos Slider: name, min, max, step, value, size, pos Label : name, text, size, pos Line : polygon-points, width, color Many : children . data Event = Tick | BtnPressed String | BtnReleased String | BtnHeld String | SliderMoved String Number . Starting the App . setTick : a -&gt; (Event -&gt; a -&gt; a) -&gt; (a -&gt; Widget) -&gt; Unit . forceUpdate : state -&gt; state . stop : Unit -&gt; Unit . Basic kinds of apps / patterns . staticView : (Unit -&gt; Widget) -&gt; Unit . Renders a view and then halts the app. Use for graphing, etc. Getters . width : Number . height: Number . getFPS : Unit -&gt; Number . Positioning / layouts . setPos : Widget -&gt; Vec -&gt; Unit . randPos : Unit -&gt; Vec . grid : Vec -&gt; Vec -&gt; Num -&gt; Num -&gt; List (Vec -&gt; Widget) -&gt; Widget . Colors &amp; constants . ",
+    "url": "/LibDocs/tea.html#definitions",
+    
+    "relUrl": "/LibDocs/tea.html#definitions"
+  },"53": {
+    "doc": "tea",
+    "title": "tea",
+    "content": " ",
+    "url": "/LibDocs/tea.html",
+    
+    "relUrl": "/LibDocs/tea.html"
+  },"54": {
+    "doc": "ugraph",
+    "title": "ugraph.ml",
+    "content": "A simplistic Undirected graph. ",
+    "url": "/LibDocs/ugraph.html#ugraphml",
+    
+    "relUrl": "/LibDocs/ugraph.html#ugraphml"
+  },"55": {
+    "doc": "ugraph",
+    "title": "Definitions",
+    "content": "Types . type Edges a = Dict (List a) . type Vertices a = List a . data Graph a = Graph (Edges a) (Vertices a) . Functions . edgesFromGraph : Graph a -&gt; List (List a) . ",
+    "url": "/LibDocs/ugraph.html#definitions",
+    
+    "relUrl": "/LibDocs/ugraph.html#definitions"
+  },"56": {
+    "doc": "ugraph",
+    "title": "ugraph",
+    "content": " ",
+    "url": "/LibDocs/ugraph.html",
+    
+    "relUrl": "/LibDocs/ugraph.html"
+  },"57": {
+    "doc": "util",
+    "title": "util.ml",
+    "content": "Util functions for the OS, kivy process, network and more. ",
+    "url": "/LibDocs/util.html#utilml",
+    
+    "relUrl": "/LibDocs/util.html#utilml"
+  },"58": {
+    "doc": "util",
+    "title": "Definitions",
+    "content": "Time . time : Unit -&gt; Number . traceTime : (Unit -&gt; b) -&gt; b . log the time an action takes to execute . setInterval : Number -&gt; state -&gt; (state-&gt;state) -&gt; Unit . args: n, state, tick run tick every n seconds. setUpdate : state -&gt; (state-&gt;state) -&gt;Unit . Terminal . cls : Unit -&gt; Unit . error : String -&gt; a . setTermFontSize : Number -&gt; Unit . str : a -&gt; String . deprecated. Use lib.string (str) . printl : List a -&gt; Unit . Misc. setreclimit : Number -&gt; Unit . setCompilerCWD : String -&gt; Unit . randint : Number -&gt; Number -&gt; Number . File system . fileexists : String -&gt; Bool . readFile : String -&gt; Maybe String . readFileUnsafe : String -&gt; String . Network . download : String -&gt; String -&gt; Unit . Basic functions . copy : a -&gt; a . uncurry2 : (a -&gt; b -&gt; c) -&gt; (a,b) -&gt; c . not : Bool -&gt; Bool . float : a -&gt; Number . int : a -&gt; Number . neg : Number -&gt; Number . between : Number-&gt; Number -&gt; Number -&gt; Bool . id : a -&gt; a . const : a -&gt; b -&gt; a . when : Bool -&gt; (Unit -&gt; Unit) -&gt; Unit . mapRecord : (a -&gt; a) -&gt; a -&gt; a . with : a -&gt; b -&gt; b . union : a -&gt; a -&gt; a . times : Number -&gt; (a -&gt; a) -&gt; a -&gt; a . ftee : (a -&gt; Unit) -&gt; (a -&gt; a) -&gt; a -&gt; a . ",
+    "url": "/LibDocs/util.html#definitions",
+    
+    "relUrl": "/LibDocs/util.html#definitions"
+  },"59": {
+    "doc": "util",
+    "title": "util",
+    "content": " ",
+    "url": "/LibDocs/util.html",
+    
+    "relUrl": "/LibDocs/util.html"
+  },"60": {
     "doc": "Blog: Module functors in PocketML",
     "title": "Blog: Module functors in PocketML",
     "content": "# Blog: Module functors in PocketML July 12th '25 --- I recently posted about PocketML on reddit and got a comment about the lack of modules in a language with \"ML\" in the name. TL;DR for this post: - modules are good :) - PocketML can do modules using records (see code below) - No modules in the standard library though, because they take too long to compile and are not terse on the users side. #### 1.0 Modules in StandardML The core idea is to be able to reuse more of the (library) code we write, by replacing type-specific functions with a module that our code takes as a parameter and which can be switched out by the user/caller depending on what type they want our code to process. More on this in section 1.1. Here's a quick rundown of how StandardML does this: - *signatures* are the type signatures of modules. They specify the contents of the module. - *modules* are the containers for the code/types we want to pass around. - *functors* are (potentially compile-time) functions that take a module and return a module. An example could be a `Dictionary` functor that takes in a module describing a hashable type and returns a module with all the important dictionary functions for this type. #### 1.1 End goal Let's take the example of getting the second (\"snd\") element from a sequence: ```python # gets the second element from a Vec let vecSnd : Vec -> Number; let vecSnd = ...; let listSnd : List a -> a; let listSnd = ...; let strSnd : String -> String; let ... ``` We'd have to write the same function for every type! This pattern actually comes up in PocketML's standard library: There's `strLen`, `len` (for lists) and `vecLen`. That's atrocious from an ML programmers point of view! Imagine adding another type - then we'd have to write every operation again. The most important use case for ML modules is now to turn the first code fragment (which scales badly) into the following one: ``` let snd : (module Sequence l e) -> l -> e; let snd m seq = m.getElementAt 0 seq; ``` We can just write one generic function that works on every type that has a corresponding `Sequence` module implemented for it. In our example `String`, `List` and `Vec` all support indexing, so implementing `Sequence` is trivial. #### 1.2 Actually implementing it As noted at the start, we do have a way to store named values/functions and pass them around - records. Passing around types is actually just as easy, but only if we do some reparameterisation (`List a` would become `Seq (List a) a` in module form): ```python data Seq l e = Seq { hd : l -> e , tl : l -> l } # a sequence with a head and tail. ; ``` This is an example of how one would create a module _signature_ in PocketML. Let's implement this module for `Vec`s: ```sml type VecSeq = Seq Vec Number; let vecTail : Vec -> Vec; let vecTail v = vecSlice 1 (vecLen v) v; let vecSeq : VecSeq; let vecSeq = Seq { hd = vecAt 0, tl = vecTail }; ``` That was easy and we need stuff like head and tail for vectors anyways! (I'd count this as zero overhead/unnescessary code for now!) Now another user might want to take the second element of a list. Hopefully, instead of writing a list-specific `snd` function, they do the following: ```python data Snd l e = Snd { snd : l -> e } # something `l` you can take the second # element `e` of ; let snd : Snd l e -> l -> e # getter for ease of use ; let snd m = case m | Snd s -> s.snd; let functorSnd : Seq l e -> Snd l e; let functorSnd m = case m | Seq s -> Snd { snd = times 2 (s.tl) >> s.hd }; ``` They might just pass in their implementation of `Seq` for lists, but we want to operate on vectors now. We can just reuse their code by passing in our `Vec` sequence! ```sml let vecSnd : Snd Vec Number; let vecSnd = functorSnd vecSeq; ``` If we leave out the type annotation, that's just one line per type. We've gone from writing every general function for every type (Imagine writing `map`, `filter`, `foldr`, `indexAt` etc. for all types that store multiple elements) to writing _a single line_ for every type. Thats O(N^2) to O(N) lines of code, which is quite amazing actually. With 10 sequence-like types and 20 generic functions, we'd have to write at least 200 lines if every function was a one liner. Now we only have to write 30 lines. #### 1.3 Overhead for the user Using our \"snd\" function for `Vec`s looks like this: ``` (snd vecSnd) @(1,2,3,4); ``` That's actually longer than with our naïve implementation, but the idea is that the time we waste using modules is completely offset by the time we saved earlier. Modern ML languages often use implicit modules to reduce boilerplate for the user. #### 1.4 Modules in the standard library One issue is that compiling modules needs a lot of type checking. Because PocketML is mainly a mobile app, we can't waste too much time compiling libraries. Using the naïve implementation, we just have to read in all the type declarations, because the functionality is usually implemented using python interop. One thing I will consider using this design pattern for, is to get rid of all the horrible variants of `len`. They introduce a lot of mental overhead which is not welcome in a language meant for tinkering. --- Thank you very much for reading 'til the end. I might write some more blog posts if I come across another interesting concept I can bring into PocketML. ### Correction / Update After more research & discussion, this seems to be more of a dictionary-passing implementation of type-classes + module functors. PocketML might get opaque types in the future to harness the power of modular abstraction. Better (qualified/selective) imports have now been added to the language to allow for cleaner namespaces. ",
     "url": "/BlogModules.html",
     
     "relUrl": "/BlogModules.html"
-  },"5": {
+  },"61": {
     "doc": "Walkthrough: Coding a GUI calculator in PocketML",
     "title": "Walkthrough: Coding a GUI calculator in PocketML",
     "content": "## Walkthrough: Coding a GUI calculator in PocketML This walkthrough shows the core functionality of `lib.tea`. #### 1.1 TEA-architecture The Elm Architecture (TEA) is a GUI architecture that decouples the app logic (`tick`), visuals/GUI (`view`) and initial state (`init`). The essential data types for TEA in PocketML are: | | - | - | `Widget` | GUI components like buttons, text or simple shapes/sprites |`Event`|When a button is pressed or a frame is rendered, the `update` function receives an event.| #### 1.2 Evaluating expressions Our calculator will have to calculate an expression from a string. PocketML does include an example with an expression evaluator, but in this case we'll use python interop: ```python %%% def PML_eval(s): try: return str(round(eval(s),4)) except ZeroDivisionError: return \"error: division by zero\" %%%; let eval : String -> String; ``` #### 1.3 State / Logic Our calculator will have buttons and a text display that shows the current expression. When the \"=\" button is pressed, the text display will show the result of the calculation. So our state will just be a String. ```sml type State = String; let init = \"\"; ``` To update our state we will use a tick function, that react to the button events. When \"C\" (clear) is pressed, the state will become the empty string. When \"=\" is pressed, the result of the expression is written into the state. When another button is pressed and that button happens to be a valid calculator button, the button text will be added to the state. > Note: We also have to include a default case! lib.tea automatically skips rerendering frames when the state didn't change. The core assumption is that the `view` function is pure. Updates can be forced by using `forceUpdate state` in the default case of `tick`. ```sml let tick : Event -> State -> State; let tick e s = case e | BtnPressed \"=\" -> eval (replace \"^\" \"**\" s) | BtnPressed \"C\" -> \"\" | BtnPressed x -> if isNumeric x || strIn x \"()+-*/^.\" then s+x else s | _ -> s; ``` #### 1.4 Making the UI layout Our view includes buttons and the state text. Buttons accept a text _and_ a name, similar to `id` in html. It is used for UI-diffing in the backend and also the argument of `BtnPressed` in our `tick` function. > Note: We could write make all the buttons manually. Instead we will write a 1D list of button labels and then place / create the buttons based on the index in the list. ```sml let mkBtn w n t = let pos = @(n-4*int (n/4), 4-int (n/4)) ° w; Btn t t pos @(w*.9,w*.9); ``` Our button layout is: ```sml let btnLayout = [ \"C\", \"(\", \")\", \"/\", \"7\", \"8\", \"9\", \"*\", \"4\", \"5\", \"6\", \"-\", \"1\", \"2\", \"3\", \"+\", \".\", \"0\", \"=\", \"^\" ]; ``` #### 1.5 View Putting it all together we can generate a view that includes both the buttons and a label with the current expression text: > Note: The Many widget is similar to a html div. It allows us to return multiple widgets from the view. They can also be nested. ```sml let view : State -> Widget; let view s = let w = width/5; let btns = Many (imap (mkBtn w) btnLayout); let inp = Label s \"inp\" @(0,w*5) @(w*4,w); Many [inp, btns]; ``` #### 1.6 Running the app `lib.tea` apps can be launched as follows: ```sml setTick init tick view ``` #### 1.7 Gallery / Results ![](/calculator.png) > Note: This screenshot is from linux, on android the layout or font might change a little depending on your kivy installation / android version. Kivy labels don't have background by default. As an excercise you could add a `Rect pos size color` behind the label inside `view`! ",
     "url": "/CalcGUI.html",
     
     "relUrl": "/CalcGUI.html"
-  },"6": {
+  },"62": {
     "doc": "Features &amp; The type system",
     "title": "Features &amp; The type system",
     "content": "## Features & The type system #### 1.1 Syntax PocketML`s syntax is largely based on Standard-ML and Haskell. Some quirks include: - Separation of top-level statements using `;` ```sml let a = 10; let b = 20; print (a + b) ``` - Comments using `#` ```python # i am a comment ``` ##### GUI A large part of PocketML is its editor. Use the `Editor` tab in the top toolbar to edit files. Close files by long pressing the file tab. Results show up in either the `Graphics` tab for graphics or the `Text Out` tab for text output. The info box above the keyboard shows the type of the symbol the cursor is on when clicked (no live type checking yet, because the typechecker is too slow). Manage project files and directories in the `Files` tab. For advanced file management use a File manager app that can access the `InternalStorage/Android/data/org.myapp.test/files/` directory. The `Docs` tab provides a Hoogle-like interface for searching types, names or libraries. #### 1.2 Type system PocketML has a set of builtin types: Vec (numpy arrays), Number, String, Bool, Tuples, Lists, Dict and Maybe. Num is an alias for Number and will replace it eventually. The operators *, /, +, - support addition of strings, numbers, and Vecs, as long as both sides of the operator have the same type. The ° operator acts the same as *, but allows two different types to be multiplied (i.e. vector-scalar multiplication, string multiplication, etc.). | Operator | Type | . | +,-,*,/ | a -> a -> a | . | ° | a -> b -> a | . | composition operators: | . | (y -> z) -> (x -> y) -> (x -> z) | . | >> | (x -> y) -> (y -> z) -> (x -> z) | . | $ | (x -> y) -> x -> y | . | logical operators / equality: | . | &&, || | Bool -> Bool -> Bool | . | =, | Number -> Number -> Bool | . #### 1.3 Builtins Most of the essentials are contained in the standard library `lib.std`, but some basic functions are passed through from python directly: | Function | Type | . | and,or | Bool -> Bool -> Bool | . | add,sub,mul,pow | Number -> Number -> Number | . | sqrt, inc, dec | Number -> Number | . | True, False | Bool | . | equal | a -> a -> Bool | . | lt | Number -> Number -> Bool | . | print | a -> () | . | print2 | a -> b -> () | . ",
     "url": "/Features.html",
     
     "relUrl": "/Features.html"
-  },"7": {
+  },"63": {
     "doc": "Walkthrough: Coding Game of Life in PocketML",
     "title": "Walkthrough: Coding Game of Life in PocketML",
     "content": "## Walkthrough: Coding Game of Life in PocketML #### 1.1 Conways Game of Life I think most people in this space are familiar with Game of Life, but heres a quick overview: Conways Game of Life is a grid based simulation of cells. They can die, live or come to life. The rules are very simple but give rise to emergent organic-looking behaviour. Game of Life is actually Turing complete. The rules are as follows: - A cells stays alive and/or gets born when it has three alive neighbours - A cell dies when it has more or less than 3 neighbours. #### 1.2 Setup in PocketML First we'll need some libraries: ```python import lib.std; import lib.image; import lib.math; import lib.tea; ``` We will represent the playing grid as a small image. Let's start with a 60x60 grid. We can create an image by calling the `image` function with a vector that denotes the size (`@(width, height)`): ``` let w = 60; let i = image @(w,w); ``` > Note: I left out the types. PocketML can infer them. If you > were to click on the typing-button in the editor with the > cursor on our image `i`, you would get `i : Img`. #### 1.3 Checking neighbouring cells To determine if a cell should live or die, we need to know the number of living neighbours. To access the neighbours we will use offsets from the position of the cell we want to check: ```python let offsets = [ @(-1,-1),@(0,-1), @(1,-1), @(-1,0),@(1,0), # The middle row has only two cells, because # we do not want to count the cell itself. @(-1,1),@(0,1),@(1,1) ]; ``` To get all the neighbouring pixels/cells we will map over the offsets: ```python map (\\offset -> let p = imgGet buf (v + offset); # v + o is vector addition! # Out of bounds access to an image returns the empty vector. if vecLen p == 0 then 0 else vecAt 0 p) offsets ``` Now we can filter them to only get the live cells and then count them using `len`. Let's also wrap the entire thing in a function: ```sml let nAlive buf v = let offsets = [ @(-1,-1),@(0,-1),@(1,-1), @(-1,0),@(1,0), @(-1,1),@(0,1),@(1,1) ]; len (filter (\\x -> x > 0) $ map (\\o -> let p = imgGet buf (v+o); if vecLen p == 0 then 0 else vecAt 0 p) offsets); ``` #### 1.4 Updating the cells We can write the rules from above as a function: ```sml let determineAlive : Bool -> Number -> Bool; let determineAlive c n = if c then not (n 3) else (n == 3) ; ``` Now we can copy our image to a buffer for fast read access and map over every pixel using `imgMap` from lib.image. We'll color live pixels white and dead ones black. > Note: This mutates our image, which is a sin in > functional languages, but we'll go with it to > increase performance ```sml let tick img = let buf = imgBuf img; imgMap img (\\x y cell -> let n = nAlive buf @(x,y); let c = vecAt 0 cell > 0; if determineAlive c n then @(255,255,255,255) else @(0,0,0,255) ); ``` #### 1.5 Populating our playing grid We could have loaded our image from a file using `imgLoad`. Alternatively we can make a function to add cell patterns from a 2D list: > Note: imap \"map with index\". This is similar to/inspired by a for > loop with enumerate in python. > The builtin `map` functions are also fast because they use python for loops > internally. ```python let addPattern img v p=imap (\\y l-> imap # rows (\\x c-> setpixel img (v+@(x,y)) # columns (@(c,c,c,255) ° 255) ) l) p; ``` #### 1.6 Running the app / Event loop Because we want to actually see the game, we need to build a GUI. We need `update`, the initial state and `view` like in ELM. Let's count the ticks since the app started to slow down the games tick/update rate a little: > Note: Our state is `Number` in this case (the number of ticks)! > We'll increase (`inc`) it every frame. ```sml let update : Event -> Number -> Number; let update e t = case e | Tick -> do when (divisible t 5) (\\_ -> tick i) inc t ; ``` The playing field will be displayed using a textured rectangle (`TRect`). ```sml let view _ = TRect @(0,0) @(width,width) i; ``` Now we can start the app using `setTick`: ```sml setTick 0 update view ``` #### 1.7 Add patterns I have added a gosper glider gun: ```sml let _ = do addPattern i @(15, 20) gosper ; ``` `gosper` is a really big list, so you'll have to see the source code (gol.ml) for the details :). #### 1.8 End result / Gallery ![An image of the end result (Glider gun)](/gameoflife.png) ",
     "url": "/GameOfLife.html",
     
     "relUrl": "/GameOfLife.html"
-  },"8": {
-    "doc": "Library Documentation",
-    "title": "Library Documentation",
-    "content": "# Library Documentation This is the documentation for the libraries available in PocketML. ## Libraries - [math](/LibDocs/math.html) >Advanced mathematical functions, functions on `Number`s - [either](/LibDocs/either.html) >Either type for errors etc. - [tea](/LibDocs/tea.html) >Graphics framework inspired by TEA. Uses kivy and VDOM-diffing internally. Supports GUIs, canvas graphics & shaders - [image](/LibDocs/image.html) >A library for kivy textures. An `Img` is a kivy texture. Images can be loaded from disk or created programmatically. - [shaders](/LibDocs/shaders.html) >Internally used for working with kivy glsl shaders - [parsing](/LibDocs/parsing.html) >A lark-based parser. Generated data compatible with a sum type of the form `data Expr = CapitalizedRuleName ... | ...` - [maybe](/LibDocs/maybe.html) >Maybe type with monad implementation - [numpy](/LibDocs/numpy.html) >A library for using numpy in PocketML. - [string](/LibDocs/string.html) >Functions for working with the builtin `String` type. - [sound](/LibDocs/sound.html) >Library for kivys sound system. - [dict](/LibDocs/dict.html) >Dictionaries with `String`-keys. Internally python dicts. - [graphing](/LibDocs/graphing.html) >Plotting functions in 2D using the TEA framework. Generates a TEA-widget. - [calculus](/LibDocs/calculus.html) >Basic numeric calculus functions like differentiation, integration, series. - [list](/LibDocs/list.html) >A simple linked list implementation. - [ugraph](/LibDocs/ugraph.html) >A simplistic Undirected graph. - [std](/LibDocs/std.html) >Imports lib.string, lib.maybe, lib.list, lib.util, lib.dict. Use for brevity. - [util](/LibDocs/util.html) >Util functions for the OS, kivy process, network and more. - [input](/LibDocs/input.html) >Simple binding for getting input from terminalout. ",
-    "url": "/LibDocs.html",
-    
-    "relUrl": "/LibDocs.html"
-  },"9": {
-    "doc": "calculus.ml",
-    "title": "calculus.ml",
-    "content": "# calculus.ml Basic numeric calculus functions like differentiation, integration, series. ## Definitions ### Differentiation & Integration ```haskell diff : (Number -> Number) -> Number -> (Number -> Number) # args: func, n # returns: n-th derivative of func. ``` ```haskell integral : (Number -> Number) -> Number -> Number -> Number # args: func, x_start, x_end ``` ### Series expansions (Taylor, Fourier etc.) ```haskell taylor : (Number -> Number) -> Number -> Number -> (Number -> Number) # args: f, n, x0, x ``` ```haskell fourier : (Number -> Number) -> Number -> (Number -> Number) # args: f, m, x ``` ",
-    "url": "/LibDocs/calculus.html",
-    
-    "relUrl": "/LibDocs/calculus.html"
-  },"10": {
-    "doc": "dict.ml",
-    "title": "dict.ml",
-    "content": "# dict.ml Dictionaries with `String`-keys. Internally python dicts. ## Definitions ### Creation ```haskell Dict a ``` ```haskell mkDict : List (String, a) -> Dict a ``` ### Accessing ```haskell dictItems : Dict a -> List (String, a) ``` ```haskell dictGet : Dict a -> String -> Maybe a ``` ```haskell dictInsert : String -> Dict a -> a -> Dict a ``` ",
-    "url": "/LibDocs/dict.html",
-    
-    "relUrl": "/LibDocs/dict.html"
-  },"11": {
-    "doc": "either.ml",
-    "title": "either.ml",
-    "content": "# either.ml Either type for errors etc. ## Definitions ### Definitions / Working with `Either` ```haskell Either a b = Left a | Right b ``` ```haskell unRight : Either a b -> b ``` ```haskell fromMaybe : b -> Maybe a -> Either b a ``` ### Monad definition ```haskell bind : Either e a -> (a -> Either e b) -> Either e b ``` ```haskell flatMap : (a -> Either e b) -> Either e a -> Either e b ``` ```haskell fmap : (a -> b) -> Either e a -> Either e b ``` ```haskell pure : a -> Either e a ``` ",
-    "url": "/LibDocs/either.html",
-    
-    "relUrl": "/LibDocs/either.html"
-  },"12": {
-    "doc": "graphing.ml",
-    "title": "graphing.ml",
-    "content": "# graphing.ml Plotting functions in 2D using the TEA framework. Generates a TEA-widget. ## Definitions ### Functions ```haskell viewGraphs : List (Number->Number) -> Number -> Number -> Number -> Widget ``` ",
-    "url": "/LibDocs/graphing.html",
-    
-    "relUrl": "/LibDocs/graphing.html"
-  },"13": {
-    "doc": "image.ml",
-    "title": "image.ml",
-    "content": "# image.ml A library for kivy textures. An `Img` is a kivy texture. Images can be loaded from disk or created programmatically. ## Definitions ### Definitions & Creating images/buffers ```haskell Img ``` ```haskell Buffer ``` ```haskell Color = Vec ``` ```haskell setpixel : Img -> Vec -> Color -> Unit ``` ```haskell image : Vec -> Img ``` ```haskell imgLoad : String -> Img ``` ```haskell imgBuf : Img -> Buffer ``` ### Functions ```haskell imgSize : Img -> Vec ``` ```haskell imgCopy : Img -> Img ``` ```haskell imgMap : Img -> (Number->Number->Color->Color) -> Unit ``` ```haskell imgGet : Buffer -> Vec -> Vec ``` ```haskell imgSave : String -> Img -> Unit ``` ```haskell imgClear : Img -> Color -> Unit ``` ```haskell imgMapRect: Vec -> Vec -> Img -> (Number->Number->Color->Color) -> Unit # args: size, pos, img, func ``` ```haskell imgSmooth : Img -> Img ``` ```haskell imgFlipH : Img -> Img ``` ```haskell imgFlipV : Img -> Img ``` ```haskell Uniform = UniformFloat String Number | UniformInt String Number | UniformVec2 String Vec | UniformVec3 String Vec | UniformVec4 String Vec | UniformTex0 String Img # -- hide # TODO ``` ```haskell imgShade : Img -> String -> Img ``` ```haskell mkAtlas : List Img -> Img ``` ",
-    "url": "/LibDocs/image.html",
-    
-    "relUrl": "/LibDocs/image.html"
-  },"14": {
-    "doc": "input.ml",
-    "title": "input.ml",
-    "content": "# input.ml Simple binding for getting input from terminalout. ## Definitions ```haskell input : String -> (String -> Unit) -> Unit ``` ",
-    "url": "/LibDocs/input.html",
-    
-    "relUrl": "/LibDocs/input.html"
-  },"15": {
-    "doc": "list.ml",
-    "title": "list.ml",
-    "content": "# list.ml A simple linked list implementation. ## Definitions ### Types ```haskell List a = Cons a (List a) | Nil # The default list generated # by `[...]` ``` ```haskell error : String -> a # -- hide ``` ### Creating lists ```haskell range : Number -> Number -> List Number ``` ```haskell srange : Number -> Number -> Number -> List Number # start, end, step ``` ### Accessors ```haskell tail : List a -> List a ``` ```haskell tailSafe : List a -> List a ``` ```haskell head : List a -> a ``` ```haskell len : List a -> Number ``` ```haskell listAtSafe : Number -> List a -> Maybe a ``` ```haskell listAt : Number -> List a -> a ``` ```haskell take : Number -> List a -> List a ``` ```haskell chunksOf : Number -> List a -> List (List a) ``` ```haskell contains : a -> List a -> Bool ``` ### Sorting, etc. ```haskell sort : List a -> List a ``` ```haskell nub : List a -> List a ``` ### Manipulating lists ```haskell append : a -> List a -> List a ``` ```haskell foldr : (b -> a -> b) -> b -> List a -> b ``` ```haskell extend : List a -> List a -> List a ``` ```haskell concat : List (List a) -> List a ``` ```haskell filter : (a -> Bool) -> List a -> List a ``` ```haskell reverse : List a -> List a ``` ```haskell map : (a -> b) -> (List a) -> List b ``` ```haskell foreach2D : Number -> Number -> (Number->Number-> Unit) -> Unit ``` ```haskell imap : (Number -> a -> b) -> List a -> List b ``` ```haskell any : List Bool -> Bool ``` ```haskell zip : List a -> List b -> List (a,b) ``` ",
-    "url": "/LibDocs/list.html",
-    
-    "relUrl": "/LibDocs/list.html"
-  },"16": {
-    "doc": "math.ml",
-    "title": "math.ml",
-    "content": "# math.ml Advanced mathematical functions, functions on `Number`s ## Definitions ### Trig ```haskell sin : Number -> Number ``` ```haskell cos : Number -> Number ``` ```haskell tan : Number -> Number ``` ```haskell pi : Number ``` ### Misc. ```haskell pow : Number -> Number -> Number ``` ```haskell round : Number -> Number -> Number ``` ```haskell ln : Number -> Number ``` ```haskell fac : Number -> Number ``` ```haskell exp : Number -> Number ``` ```haskell min : Number -> Number -> Number ``` ```haskell max : Number -> Number -> Number ``` ### Predicates / Checking properties of numbers ```haskell mod : Number -> Number -> Number ``` ```haskell divisible : Number -> Number -> Bool ``` ```haskell odd : Number -> Bool ``` ```haskell even : Number -> Bool ``` ### Random ```haskell noise : Vec -> Number ``` ",
-    "url": "/LibDocs/math.html",
-    
-    "relUrl": "/LibDocs/math.html"
-  },"17": {
-    "doc": "math.ml",
-    "title": "math.ml",
-    "content": "# math.ml ## Definitions ",
-    "url": "/LibDocs/math.ml.html",
-    
-    "relUrl": "/LibDocs/math.ml.html"
-  },"18": {
-    "doc": "maybe.ml",
-    "title": "maybe.ml",
-    "content": "# maybe.ml Maybe type with monad implementation ## Definitions ### Type & Creating / unwrapping ```haskell Maybe a = Nothing | Just a ``` ```haskell maybe : a -> Maybe a -> a ``` ### Monad implementation ```haskell flatMap : (a -> Maybe b) -> Maybe a -> Maybe b ``` ```haskell bind : Maybe a -> (a -> Maybe b) -> Maybe b ``` ```haskell pure : a -> Maybe a ``` ```haskell fmap : (a -> b) -> Maybe a -> Maybe b ``` ```haskell mapM : (a -> Maybe b) -> List a -> Maybe (List b) ``` ",
-    "url": "/LibDocs/maybe.html",
-    
-    "relUrl": "/LibDocs/maybe.html"
-  },"19": {
-    "doc": "mdo.ml",
-    "title": "mdo.ml",
-    "content": "# mdo.ml ## Definitions ```haskell mkMDo : ((a -> M b) -> M a -> M b) -> ((M t -> t) -> M c) -> M c # args: bind, do block # Example: # mkMDo Maybe.bind $ \\yield -> # x = yield $ Just 1 # y = yield $ Just 2 # Just (x+y) ``` ",
-    "url": "/LibDocs/mdo.html",
-    
-    "relUrl": "/LibDocs/mdo.html"
-  },"20": {
-    "doc": "numpy.ml",
-    "title": "numpy.ml",
-    "content": "# numpy.ml A library for using numpy in PocketML. ## Definitions ### Type Aliases ```haskell Size = List Number ``` ```haskell Index = List Number ``` ### Creating arrays ```haskell array : List Number -> Vec ``` ```haskell zeros : Size -> Vec ``` ```haskell full : Size -> Number -> Vec ``` ```haskell linspace : Number -> Number -> Number -> Vec # start, end, nsteps ``` ### Getters ```haskell toList : Vec -> List Number # only 1-dim.! ``` ```haskell size : Vec -> Size # arr.shape in numpy! ``` ```haskell get : Index -> Vec -> Number ``` ```haskell slice : Index -> Index -> Vec -> Vec # - start, end, input_array # - fails if out of bounds ``` ```haskell sliceInc : Index -> Index -> Vec -> Vec # like slice but end index is included. ``` ```haskell slicePartial : Index -> Index -> Vec -> Vec # same as slice, but return all # elements in index range instead # of failing ``` ### Manipulating `Vec`s ```haskell set : Index -> Number -> Vec -> Vec ``` ```haskell vectorize : (Number -> Number) -> Vec -> Vec ``` ```haskell ivectorize : (Index -> Number -> Number) -> Vec -> Vec ``` ```haskell sum : Vec -> Number ``` ```haskell dot : Vec -> Vec -> Number ``` ```haskell flatten : Vec -> Vec ``` ```haskell delete : Number -> Vec -> Vec # args: i, arr # remove the element at i # only for flat Vecs ``` ```haskell concatenate : Number -> Vec -> Vec -> Vec # args: axis, arr1, arr2 ``` ```haskell reshape : Size -> Vec -> Vec ``` ```haskell transpose : Vec -> Vec ``` ",
-    "url": "/LibDocs/numpy.html",
-    
-    "relUrl": "/LibDocs/numpy.html"
-  },"21": {
-    "doc": "parsing.ml",
-    "title": "parsing.ml",
-    "content": "# parsing.ml A lark-based parser. Generated data compatible with a sum type of the form `data Expr = CapitalizedRuleName ... | ...` ## Definitions ### Types ```haskell GrammarError = String ``` ```haskell ParseError = String ``` ### Creating parsers ```haskell parser : String -> Either GrammarError ( String -> Either ParseError a ) # args: grammar, string ``` ",
-    "url": "/LibDocs/parsing.html",
-    
-    "relUrl": "/LibDocs/parsing.html"
-  },"22": {
-    "doc": "shaders.ml",
-    "title": "shaders.ml",
-    "content": "# shaders.ml Internally used for working with kivy glsl shaders ## Definitions ",
-    "url": "/LibDocs/shaders.html",
-    
-    "relUrl": "/LibDocs/shaders.html"
-  },"23": {
-    "doc": "sound.ml",
-    "title": "sound.ml",
-    "content": "# sound.ml Library for kivys sound system. ## Definitions ### Types ```haskell Sound ``` ### Generating Sounds ```haskell max_amp : Number ``` ```haskell sound : (Number -> Number) -> Number -> Sound ``` ```haskell beep : Number -> Number -> Sound ``` ### Playback ```haskell play : Sound -> Unit # example: # play $ beep 440 1 ``` ",
-    "url": "/LibDocs/sound.html",
-    
-    "relUrl": "/LibDocs/sound.html"
-  },"24": {
-    "doc": "std.ml",
-    "title": "std.ml",
-    "content": "# std.ml Imports lib.string, lib.maybe, lib.list, lib.util, lib.dict. Use for brevity. ## Definitions ",
-    "url": "/LibDocs/std.html",
-    
-    "relUrl": "/LibDocs/std.html"
-  },"25": {
-    "doc": "string.ml",
-    "title": "string.ml",
-    "content": "# string.ml Functions for working with the builtin `String` type. ## Definitions ```haskell str : a -> String ``` ```haskell split : String -> String -> List String ``` ```haskell replace : String -> String -> String -> String ``` ```haskell isNumeric : String -> Bool ``` ```haskell strIn : String -> String -> Bool ``` ```haskell strLen : String -> Number ``` ```haskell str : a -> String ``` ```haskell strHead : String -> String ``` ```haskell strTail : String-> String ``` ",
-    "url": "/LibDocs/string.html",
-    
-    "relUrl": "/LibDocs/string.html"
-  },"26": {
-    "doc": "tea.ml",
-    "title": "tea.ml",
-    "content": "# tea.ml Graphics framework inspired by TEA. Uses kivy and VDOM-diffing internally. Supports GUIs, canvas graphics & shaders ## Definitions ### Types ```haskell Color = Vec ``` ```haskell Uniform = UniformFloat String Number | UniformInt String Number | UniformVec2 String Vec | UniformVec3 String Vec | UniformVec4 String Vec | UniformTex0 String Img ``` ```haskell Widget = Rect Color Vec Vec | TRect Img Vec Vec | SRect String (List Uniform) Vec Vec | Btn String String Vec Vec | Slider String Number Number Number Number Vec Vec | Label String String Vec Vec | Line (List Vec) Number Color | Many (List Widget) ``` ```haskell WIDGET_DOCS : doc # Attributes for Widgets: # Rect : color, size, pos # TRect : texture, size, pos # Btn : name, text, size, pos # Slider: name, min, max, step, value, size, pos # Label : name, text, size, pos # Line : polygon-points, width, color # Many : children ``` ```haskell Event = Tick | BtnPressed String | BtnReleased String | BtnHeld String | SliderMoved String Number ``` ### Starting the App ```haskell setTick : a -> (Event -> a -> a) -> (a -> Widget) -> Unit ``` ```haskell forceUpdate : state -> state ``` ```haskell stop : Unit -> Unit ``` ### Basic kinds of apps / patterns ```haskell staticView : (Unit -> Widget) -> Unit # Renders a view and then halts the app. # Use for graphing, etc. ``` ### Getters ```haskell width : Number ``` ```haskell height: Number ``` ```haskell getFPS : Unit -> Number ``` ### Positioning / layouts ```haskell setPos : Widget -> Vec -> Unit ``` ```haskell randPos : Unit -> Vec ``` ```haskell grid : Vec -> Vec -> Num -> Num -> List (Vec -> Widget) -> Widget ``` ### Colors & constants ",
-    "url": "/LibDocs/tea.html",
-    
-    "relUrl": "/LibDocs/tea.html"
-  },"27": {
-    "doc": "ugraph.ml",
-    "title": "ugraph.ml",
-    "content": "# ugraph.ml A simplistic Undirected graph. ## Definitions ### Types ```haskell Edges a = Dict (List a) ``` ```haskell Vertices a = List a ``` ```haskell Graph a = Graph (Edges a) (Vertices a) ``` ### Functions ```haskell edgesFromGraph : Graph a -> List (List a) ``` ",
-    "url": "/LibDocs/ugraph.html",
-    
-    "relUrl": "/LibDocs/ugraph.html"
-  },"28": {
-    "doc": "util.ml",
-    "title": "util.ml",
-    "content": "# util.ml Util functions for the OS, kivy process, network and more. ## Definitions ### Time ```haskell time : Unit -> Number ``` ```haskell traceTime : (Unit -> b) -> b # log the time an action takes to execute ``` ```haskell setInterval : Number -> state -> (state->state) -> Unit # args: n, state, tick # run tick every n seconds. ``` ```haskell setUpdate : state -> (state->state) ->Unit ``` ### Terminal ```haskell cls : Unit -> Unit ``` ```haskell error : String -> a ``` ```haskell setTermFontSize : Number -> Unit ``` ```haskell str : a -> String # deprecated. Use lib.string (str) ``` ```haskell printl : List a -> Unit ``` ### Misc. ```haskell setreclimit : Number -> Unit ``` ```haskell setCompilerCWD : String -> Unit ``` ```haskell randint : Number -> Number -> Number ``` ### File system ```haskell fileexists : String -> Bool ``` ```haskell readFile : String -> Maybe String ``` ```haskell readFileUnsafe : String -> String ``` ### Network ```haskell download : String -> String -> Unit ``` ### Basic functions ```haskell copy : a -> a ``` ```haskell uncurry2 : (a -> b -> c) -> (a,b) -> c ``` ```haskell not : Bool -> Bool ``` ```haskell float : a -> Number ``` ```haskell int : a -> Number ``` ```haskell neg : Number -> Number ``` ```haskell between : Number-> Number -> Number -> Bool ``` ```haskell id : a -> a ``` ```haskell const : a -> b -> a ``` ```haskell when : Bool -> (Unit -> Unit) -> Unit ``` ```haskell mapRecord : (a -> a) -> a -> a ``` ```haskell with : a -> b -> b ``` ```haskell union : a -> a -> a ``` ```haskell times : Number -> (a -> a) -> a -> a ``` ```haskell ftee : (a -> Unit) -> (a -> a) -> a -> a ``` ",
-    "url": "/LibDocs/util.html",
-    
-    "relUrl": "/LibDocs/util.html"
   }
 }

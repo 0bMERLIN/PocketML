@@ -1,3 +1,9 @@
+---
+nav_order: 2
+title: calculus
+parent: Library Documentation
+---
+
 # calculus.ml
 
 Basic numeric calculus functions like differentiation, integration, series.
@@ -8,23 +14,31 @@ Basic numeric calculus functions like differentiation, integration, series.
 ### Differentiation & Integration
 ```haskell
 diff : (Number -> Number) -> Number -> (Number -> Number)
-	# args: func, n
-	# returns: n-th derivative of func.
-
 ```
+
+> args: func, n<br>
+> returns: n-th derivative of func.
+
+
 ```haskell
 integral : (Number -> Number) -> Number -> Number -> Number
-	# args: func, x_start, x_end
-
 ```
+
+> args: func, x_start, x_end
+
+
 ### Series expansions (Taylor, Fourier etc.)
 ```haskell
 taylor : (Number -> Number) -> Number -> Number -> (Number -> Number)
-	# args: f, n, x0, x
-
 ```
+
+> args: f, n, x0, x
+
+
 ```haskell
 fourier : (Number -> Number) -> Number -> (Number -> Number)
-	# args: f, m, x
-
 ```
+
+> args: f, m, x
+
+

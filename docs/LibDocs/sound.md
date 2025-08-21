@@ -1,3 +1,9 @@
+---
+nav_order: 2
+title: sound
+parent: Library Documentation
+---
+
 # sound.ml
 
 Library for kivys sound system.
@@ -7,22 +13,40 @@ Library for kivys sound system.
 
 ### Types
 ```haskell
-Sound
+data Sound
 ```
+
+
+
+
 ### Generating Sounds
 ```haskell
 max_amp : Number
 ```
+
+
+
+
 ```haskell
 sound : (Number -> Number) -> Number -> Sound
 ```
+
+
+
+
 ```haskell
 beep : Number -> Number -> Sound
 ```
+
+
+
+
 ### Playback
 ```haskell
 play : Sound -> Unit
-    # example:
-    # play $ beep 440 1
-
 ```
+
+> example:<br>
+> play $ beep 440 1
+
+

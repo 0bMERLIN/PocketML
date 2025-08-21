@@ -1,3 +1,9 @@
+---
+nav_order: 2
+title: ugraph
+parent: Library Documentation
+---
+
 # ugraph.ml
 
 A simplistic Undirected graph.
@@ -7,15 +13,31 @@ A simplistic Undirected graph.
 
 ### Types
 ```haskell
-Edges a = Dict (List a)
+type Edges a = Dict (List a)
 ```
+
+
+
+
 ```haskell
-Vertices a = List a
+type Vertices a = List a
 ```
+
+
+
+
 ```haskell
-Graph a = Graph (Edges a) (Vertices a)
+data Graph a = Graph (Edges a) (Vertices a)
 ```
+
+
+
+
 ### Functions
 ```haskell
 edgesFromGraph : Graph a -> List (List a)
 ```
+
+
+
+

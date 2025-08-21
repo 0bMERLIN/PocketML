@@ -1,6 +1,6 @@
 ---
 title: Hacking & Python Interop
-nav_order: 2
+nav_order: 3
 ---
 
 ## Hacking / Extending

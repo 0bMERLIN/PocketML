@@ -1,3 +1,9 @@
+---
+nav_order: 2
+title: parsing
+parent: Library Documentation
+---
+
 # parsing.ml
 
 A lark-based parser. Generated data compatible with a sum type of the form `data Expr = CapitalizedRuleName ... | ...`
@@ -7,17 +13,27 @@ A lark-based parser. Generated data compatible with a sum type of the form `data
 
 ### Types
 ```haskell
-GrammarError = String
+type GrammarError = String
 ```
+
+
+
+
 ```haskell
-ParseError = String
+type ParseError = String
 ```
+
+
+
+
 ### Creating parsers
 ```haskell
 parser :
 	String -> Either GrammarError (
 		String -> Either ParseError a
 	)
-	# args: grammar, string
-
 ```
+
+> args: grammar, string
+
+

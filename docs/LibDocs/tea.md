@@ -1,3 +1,9 @@
+---
+nav_order: 2
+title: tea
+parent: Library Documentation
+---
+
 # tea.ml
 
 Graphics framework inspired by TEA. Uses kivy and VDOM-diffing internally. Supports GUIs, canvas graphics & shaders
@@ -7,20 +13,27 @@ Graphics framework inspired by TEA. Uses kivy and VDOM-diffing internally. Suppo
 
 ### Types
 ```haskell
-Color = Vec
+type Color = Vec
 ```
+
+
+
+
 ```haskell
-Uniform
+data Uniform
 	= UniformFloat String Number
 	| UniformInt String Number
 	| UniformVec2 String Vec
 	| UniformVec3 String Vec
 	| UniformVec4 String Vec
 	| UniformTex0 String Img
-
 ```
+
+
+
+
 ```haskell
-Widget
+data Widget
 	= Rect Color Vec Vec
 	| TRect Img Vec Vec
 	| SRect String (List Uniform) Vec Vec
@@ -29,64 +42,110 @@ Widget
 	| Label String String Vec Vec
 	| Line (List Vec) Number Color
 	| Many (List Widget)
-
 ```
+
+
+
+
 ```haskell
 WIDGET_DOCS : doc
-	# Attributes for Widgets:
-	# Rect  : color, size, pos
-	# TRect : texture, size, pos
-	# Btn   : name, text, size, pos
-	# Slider: name, min, max, step, value, size, pos
-	# Label : name, text, size, pos
-	# Line  : polygon-points, width, color
-	# Many  : children
-
 ```
+
+> Attributes for Widgets:<br>
+> Rect  : color, size, pos<br>
+> TRect : texture, size, pos<br>
+> Btn   : name, text, size, pos<br>
+> Slider: name, min, max, step, value, size, pos<br>
+> Label : name, text, size, pos<br>
+> Line  : polygon-points, width, color<br>
+> Many  : children
+
+
 ```haskell
-Event
+data Event
 	= Tick
 	| BtnPressed String
 	| BtnReleased String
 	| BtnHeld String
 	| SliderMoved String Number
-
 ```
+
+
+
+
 ### Starting the App
 ```haskell
 setTick : a -> (Event -> a -> a) -> (a -> Widget) -> Unit
 ```
+
+
+
+
 ```haskell
 forceUpdate : state -> state
 ```
+
+
+
+
 ```haskell
 stop : Unit -> Unit
 ```
+
+
+
+
 ### Basic kinds of apps / patterns
 ```haskell
 staticView : (Unit -> Widget) -> Unit
-	# Renders a view and then halts the app.
-	# Use for graphing, etc.
-
 ```
+
+> Renders a view and then halts the app.<br>
+> Use for graphing, etc.
+
+
 ### Getters
 ```haskell
 width : Number
 ```
+
+
+
+
 ```haskell
 height: Number
 ```
+
+
+
+
 ```haskell
 getFPS : Unit -> Number
 ```
+
+
+
+
 ### Positioning / layouts
 ```haskell
 setPos : Widget -> Vec -> Unit
 ```
+
+
+
+
 ```haskell
 randPos : Unit -> Vec
 ```
+
+
+
+
 ```haskell
 grid : Vec -> Vec -> Num -> Num -> List (Vec -> Widget) -> Widget
 ```
+
+
+
+
 ### Colors & constants

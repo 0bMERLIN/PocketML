@@ -54,13 +54,6 @@ strLen : String -> Number
 
 
 ```haskell
-str : a -> String
-```
-
-
-
-
-```haskell
 strHead : String -> String
 ```
 

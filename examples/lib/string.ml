@@ -28,7 +28,6 @@ let replace : String -> String -> String -> String; # old new str
 let isNumeric : String -> Bool;
 let strIn : String -> String -> Bool; # a b, check if a is any of the characters in b
 let strLen : String -> Number;
-let str : a -> String;
 let strHead : String -> String;
 let strTail : String-> String;
 

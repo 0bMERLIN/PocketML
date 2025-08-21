@@ -7,19 +7,44 @@
     <style>
         body {
             padding: 20px;
+            padding-top: 70px;
         }
 
         #navbar {
-            display: flex;
-            background-color: #f8f9fa;
-            padding: 10px;
+            background-color: white;
             border-bottom: 1px solid #dee2e6;
+            position:fixed;
+            height: 50px;
+            width: auto;
+            left: 20px;
+            right: 20px;
+            top: 0px;
+            overflow: hidden;
+            border-color: red;
+        }
+
+        #PMLlogo {
+            width: auto;
+            top: -25px;
+            height: 110px;
+            position: absolute;
+        }
+        #navcontent {
+            padding-left: 200px;
+            width: 100%;
+            align-content: center;
+            height: 100%;
         }
     </style>
   </head>
   <body>
     <div id="navbar">
-    <img src="../assets/logo.jpeg" alt="PocketML Logo" style="width: 100px; height: auto;">
+        <a href="/index.html"><img src="../assets/logo.jpeg" alt="PocketML Logo" id="PMLlogo"></a>
+        <div id="navcontent">
+            <a href="/index.html">Index</a> |
+            <a href="/Guide.html">Guide</a> |
+            <a href="/LibDocs.html">Docs</a>
+        </div>
     </div>
     <h1 id="stdml">std.ml</h1>
 

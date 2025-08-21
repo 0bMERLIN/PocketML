@@ -176,11 +176,12 @@ def nocheckpreprocess(txt: str):
 DBG = False
 
 OPS = {
-    -1: ["$", "<<", ">>"],
-    0: ["||", "&&"],
-    1: ["==", "!=", "<", ">", ">=", "<="],
-    2: ["+", "-"],
-    3: ["*", "/", "°"],
+    -2: {"ops": ["$"], "assoc": "right"},
+    -1: { "ops": ["<<", ">>"], "assoc": "left"},
+    0: {"ops": ["||", "&&"], "assoc": "left"},
+    1: {"ops": ["==", "!=", "<", ">", ">=", "<="], "assoc": "left"},
+    2: {"ops":["+", "-"], "assoc": "left"},
+    3: {"ops":["*", "/", "°"], "assoc": "left"},
 }
 
 
@@ -195,11 +196,17 @@ def add_infix_operators(g):
 
     OPS_sorted = [OPS[i] for i in sorted(OPS)]
     for i, _ in enumerate(OPS_sorted):
-        ops = " | ".join(map(lambda o: f'"{o}"', OPS_sorted[i]))
+        op = OPS_sorted[i]
+        ops = " | ".join(map(lambda o: f'"{o}"', op["ops"]))
         res += f"OP{i}: {ops}\n"
         next = "atom" if i == len(OPS_sorted) - 1 else f"op{i+1}"
-        res += f"?op{i}: {next} | op{i} OP{i} {next} -> infix_op"
-
+        if op["assoc"] == "left":
+            res += f"?op{i}: {next} | op{i} OP{i} {next} -> infix_op"
+        elif op["assoc"] == "right":
+            res += f"?op{i}: {next} | {next} OP{i} op{i} -> infix_op"
+        else:
+            raise ValueError(f"Unknown operator association: {res['assoc']}")
+        
         # the last infix layer contains prefix operators like negation
         if i == len(OPS_sorted) - 1:
             res += '| "-" atom -> neg'

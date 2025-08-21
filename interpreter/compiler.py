@@ -51,7 +51,7 @@ def prettify(v):
 
     # custom data type
     if type(v) == tuple and len(v) != 0 and type(v[0]) == str:
-        res = str(v[0].strip("PML_")) + " " + " ".join(map(prettify, v[1:]))
+        res = str(v[0].removeprefix("PML_")) + " " + " ".join(map(prettify, v[1:]))
         return f"({res})" if len(v) > 1 else res
 
     # number
@@ -239,6 +239,7 @@ class Compiler(Interpreter):
                     exports[item] = f'__EXPORTS__["PML_{item}"]'
 
         self.emit("\n__EXPORTS__={}\n")
+        self.emit("\n__OLD_ENV__=copy(globals())\n")
         self.visit(tree)
         # if module alias, replace __EXPORTS__ with { "[alias]" : __EXPORTS__ }
         self.emit("\nglobals().update({ " + f'"PML_{alias}" : __EXPORTS__' + " })")
@@ -252,6 +253,8 @@ class Compiler(Interpreter):
             if import_list is None
             else f"\nglobals().update({exports_compiled})"
         )
+        self.emit("\nglobals().update(__OLD_ENV__)\n")
+
         # body
         return self.visit(e)
 
@@ -369,7 +372,7 @@ class Compiler(Interpreter):
         self.emit(f"def PML_{x}({', '.join(map(lambda x:'PML_'+x,params))}):")
         self.indent()
         res = self.visit(e)
-        self.emit("return " + res)
+        self.emit("return (" + res + ")")
         self.dedent()
         return self.visit(b)
 
@@ -380,6 +383,8 @@ class Compiler(Interpreter):
         return self.let(*args)
 
     def var(self, x):
+        if str(x) == "yield":
+            return str(x)
         return "PML_" + str(x)
 
     def app(self, f, x):
@@ -397,7 +402,7 @@ class Compiler(Interpreter):
         self.emit(f"def {fn_name}({', '.join(map(lambda x:'PML_'+x, xs))}):")
         self.indent()
         res = self.visit(b)
-        self.emit("return " + res)
+        self.emit("return (" + res + ")")
         self.dedent()
 
         return fn_name
@@ -409,13 +414,13 @@ class Compiler(Interpreter):
         self.emit(f"def {fn_name}({param}):")
         self.indent()
         res = self.match(param, *lamcases.children, arg_compiled=True)
-        self.emit("return " + res)
+        self.emit("return (" + res + ")")
         self.dedent()
 
         return fn_name
 
     def num(self, x):
-        return self.emitv(str(x))
+        return str(x)
 
     def string(self, s: str):
         return self.emitv(s.replace("\n", "\\n"))

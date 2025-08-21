@@ -5,8 +5,8 @@
 %%%OPERATOR_TABLE%%%
 
 // lambdas and lambda-case
-?atom: "\\" NAME+ "->" expr -> lam
-    | "\\" "case" lamcases -> lamcase
+?atom:  "\\" "case" lamcases -> lamcase
+    | "\\" NAME+ "->" expr -> lam
     | atom1
     | atom atom -> app
 
@@ -23,7 +23,6 @@
     | "data" NAME NAME* "=" constructors ";" expr -> typedef
     | "data" NAME NAME* ";" expr -> typedecl
     | "type" NAME NAME* "=" type ";" expr -> typealias
-//    | "cache" ";" expr -> cache // deprecated
     | /%%%(.|[\n])+%%%/ ";" expr -> python
     | atom2
 
@@ -35,7 +34,7 @@
     | NAME -> var
     | "(" expr ")"
     | NUMBER -> num
-    | (STRING | /"""(.|[\n])+"""/) -> string
+    | (STRING | /"""(.|[\n])*?"""/) -> string
     | /%%(.|[\n])+%%/ -> inlinepython
     | "{" entry ("," entry)* "}" -> record
 

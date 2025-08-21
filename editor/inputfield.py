@@ -15,6 +15,7 @@ from interpreter.interpreter import file_to_python, run_compiled, run_file
 from interpreter.parser import get_imports
 from interpreter.typ import PMLTypeError
 from interpreter.typecheck import BUILTIN_KINDS, BUILTIN_TYPES, load_file
+import interpreter.path as path
 
 from utils import BTN_H, BTN_W, relpath, word_at_index
 
@@ -60,6 +61,10 @@ class InputField(Widget):
 
         def comp(*args, **kwargs):
             try:
+                path.set_cwd(
+                    "/".join((args[0].removeprefix(path.storage_path)).split("/")[:-1])
+                    + "/"
+                )
                 file_to_python(*args, **kwargs)
             except PMLTypeError as e:
                 report(e.args[0])

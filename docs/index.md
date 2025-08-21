@@ -21,8 +21,10 @@ This project is an exercise in input schemes. A terse functional language paired
 
 I learned to code in python on my phone using the app PyDroid3. Nowadays I regularly use the app to run some quick calculations for my phyics & maths classes or just to kill boredom on a long trip. This project was created because PyDroid3 has ads and because of my preference for functional languages.
 
+## Library Docs
+[Library documentation](LibDocs.md)
 
-## Libraries
+## Python Libraries
 > Note: Neither of these are fully integrated, but can be accessed fully through python blocks. The most important functions are available directly in PocketML.
 
 | Library |  | Features |
@@ -30,3 +32,5 @@ I learned to code in python on my phone using the app PyDroid3. Nowadays I regul
 | numpy | lib/math.ml| 1D arrays as vectors (`Vec`) |
 | kivy | lib/tea.ml | TEA-inspired GUI library |
 | lark | lib/parsing.ml | generate custom parsers from a grammar file/string |
+
+

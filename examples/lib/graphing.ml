@@ -2,7 +2,8 @@ import lib.std;
 import lib.tea;
 import lib.math;
 
-# draw graph
+## Plotting functions in 2D using the TEA framework. Generates a TEA-widget.
+
 let graph f =
 	let w = width/1.5;
 	let offsetx=w/2;
@@ -21,6 +22,8 @@ let cols = [
 	@(255,255,0,255),
 	@(0,255,255,255)
 ];
+
+### ### Functions
 
 let viewGraphs : List (Number->Number) -> Number -> Number -> Number -> Widget; # Args: fns, zoom, x, y
 

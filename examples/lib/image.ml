@@ -1,3 +1,5 @@
+import lib.shaders;
+
 %%%
 EDITOR = globals()["editor"] if "editor" in globals() else None
 
@@ -40,20 +42,34 @@ def setpixel(texture, x, y, c):
 	except Exception as e:
 		print(e)
 
+def setfilter(t):
+	t.mag_filter = 'nearest'
+	t.min_filter = 'nearest'
+
+
 @curry
 def PML_imgMap(texture, f):
+	PML_imgMapRect(texture.size,(0,0),texture,f)
+
+@curry
+def PML_imgMapRect(size, pos, texture, f):
 	try:
-		arr = np.frombuffer(texture.pixels, dtype=np.uint8).copy()
 		w, h = texture.width, texture.height
-		for y in range(h):
-			for x in range(w):
-				pos = (x + y * w) * 4
-				color = arr[pos:pos+4]
-				new_color = f(x)(y)(np.array(color))
-				arr[pos:pos+4] = list(new_color)
+		arr = np.frombuffer(texture.pixels, 
+			dtype=np.uint8) \
+			.copy().reshape((h, w, 4))
+		for y in range(
+				pos[1], min(h, pos[1]+size[1])):
+			for x in range(
+					pos[0],
+					min(w, pos[0]+size[0])):
+				color = arr[y,x]
+				new_color = f(x)(y)(color)
+				arr[y,x] = new_color
 		texture.blit_buffer(arr.tobytes(), colorfmt='rgba', bufferfmt='ubyte')
 	except Exception as e:
 		print(e)
+	setfilter(texture)
 
 def imgGet(buf, x, y):
 	arr,w,_ = buf
@@ -74,6 +90,7 @@ def PML_imgLoad(p):
 	try:
 		t = CoreImage(SP + p).texture
 		t.mag_filter = "nearest"
+		
 		return t
 	except Exception as e:
 		print("Oops", e)
@@ -95,9 +112,70 @@ PML_imgGet = lambda b: lambda pos: imgGet(b, *map(int, list(pos)))
 PML_imgFlipH = lambda t: (t1 := PML_imgCopy(t), t1.flip_horizontal(), t1)[-1]
 PML_imgFlipV = lambda t: (t1 := PML_imgCopy(t), t1.flip_vertical(), t1)[-1]
 
+from kivy.graphics import Fbo, Rectangle, ClearBuffers, ClearColor
+from kivy.graphics.texture import Texture
+
+def PML_mkAtlas(textures):
+    textures = convlist(textures)
+    if not textures:
+        raise ValueError("No textures provided")
+
+    width = textures[0].width
+    colorfmt = textures[0].colorfmt
+
+    for tex in textures:
+        if tex.width != width or tex.colorfmt != colorfmt:
+            raise ValueError("All textures must have the same width and color format")
+
+    total_height = sum(tex.height for tex in textures)
+
+    # Create an FBO with the final size
+    fbo = Fbo(size=(width, total_height), with_stencilbuffer=False)
+
+    with fbo:
+        # Clear the FBO with transparent background
+        ClearColor(0, 0, 0, 0)
+        ClearBuffers()
+
+        y_offset = 0
+        for tex in textures:
+            Rectangle(texture=tex, pos=(0, y_offset), size=(tex.width, tex.height))
+            y_offset += tex.height
+
+    # Force the FBO to render
+    fbo.draw()
+    setfilter(fbo.texture)
+    return fbo.texture
+
+PML_imgSize = lambda i: \
+	np.array([i.width,i.height])
+
+@curry
+def PML_imgShade(img, fs):
+	fbo = Fbo(size=img.size)
+	fbo.shader.fs=fs
+	if fbo.shader.success == 0:
+		PML_print(checkshader(fs))
+		return img
+	with fbo:
+		Rectangle(pos=(0,0),size=img.size,
+			texture=img)
+	fbo.draw()
+	return fbo.texture
+
+@curry
+def PML_imgSmooth(i):
+	i.mag_filter="linear"
+	i.min_filter="linear"
+	return i
+
 %%%;
 
 import lib.std;
+
+## A library for kivy textures. An `Img` is a kivy texture. Images can be loaded from disk or created programmatically.
+
+### ### Definitions & Creating images/buffers
 
 data Img;
 data Buffer; # more efficient for getting pixels
@@ -106,15 +184,37 @@ type Color = Vec;
 let setpixel : Img -> Vec -> Color -> Unit; # slow. Use imgMap instead
 
 let image : Vec -> Img;
-let imgMap : Img -> (Number->Number->Color->Color) -> Unit;
+let imgLoad : String -> Img;
 let imgBuf : Img -> Buffer;
+
+### ### Functions
+
+let imgSize : Img -> Vec;
+let imgCopy : Img -> Img;
+let imgMap : Img -> (Number->Number->Color->Color) -> Unit;
 let imgGet : Buffer -> Vec -> Vec;
 let imgSave : String -> Img -> Unit;
-let imgLoad : String -> Img;
-let imgCopy : Img -> Img;
 let imgClear : Img -> Color -> Unit;
-
+let imgMapRect: Vec -> Vec -> Img -> (Number->Number->Color->Color) -> Unit
+	# args: size, pos, img, func
+;
+let imgSmooth : Img -> Img;
 let imgFlipH : Img -> Img;
 let imgFlipV : Img -> Img;
+
+data Uniform
+	= UniformFloat String Number
+	| UniformInt String Number
+	| UniformVec2 String Vec
+	| UniformVec3 String Vec
+	| UniformVec4 String Vec
+	| UniformTex0 String Img
+	# -- hide
+	# TODO
+;
+
+let imgShade : Img -> String -> Img;
+
+let mkAtlas : List Img -> Img;
 
 module (*)

@@ -7,6 +7,7 @@ from lark.visitors import Interpreter
 from dataclasses import dataclass as dat
 from interpreter.parser import parse_file
 from interpreter.path import storage_path
+import interpreter.path as path
 from interpreter.typ import *
 import os
 
@@ -49,7 +50,27 @@ class ModuleData:
         if nm in self.type_aliases:
             return self.type_aliases[nm]
 
-    def get_type_or_kind_with_namespace(self, nm,line) -> Tuple[object, NamespaceType]:
+    def get_type_or_kind_in_namespace(self, nm, ns):
+        """
+        Get type or kind of a name in a specific namespace.
+        If the name is not found in the namespace, return None.
+        namespace `MODULE` not supported, returns None.
+        """
+        e = None
+        match ns:
+            case NamespaceType.TYPE:
+                e = self.type_env
+            case NamespaceType.TYPE_ALIAS:
+                e = self.type_aliases
+            case NamespaceType.VALUE:
+                e = self.env
+            case NamespaceType.MODULE:
+                return None
+        if e is not None and nm in e:
+            return e[nm]
+        return None
+
+    def get_type_or_kind_with_namespace(self, nm, line) -> Tuple[object, NamespaceType]:
         """
         Try to find a name.
         WARNING: If not found return None.
@@ -102,7 +123,7 @@ BUILTIN_TYPES = {
             TRecord({f"_{n}": tvar(f"a{n}") for n in range(10)}, -1, baked=True), t_unit
         )
     ),
-    "print_raw": Scheme.generalize(t_fn(tvar("a"), t_unit)),
+    "print_raw": Scheme.generalize(t_fn(tvar("a"), t_unit))
 }
 
 BUILTIN_KINDS = {"Bool": 0, "Number": 0, "Unit": 0, "String": 0, "Vec": 0, "Num": 0}
@@ -116,6 +137,13 @@ def load_file(filename, logger=print) -> Tuple[ParseTree, ModuleData]:
     Returns result type of the expression in the file
     and the parse tree.
     """
+
+    if "lib/" in filename:
+        # lib is a separate include dir (always in storage_path+"lib/")
+        filename = storage_path + "lib/" + (filename.split("/")[-1])
+    else:
+        filename = (storage_path + path.cwd + filename.split("/")[-1]) if filename.startswith(storage_path) else filename
+
     if not os.path.isfile(filename):
         raise ParseError(f"Module ({filename}) not found!")
 
@@ -140,7 +168,9 @@ def load_file(filename, logger=print) -> Tuple[ParseTree, ModuleData]:
         logger(f"[PARSING] ({filename})\t", round(t2 - t1, 4))
 
     # typecheck
-    typechecker = Typechecker(BUILTIN_TYPES, BUILTIN_KINDS, BUILTIN_TALIASES, logger)
+    typechecker = Typechecker(
+        copy(BUILTIN_TYPES), copy(BUILTIN_KINDS), copy(BUILTIN_TALIASES), logger
+    )
 
     try:
         t1 = time.time()
@@ -318,19 +348,31 @@ class Typechecker(Interpreter):
 
         return res
 
-    def resolve_name(self, name: str, line: int) -> Tuple[object, NamespaceType]:
+    def to_module(self):
+        """
+        Return self as a ModuleData object.
+        """
+        return ModuleData(self.env, self.type_env, self.type_aliases)
+
+    def resolve_name(
+        self, name: str, line: int, namespace=None
+    ) -> Tuple[object, NamespaceType] | object:
         """
         Find a name in the current environment or imported modules.
         name can be regular name or a dotted name (e.g. "math.sin").
+        If namespace is given, look for it in a specific namespace and
+        return the type or kind of the name (object).
         """
         # name from a module? (e.g "math.sin")
         if "." in name:
             # use get_type_or_kind_with_namespace to get the type or kind
             module_name, item_name = name.split(".", 1)
             if module_name in self.imported_modules:
-                res = self.imported_modules[
-                    module_name
-                ].get_type_or_kind_with_namespace(item_name, line)
+                module: ModuleData = self.imported_modules[module_name]
+                if namespace is not None:
+                    res = module.get_type_or_kind_in_namespace(item_name, namespace)
+                else:
+                    res = module.get_type_or_kind_with_namespace(item_name, line)
                 if res is None:
                     raise PMLTypeError(
                         f"Name {item_name} not found in module {module_name} (line {line})"
@@ -340,10 +382,21 @@ class Typechecker(Interpreter):
                 raise PMLTypeError(f"Module {module_name} not found (line {line})")
 
         # name from the current module
+        # if namespace is given, look for it in a specific namespace
+        if namespace is not None:
+            res = self.to_module().get_type_or_kind_in_namespace(name, namespace)
+            if res is None:
+                raise PMLTypeError(f"Name {name} not found in namespace (line {line})")
+            return res
+
+        # if namespace is not given, look for it in the current environment
         if name in self.env:
             return self.env[name].inst(), NamespaceType.VALUE
         if name in self.type_aliases:
-            return (self.type_aliases[name], self.type_env[name]), NamespaceType.TYPE_ALIAS
+            return (
+                self.type_aliases[name],
+                self.type_env[name],
+            ), NamespaceType.TYPE_ALIAS
         if name in self.type_env:
             return self.type_env[name], NamespaceType.TYPE
 
@@ -441,6 +494,7 @@ class Typechecker(Interpreter):
         return tt
 
     def letdecl(self, x, t, b):
+        old_env = self.env
         self.allow_free_tvars = True
         t = self.visit(t)
         if type(t) == TRecord:
@@ -449,8 +503,7 @@ class Typechecker(Interpreter):
         self.allow_free_tvars = False
 
         res = self.visit(b)
-        if x in self.env:  # might have been redefined and already deleted
-            del self.env[str(x)]
+        self.env = old_env
         return res
 
     # regular let
@@ -459,6 +512,7 @@ class Typechecker(Interpreter):
         x = args[0]
         params = args[1:-2]
         e, b = args[-2], args[-1]
+        old_env = copy(self.env)
 
         # add args into env
         tvs = []
@@ -495,8 +549,7 @@ class Typechecker(Interpreter):
         # body
         tb = self.visit(b)
 
-        if x in self.env:  # might have been redefined and already deleted
-            del self.env[x]
+        self.env = old_env
 
         return tb
 
@@ -504,6 +557,7 @@ class Typechecker(Interpreter):
         x = args[0]
         params = args[1:-2]
         e, b = args[-2], args[-1]
+        old_env = copy(self.env)
 
         # automatically apply fix
         fix_t = Scheme.generalize(t_fn(t_fn(tvar("a"), tvar("a")), tvar("a"))).inst()
@@ -532,7 +586,7 @@ class Typechecker(Interpreter):
         # body
         tb = self.visit(b)
 
-        del self.env[x]
+        self.env = old_env
 
         return tb
 
@@ -548,9 +602,7 @@ class Typechecker(Interpreter):
 
         if ns != NamespaceType.VALUE:
             # if it is not a value, raise an error
-            raise PMLTypeError(
-                f"Name {name} is not a value, but a type. (line {x.line})"
-            )
+            raise PMLTypeError(f"Name {name} is not a value (line {x.line})")
 
         return res.inst()
 
@@ -689,10 +741,8 @@ class Typechecker(Interpreter):
         res, ns = self.resolve_name(name, line)
         if ns != NamespaceType.VALUE:
             # if it is not a value, raise an error
-            raise PMLTypeError(
-                f"Name {name} is not a value, but a type. (line {line})"
-            )
-        
+            raise PMLTypeError(f"Name {name} is not a value, but a type. (line {line})")
+
         # if it is a value, return its type
         return res.inst()
 
@@ -729,28 +779,32 @@ class Typechecker(Interpreter):
         name = self.visit(nm)
         line = nm.line if hasattr(nm, "line") else nm.meta.line
 
-
         # try to find name using find_name_with_namespace
-        res, ns = self.resolve_name(str(name), line)
-        if ns != NamespaceType.TYPE and ns != NamespaceType.TYPE_ALIAS:
-            # if it is not a type or type alias, raise an error
-            raise PMLTypeError(
-                f"Name {name} is not a type, but a value. (line {line})"
-            )
+        try:
+            res = self.resolve_name(str(name), line, NamespaceType.TYPE_ALIAS)
+            ns = NamespaceType.TYPE_ALIAS
+        except PMLTypeError:
+            try:
+                res = self.resolve_name(str(name), line, NamespaceType.TYPE)
+                ns = NamespaceType.TYPE
+            except PMLTypeError:
+                # if not found, raise an error
+                raise PMLTypeError(f"Type {name} not found (line {line})")
 
         # alias
         if ns == NamespaceType.TYPE_ALIAS:
-            n_params = res[1] if type(res) == tuple else res
+            n_params = self.to_module().get_type_or_kind_in_namespace(
+                name, NamespaceType.TYPE
+            )
             if n_params != len(params):
                 raise PMLTypeError(
                     f"Type alias {name} takes {n_params} "
                     + f"parameters, {len(params)} given (line {line})"
                 )
-            t: Typ = res[0]
-            substs = zip(t.free_tvars(), params)
+            substs = zip(res.free_tvars(), params)
             for a, b in substs:
-                t = t.subst(a, b)
-            return t
+                res = res.subst(a, b)
+            return res
 
         # type
         if ns == NamespaceType.TYPE:

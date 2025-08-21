@@ -97,10 +97,13 @@ import lib.list (type List, map, zip);
 import lib.math (min, max, type Vec);
 import lib.util (uncurry2);
 
+## A library for using numpy in PocketML.
+
+### ### Type Aliases
 type Size = List Number;
 type Index = List Number;
 
-# construction
+### ### Creating arrays
 let array : List Number -> Vec;
 
 let zeros : Size -> Vec;
@@ -109,9 +112,8 @@ let linspace : Number -> Number -> Number -> Vec
 	# start, end, nsteps
 ;
 
-let vectorize : (Number -> Number) -> Vec -> Vec;
 
-# getters / info
+### ### Getters
 let toList : Vec -> List Number
 	# only 1-dim.!
 ;
@@ -142,8 +144,10 @@ let slicePartial s e a =
 	slice start end a
 ;
 
-# operations
+### ### Manipulating `Vec`s
 let set : Index -> Number -> Vec -> Vec;
+
+let vectorize : (Number -> Number) -> Vec -> Vec;
 let ivectorize : (Index -> Number -> Number) -> Vec -> Vec;
 
 let sum : Vec -> Number;
@@ -161,7 +165,5 @@ let concatenate : Number -> Vec -> Vec -> Vec
 
 let reshape : Size -> Vec -> Vec;
 let transpose : Vec -> Vec;
-
-let _ = print $ concatenate 0 @(1,2) @(3,4);
 
 module (*)

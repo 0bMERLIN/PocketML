@@ -32,6 +32,8 @@ else:
 
 %%%;
 
+## Simple binding for getting input from terminalout.
+
 let input : String -> (String -> Unit) -> Unit;
 
 module (*)

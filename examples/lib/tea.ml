@@ -1,10 +1,38 @@
-%%%
+import lib.shaders;
 
-from kivy.graphics import Color,Rectangle,Ellipse,Rotate,PushMatrix,PopMatrix,Scale,Line
+%%%from kivy.graphics import Color,Rectangle,Ellipse,Rotate,PushMatrix,PopMatrix,Scale,Line
 from kivy.uix.button import Button
 from kivy.core.window import Window
 from kivy.uix.label import Label
 import numpy as np
+
+from kivy.app import App
+from kivy.uix.widget import Widget
+from kivy.graphics import RenderContext, Rectangle
+from kivy.core.window import Window
+from kivy.clock import Clock
+
+from kivy.resources import resource_find
+from kivy.graphics.opengl import *
+from kivy.graphics.texture import Texture
+from kivy.graphics import Callback,BindTexture
+
+class SRectWidget(Widget):
+	def __init__(self, src, **kwargs):
+		self.canvas = RenderContext()
+		super().__init__(**kwargs)
+		
+		with self.canvas:	
+			self.rect = Rectangle(pos=self.pos, size=self.size)
+		self.bind(pos=self.update_rect, size=self.update_rect)
+		self.canvas.shader.fs = src
+		if self.canvas.shader.success == 0:
+			PML_print(checkshader(src))
+		
+	def update_rect(self, *args):
+		self.rect.pos = self.pos
+		self.rect.size = self.size
+
 
 from editor.graphicalout import GraphicalOut
 
@@ -85,7 +113,7 @@ class GameObj:
 		for c in self.cs:
 			c.pos = ints(np.array(c.pos) + dp)
 
-###### PRIMITIVES
+###### PRIMITIVES / HELPERS
 
 def rect(pos,size,texture=None):
 	PushMatrix()
@@ -103,13 +131,77 @@ def label(text,pos,size):
 	editor.graphicalout.add_widget(l)
 	return l
 
+from kivy.uix.slider import Slider
+
 def color(c):
 	editor.graphicalout.__class__.color(list(c))
 
 from kivy.graphics import Color, Rectangle
 
+######### WIDGET MANAGEMENT
+def init_btn(name,txt,size,pos):
+	b = button(txt,floats(pos),floats(size))
+	b.bind(on_press=lambda _:btn_press(name))
+	b.bind(on_release=lambda _:btn_rel(name))
+	return b
 
-######### VDOM
+def update_btn(b,name,txt,size,pos):
+	b.pos=floats(pos)
+	b.size=floats(size)
+	b.text=txt
+
+def init_slider(name,
+		min, max, step, value, size, pos):
+	s = Slider(min=min, max=max,
+		value=value,pos=floats(pos),size=floats(size))
+	editor.graphicalout.add_widget(s)
+	s.bind(value=lambda _,v:slider_move(name,v))
+	return s
+
+def update_slider(s,name,
+		min, max, step, value, size, pos):
+	s.pos,s.size,s.min,s.max,s.step=floats(pos), floats(size),min, max, step
+
+def init_label(name,txt,size,pos):
+	return label(txt,floats(pos),floats(size))
+
+def update_label(l,name,txt,size,pos):
+	l.text=txt
+	l.pos=floats(pos)
+	l.size=floats(size)
+
+def init_srect(src,_,size,pos):
+	pos = pos - np.array([Window.width,Window.height]) / 2
+	s = SRectWidget(
+		src=src,
+		size=floats(2*size/np.array([Window.width,Window.height])),
+		pos=floats(2*pos/np.array([Window.width,Window.height]))
+	)
+	editor.graphicalout.add_widget(s)
+	return s
+
+def update_srect(s, src,_,size,pos):
+	pos = pos - np.array([Window.width,Window.height]) / 2
+	s.src = src
+	s.size = floats(2*size/np.array([Window.width,Window.height]))
+	s.pos = floats(2*pos/np.array([Window.width,Window.height]))
+
+UPDATERS = {
+	"PML_Btn": update_btn,
+	"PML_Slider": update_slider,
+	"PML_Label": update_label,
+	"PML_SRect": update_srect
+}
+
+# create widget objects
+INITIALIZERS = {
+	"PML_Btn": init_btn,
+	"PML_Slider": init_slider,
+	"PML_Label": init_label,
+	"PML_SRect": init_srect
+}
+
+######### VDOM / EVENTS
 
 WIDGETS = {}
 n_used=0
@@ -131,31 +223,45 @@ def btn_rel(name):
 	PRESSED[name]=False
 	emit_event("BtnReleased",name)
 
+def slider_move(name,v):
+	emit_event("SliderMoved",name,v)
+
+from kivy.core.image import Image as CoreImage
+
 def draw(v):
 	global n_used, ff
 
-	if v[0] in ["PML_Btn","PML_Label"]:
-		_,txt,name,pos,size = v
+	if v[0] in INITIALIZERS:
+		name=v[1]
 		if name in WIDGETS:
-			[b,_] = WIDGETS[name]
-			b.pos=floats(pos)
-			b.size=floats(size)
-			b.text=txt
+			[x,_] = WIDGETS[name]
+			UPDATERS[v[0]](x,*v[1:])
 			WIDGETS[name][1] = True # used
-		elif v[0] == "PML_Btn": # new btn
-			b = button(
-				txt,floats(pos),floats(size))
-			b.bind(
-			 on_press=lambda _:btn_press(name))
-			b.bind(
-		 	on_release=lambda _:btn_rel(name))
-			WIDGETS[name] = [b,True]
-		elif v[0] == "PML_Label":
-			l = label(txt,floats(pos),floats(size))
-			WIDGETS[name]=[l,True]
+		else: # new btn
+			x = INITIALIZERS[v[0]](*v[1:])
+			WIDGETS[name] = [x,True]
+	
+	if v[0] == "PML_SRect":
+		uniforms = convlist(v[2])
+		s = WIDGETS[v[1]][0]
+		
+		for typ, name, value in uniforms:
+			if typ == "PML_UniformFloat":
+				s.canvas[name] = value
+			if typ == "PML_UniformInt":
+				s.canvas[name] = int(value)
+			if typ.startswith("PML_UniformVec"):
+				n = int(typ[-1])
+				if len(value) != n:
+					raise Exception(
+						f"[uniformError] Cannot set uniform vec{n} to a Vec of length {len(value)}"
+					)
+				s.canvas[name] = tuple(floats(value))
+			if typ == "PML_UniformTex0":
+				s.rect.texture = value
 	
 	if v[0] in ("PML_Rect", "PML_TRect"):
-		_,pos,size,c=v
+		_,c,size,pos=v
 		tex = None
 		if v[0]=="PML_Rect":
 			g(lambda:color(c))
@@ -176,6 +282,12 @@ DOUPDATE = False
 
 @curry
 def set_tick(state, update, view):
+
+	def on_mouse_up(window, x, y, button, modifiers):
+		global PRESSED
+		PRESSED = {}
+	
+	Window.bind(on_mouse_up=on_mouse_up)
 
 	def helper(s):
 
@@ -206,7 +318,9 @@ def set_tick(state, update, view):
 		# remove old btns
 		for b in list(WIDGETS.keys()):
 			if not WIDGETS[b][1]:
-				WIDGETS[b][0].opacity = 0
+				w = WIDGETS[b][0]
+				w.opacity = 0
+				w.pos=(Window.width*100,0)
 				editor.graphicalout.remove_widget(WIDGETS[b][0])
 				del WIDGETS[b]
 
@@ -231,20 +345,53 @@ def PML_forceUpdate(s):
 	DOUPDATE = True
 	return s
 
+@curry
+def PML_setPos(w, p):
+	w.pos = p
+
+def PML_getFPS(_):
+	return Clock.get_rfps()
+
 %%%;
 
 import lib.std;
 import lib.image;
 
+## Graphics framework inspired by TEA. Uses kivy and VDOM-diffing internally. Supports GUIs, canvas graphics & shaders
+
+
+### ### Types
 type Color = Vec;
 
+data Uniform
+	= UniformFloat String Number
+	| UniformInt String Number
+	| UniformVec2 String Vec
+	| UniformVec3 String Vec
+	| UniformVec4 String Vec
+	| UniformTex0 String Img
+;
+
 data Widget
-	= Rect Vec Vec Color
-	| TRect Vec Vec Img
+	= Rect Color Vec Vec
+	| TRect Img Vec Vec
+	| SRect String (List Uniform) Vec Vec
 	| Btn String String Vec Vec
+	| Slider String Number Number Number Number Vec Vec
 	| Label String String Vec Vec
 	| Line (List Vec) Number Color
 	| Many (List Widget)
+;
+
+let WIDGET_DOCS : doc
+	# Attributes for Widgets:
+	# Rect  : color, size, pos
+	# TRect : texture, size, pos
+	# Btn   : name, text, size, pos
+	# Slider: name, min, max, step, value, size, pos
+	# Label : name, text, size, pos
+	# Line  : polygon-points, width, color
+	# Many  : children
 ;
 
 # builtin event type
@@ -253,7 +400,10 @@ data Event
 	| BtnPressed String
 	| BtnReleased String
 	| BtnHeld String
+	| SliderMoved String Number
 ;
+
+### ### Starting the App
 
 let setTick : a -> (Event -> a -> a) -> (a -> Widget) -> Unit;
 
@@ -261,15 +411,36 @@ let forceUpdate : state -> state;
 
 let stop : Unit -> Unit;
 
-let staticView : (Unit -> Widget) -> Unit;
+### ### Basic kinds of apps / patterns
+
+let staticView : (Unit -> Widget) -> Unit
+	# Renders a view and then halts the app.
+	# Use for graphing, etc.
+;
 let staticView view =
 	setTick () (const stop) view;
 
+### ### Getters
+
 let width : Number;
 let height: Number;
+let top = height - height*.1;
+let getFPS : Unit -> Number;
 
+### ### Positioning / layouts
+let setPos : Widget -> Vec -> Unit;
 let randPos : Unit -> Vec;
 
+let grid : Vec -> Vec -> Num -> Num -> List (Vec -> Widget) -> Widget;
+let grid pos spacing nx ny elems =
+	Many (imap (\i e ->
+		let y = int (i / nx);
+		let x = i - y*nx;
+		e ( pos + @(x,y) * spacing )
+	) elems)
+;
+
+### ### Colors & constants
 let RED = @(255,0,0,255);
 let BLACK = @(0,0,0,255);
 let WHITE = @(255,255,255,255);

@@ -77,8 +77,12 @@ def PML_take(n,l):
 
 %%%;
 
-import lib.maybe;
 import lib.util (times);
+
+## A simple linked list implementation.
+
+
+### ### Types
 
 data List a
 	= Cons a (List a)
@@ -87,49 +91,18 @@ data List a
 	# by `[...]`
 ;
 
-let error : String -> a;
+let error : String -> a
+	# -- hide
+;
+
+### ### Creating lists
 
 let range : Number -> Number -> List Number;
 let srange : Number -> Number -> Number -> List Number
 	# start, end, step
 ;
-let sort : List a -> List a;
 
-let append : a -> List a -> List a;
-let rec append a l = case l
-	| Cons x xs -> Cons x (append a xs)
-	| Nil -> Cons a Nil;
-
-let foldr : (b -> a -> b) -> b -> List a -> b;
-
-let extend : List a -> List a -> List a;
-let extend l xs = foldr (\acc x -> append x acc) l xs;
-
-let concat : List (List a) -> List a;
-let concat = foldr (\acc l -> extend acc l) [];
-
-let reverse : List a -> List a;
-
-let map : (a -> b) -> (List a) -> List b;
-
-let foreach2D : Number -> Number -> (Number->Number-> Unit) -> Unit; # w h f
-let foreach2D w h f = 
-	let _ = map (\x ->
-		map (\y -> f x y) (range 0 w))
-		(range 0 w);
-	();
-
-let nub : List a -> List a;
-
-let imap : (Number -> a -> b) -> List a -> List b;
-
-let any : List Bool -> Bool;
-let any = foldr or False;
-
-let head : List a -> a;
-let head l = case l
-	| Cons x xs -> x
-	| Nil -> error "head on empty list";
+### ### Accessors
 
 let tail : List a -> List a;
 let tail l = case l
@@ -140,6 +113,11 @@ let tailSafe : List a -> List a;
 let tailSafe l = case l
 	| Cons x xs -> xs
 	| Nil -> Nil;
+
+let head : List a -> a;
+let head l = case l
+	| Cons x xs -> x
+	| Nil -> error "head on empty list";
 
 let len : List a -> Number;
 let rec len = \case
@@ -156,6 +134,53 @@ let listAt i l = case listAtSafe i l
 	| Just x -> x
 	| Nothing -> error "Index out of bounds.";
 
+let take : Number -> List a -> List a;
+let chunksOf : Number -> List a -> List (List a);
+let contains : a -> List a -> Bool;
+
+### ### Sorting, etc.
+let sort : List a -> List a;
+let nub : List a -> List a;
+
+### ### Manipulating lists
+
+let append : a -> List a -> List a;
+let rec append a l = case l
+	| Cons x xs -> Cons x (append a xs)
+	| Nil -> Cons a Nil;
+
+let foldr : (b -> a -> b) -> b -> List a -> b;
+let foldr1 f l = foldr f (head l) (tail l);
+
+let extend : List a -> List a -> List a;
+let extend l xs = foldr (\acc x -> append x acc) l xs;
+
+let concat : List (List a) -> List a;
+let concat = foldr (\acc l -> extend acc l) [];
+
+let filter : (a -> Bool) -> List a -> List a;
+let filter f l = foldr (\acc x -> if f x then append x acc else acc) [] l;
+
+let reverse : List a -> List a;
+
+let map : (a -> b) -> (List a) -> List b;
+
+let foreach2D : Number -> Number -> (Number->Number-> Unit) -> Unit; # w h f
+let foreach2D w h f = 
+	let _ = map (\x ->
+		map (\y -> f x y) (range 0 h))
+		(range 0 w);
+	();
+
+let imap : (Number -> a -> b) -> List a -> List b;
+
+let any : List Bool -> Bool;
+let any = foldr or False;
+
+data Maybe a = Just a | Nothing
+	# --hide
+;
+
 let zip : List a -> List b -> List (a,b);
 let rec zip xs ys =
 	if len xs == 0 || len ys == 0
@@ -163,14 +188,5 @@ let rec zip xs ys =
 	else Cons
 		((head xs), (head ys))
 		(zip (tail xs) (tail ys));
-
-let take : Number -> List a -> List a;
-
-let chunksOf : Number -> List a -> List (List a);
-
-let contains : a -> List a -> Bool;
-
-let filter : (a -> Bool) -> List a -> List a;
-let filter f l = foldr (\acc x -> if f x then append x acc else acc) [] l;
 
 module (*)

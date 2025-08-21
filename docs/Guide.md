@@ -258,6 +258,31 @@ type Color = Vec
 
 Most of the standard library is written in a self-documenting way to save on excessive comment clutter when searching in the doc panel.
 
+
+If you want to hide a declaration from the search panel, you can include the
+`--hide` flag in the definition comment:
+```haskell
+data List a
+    # my own list :)
+    # --hide
+;
+```
+
+For library authors:
+The `gen_lib_docs.py` script generates markdown doc files from all `.ml` modules in the `examples/lib/` directory.
+The module description can be defined using a `##`-comment. Markdown can be inserted using `###`:
+
+```python
+## My module. It provides T!
+
+### ### Definitions
+data T = C Num;
+
+### ### Functions
+let unT : T -> Num;
+let unT = \case C n -> n;
+```
+
 ---
 
 For more information consult the "Docs" tab in the editor app that is available for android and linux.

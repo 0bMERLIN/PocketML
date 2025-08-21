@@ -1,3 +1,5 @@
+# a simple gui calculator using lib.tea
+
 import lib.tea;
 import lib.std;
 import lib.math;

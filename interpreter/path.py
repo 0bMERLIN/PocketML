@@ -1,4 +1,5 @@
 
+import os
 from kivy import platform
 
 storage_path = None
@@ -22,3 +23,10 @@ if platform == "android":
 else:
     storage_path = "examples/"
     print("STORAGE:", storage_path)
+
+
+cwd = ""
+
+def set_cwd(new_cwd):
+    global cwd
+    cwd = new_cwd

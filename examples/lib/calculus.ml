@@ -1,6 +1,12 @@
 import lib.math;
 
-let diff : (Number -> Number) -> Number -> (Number -> Number);
+## Basic numeric calculus functions like differentiation, integration, series.
+
+### ### Differentiation & Integration
+let diff : (Number -> Number) -> Number -> (Number -> Number)
+	# args: func, n
+	# returns: n-th derivative of func.
+;
 let rec diff f n =
 	let h = .1;
 	if n <= 0 then f
@@ -12,18 +18,26 @@ let rec diff f n =
 			(if abs(dy/dx) < .01 then 0 else dy/dx)
 ;
 
-let integral : (Number -> Number) -> Number -> Number -> Number;
+let integral : (Number -> Number) -> Number -> Number -> Number
+	# args: func, x_start, x_end
+;
 let rec integral f a b =
 	let dx = .1;
 	if a < b then f a * dx + integral f (a+dx) b
 	else 0;
 
-let taylor : (Number -> Number) -> Number -> Number -> (Number -> Number);
+### ### Series expansions (Taylor, Fourier etc.)
+
+let taylor : (Number -> Number) -> Number -> Number -> (Number -> Number)
+	# args: f, n, x0, x
+;
 let taylor f n x0 x = sigma
 	(\k -> pow (x-x0) k * diff f k x0 / fac k)
 	0 n;
 
-let fourier : (Number -> Number) -> Number -> (Number -> Number);
+let fourier : (Number -> Number) -> Number -> (Number -> Number)
+	# args: f, m, x
+;
 let fourier f m =
 	let a0 = integral f (-pi) pi * 1/(2*pi);
 	let a n =

@@ -24,6 +24,9 @@ import sys
 import numpy as np
 import random
 import os.path
+import requests
+import interpreter.path as path
+
 globals().update(locals())
 
 tup = lambda *l:dict(zip(
@@ -55,24 +58,93 @@ def PML_setInterval(i,s,f):
 def PML_printl(l):
 	PML_print(" ".join(list(map(str, convlist(l)))))
 
+def PML_setTermFontSize(s):
+	editor.terminalout.font_size = s
+
+def PML_setCompilerCWD(p):
+	import interpreter.typecheck as tc
+	import interpreter.compiler as co
+	while not tc.storage_path.endswith("myapp"):
+		tc.storage_path = tc.storage_path[:-1]
+	tc.storage_path += "/" + p
+	co.storage_path = tc.storage_path
+
+def PML_traceTime(f):
+	t = time.time()
+	res = f(None)
+	PML_print("[traceTime]", time.time()-t)
+	return res
+
+@curry
+def PML_download(from_path, to_path):
+	response = requests.get(from_path)
+	response.raise_for_status()
+
+	with open(path.storage_path+"/"+to_path, 'wb') as f:
+		f.write(response.content)
+
+from copy import deepcopy as copy
+PML_copy=copy
+
+def PML_readFile(p):
+	try:
+		with open(path.storage_path+path.cwd+"/"+p,'r') \
+				as f:
+			return ("PML_Just",f.read())
+	except Exception as e:
+		PML_print(e)
+		return ("PML_Nothing",)
 %%%;
 
+## Util functions for the OS, kivy process, network and more.
+
+
+### ### Time
 let time : Unit -> Number;
+let traceTime : (Unit -> b) -> b
+	# log the time an action takes to execute
+;
 let setInterval : Number -> state -> (state->state) -> Unit
 	# args: n, state, tick
 	# run tick every n seconds.
 ;
 let setUpdate : state -> (state->state) ->Unit;
 
+### ### Terminal
 let cls : Unit -> Unit;
-let time : Unit -> Number;
-let setreclimit : Number -> Unit;
 let error : String -> a;
-let str : a -> String;
-let fileexists : String -> Bool;
+let setTermFontSize : Number -> Unit;
+let str : a -> String
+	# deprecated. Use lib.string (str)
+;
+data List a
+	# --hide
+;
+let printl : List a -> Unit;
 
+### ### Misc.
+
+let setreclimit : Number -> Unit;
+let setCompilerCWD : String -> Unit;
 let randint : Number -> Number -> Number;
 
+### ### File system
+
+let fileexists : String -> Bool;
+data Maybe a = Just a | Nothing
+	# --hide
+;
+let readFile : String -> Maybe String;
+
+let readFileUnsafe : String -> String;
+let readFileUnsafe s = case readFile s
+	| Just x -> x;
+
+### ### Network
+let download : String -> String -> Unit;
+
+### ### Basic functions
+let copy : a -> a;
 let uncurry2 : (a -> b -> c) -> (a,b) -> c;
 let uncurry2 f t = f (t._0) (t._1);
 
@@ -100,8 +172,11 @@ let when cond func = if cond then func () else ();
 
 let mapRecord : (a -> a) -> a -> a;
 
-let with : a -> a -> a;
+let with : a -> b -> b;
 let with x = mapRecord (\_ -> x);
+
+let union : a -> a -> a;
+let union = with;
 
 let times : Number -> (a -> a) -> a -> a;
 let times n f x = if n <= 0 then x else times (n-1) f (f x);
@@ -110,7 +185,6 @@ let ftee : (a -> Unit) -> (a -> a) -> a -> a;
 let ftee t g x =
 	let res = g x; const res (t res);
 
-data List a;
-let printl : List a -> Unit;
+#let _= download "http://localhost:8080/C13.png" "test.png";
 
 module (*)

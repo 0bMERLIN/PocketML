@@ -1,3 +1,6 @@
+# finding euler paths (a path that
+# traverses every edge of a graph once)
+
 import lib.std;
 import lib.ugraph;
 
@@ -21,7 +24,7 @@ let edgesFromPath p =
 let valid : Path -> Bool;
 let valid p =
 	let es = edgesFromPath p;
-	listeq (nub es) es;
+	 (nub es) == es;
 
 let gen : Graph String -> Path -> List Path;
 let gen g p = case g | Graph es _ ->
@@ -44,13 +47,13 @@ let euler g sol =
 
 let haus_des_nikolaus = Graph
     # edges:
-    (mkDict (
+    (mkDict [
         ("A", ["B", "D", "E"]),
         ("B", ["A", "E", "D"]),
         ("C", ["D", "E"]),
         ("D", ["A", "B", "C", "E"]),
         ("E", ["A", "B", "C", "D"])
-    ))
+    ])
 
     # vertices:
     ["A", "B", "C", "D", "E"]

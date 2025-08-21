@@ -1,2 +1,1 @@
-examples/test.ml
-examples/examples/calcgui.ml[OPEN]
+examples/examples/game3d.ml[OPEN]

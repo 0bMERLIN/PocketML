@@ -1,8 +1,14 @@
 import lib.std;
 
+## A simplistic Undirected graph.
+
+### ### Types
+
 type Edges a = Dict (List a);
 type Vertices a = List a;
 data Graph a = Graph (Edges a) (Vertices a);
+
+### ### Functions
 
 let edgesFromGraph : Graph a -> List (List a);
 let edgesFromGraph g = case g | Graph es _ ->

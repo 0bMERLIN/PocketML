@@ -59,7 +59,7 @@ class ResultBox(BoxLayout):
             halign="left",
             valign="bottom",
             # add padding on the top
-            padding=(5, 10*len(definition.split("\n")), 0, 0),
+            padding=(5, 10 * len(definition.split("\n")), 0, 0),
             font_name="RobotoMono-Regular",  # use default if missing
             color=(1, 1, 1, 1),
             text_size=(Window.width - 40, None),  # Wrap text based on window width
@@ -91,13 +91,14 @@ class ResultBox(BoxLayout):
         self.height = instance.texture_size[1] + Window.height / 8
 
     def _update_bg(self, *args):
-        self.bg.pos = (self.pos[0], self.pos[1])#+self.size[1] * 0.2)
+        self.bg.pos = (self.pos[0], self.pos[1])  # +self.size[1] * 0.2)
         self.bg.size = (self.size[0] * 1.01, self.size[1])
 
 
-def find_defs(path):
+def find_defs(path, get_markdown_comments=False):
     """
     Find all definitions in a file, excluding comments and multiline comments.
+    get_markdown_comments: If True, also include comments starting with "###"
     """
 
     with open(path, "r") as file:
@@ -109,6 +110,7 @@ def find_defs(path):
         ^data\s+.*?;     # Match 'data ... = ...;' non-greedy
     | ^let\s+[A-Za-z0-9_\s]*?:.*?;      # Match 'let ... : ...;' non-greedy
     | ^type\s+[A-Za-z0-9_\s]*?=.*?;  # Match 'type ...;' non-greedy
+    | ^\s\#\#\#.*?$           # Match comments starting with "##"
     """
     matches = list(re.finditer(pattern, text, re.DOTALL | re.VERBOSE | re.MULTILINE))
 
@@ -117,8 +119,13 @@ def find_defs(path):
 
     def get_line_number(position):
         return sum(1 for p in newline_positions if p < position) + 1
-    
-    return [(path, get_line_number(m.start()), m.group().strip()) for m in matches]
+
+    return [
+        (path, get_line_number(m.start()), m.group().strip())
+        for m in matches
+        if ("--hide" not in m.group()
+        and not (not get_markdown_comments and m.group()[0:4].strip()=="###"))
+    ]
 
 
 class ModuleViewer(BoxLayout):
@@ -206,7 +213,7 @@ class ModuleViewer(BoxLayout):
 
             with open("definitions.txt", "a") as f:
                 f.write(f"{path}: {txt}\n")
-            
+
             if matches(s, query):
                 acc += [(path, lineno, txt.replace(";", "").strip())]
         return acc

@@ -1,6 +1,7 @@
 from copy import copy
 from interpreter.compiler import compile
 from interpreter.typecheck import load_file
+import interpreter.path as path
 import time
 
 from utils import SHOW_COMPILE_TIME
@@ -47,5 +48,4 @@ def file_to_python(filename, logger=print):
     with open("output.py", "w+") as f:
         f.write(res)
 
-    print("")
     return res

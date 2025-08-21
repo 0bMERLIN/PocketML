@@ -1,3 +1,4 @@
-let t = (print, 2, 3);
-
-t._0 "hi"
+awdadwawddw
+adwawdawdawd
+awdadwadwadwadwawawadwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwawdddddddddddddddddddddddddddddddddd
+dawdawdc + 2

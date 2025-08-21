@@ -48,7 +48,12 @@ PML_play = play
 import lib.math;
 import lib.std;
 
+## Library for kivys sound system.
+
+### ### Types
 data Sound;
+
+### ### Generating Sounds
 
 # sound(generator, duration)
 let max_amp : Number;
@@ -58,9 +63,12 @@ let beep : Number -> Number -> Sound;
 let beep freq dur = sound
     (\t -> max_amp * sign (sin (2 * pi * freq * t))) dur;
 
-let play : Sound -> Unit;
+### ### Playback
 
-let _ = play $ beep 440 1;
+let play : Sound -> Unit
+    # example:
+    # play $ beep 440 1
+;
 
 module (*)
 

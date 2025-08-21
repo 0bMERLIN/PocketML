@@ -1,3 +1,6 @@
+# weird example to showcase graphing, buttons
+# and TEA
+
 import lib.graphing;
 import lib.calculus;
 import lib.math;
@@ -27,8 +30,8 @@ let view : State -> Widget;
 let view s = Many
 	[ viewGraphs [\x -> 5*vecAtSafe (vecLen s.data - int (x*40+50)) 0 s.data]
 		(s.zoom) 0 0
-	, Btn "+" "+" @(0,height-250) @(100,100)
-	, Btn "-" "-" @(100,height-250+s.y) @(100,100)
+	, Btn "+" "+" @(100,100) @(0,height-250)
+	, Btn "-" "-" @(100,100) @(100,height-250+s.y)
 	];
 
 let update : Event -> State -> State;

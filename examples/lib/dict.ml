@@ -13,7 +13,7 @@ def PML_dictItems(d):
 
 def PML_mkDict(t):
 	if t == None: return {}
-	xs = list(t.values())
+	xs = convlist(t)
 	acc = {}
 	for e in xs:
 		k = e["_0"]
@@ -26,16 +26,23 @@ PML_dictInsert = lambda s:lambda d:lambda x: dict(list(d.items())+[(s,x)])
 PML_dictEmpty = {}
 %%%;
 
-data List a;
-data Maybe a;
+## Dictionaries with `String`-keys. Internally python dicts.
+
+data List a
+	# --hide
+;
+data Maybe a
+	# --hide
+;
+
+### ### Creation
 
 data Dict a;
 
-let mkDict : a -> Dict b
-# WARNING: `a` should always be a record.
-;
 
-let dictEmpty : Dict a;
+let mkDict : List (String, a) -> Dict a;
+
+### ### Accessing
 
 let dictItems : Dict a -> List (String, a);
 

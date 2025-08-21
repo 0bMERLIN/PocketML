@@ -1,3 +1,7 @@
+---
+title: Language (& Installation) Guide
+nav_order: 1
+---
 
 ## Language Guide
 

@@ -1,8 +1,1 @@
-defaults:
-  - scope:
-      path: ""          # empty string = applies to all files
-      type: "pages"     # or "posts" or "drafts"
-    values:
-      layout: "default"
-
-theme: minima
+remote_theme: pmarsceill/just-the-docs

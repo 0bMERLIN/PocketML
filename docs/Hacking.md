@@ -1,3 +1,8 @@
+---
+title: Hacking & Python Interop
+nav_order: 2
+---
+
 ## Hacking / Extending
 
 #### 1.1 Writing your own libraries

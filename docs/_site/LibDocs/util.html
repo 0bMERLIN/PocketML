@@ -1,0 +1,107 @@
+<html>
+  <head>
+    
+    
+    
+    <link rel="stylesheet" href="/assets/main.css">
+    <style>
+        body {
+            padding: 20px;
+        }
+
+        #navbar {
+            display: flex;
+            background-color: #f8f9fa;
+            padding: 10px;
+            border-bottom: 1px solid #dee2e6;
+        }
+    </style>
+  </head>
+  <body>
+    <div id="navbar">
+    <img src="../assets/logo.jpeg" alt="PocketML Logo" style="width: 100px; height: auto;">
+    </div>
+    <h1 id="utilml">util.ml</h1>
+
+<p>Util functions for the OS, kivy process, network and more.</p>
+
+<h2 id="definitions">Definitions</h2>
+
+<h3 id="time">Time</h3>
+<div class="language-haskell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">time</span> <span class="o">:</span> <span class="kt">Unit</span> <span class="o">-&gt;</span> <span class="kt">Number</span>
+</code></pre></div></div>
+<div class="language-haskell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">traceTime</span> <span class="o">:</span> <span class="p">(</span><span class="kt">Unit</span> <span class="o">-&gt;</span> <span class="n">b</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">b</span>
+	<span class="o">#</span> <span class="n">log</span> <span class="n">the</span> <span class="n">time</span> <span class="n">an</span> <span class="n">action</span> <span class="n">takes</span> <span class="n">to</span> <span class="n">execute</span>
+
+</code></pre></div></div>
+<div class="language-haskell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">setInterval</span> <span class="o">:</span> <span class="kt">Number</span> <span class="o">-&gt;</span> <span class="n">state</span> <span class="o">-&gt;</span> <span class="p">(</span><span class="n">state</span><span class="o">-&gt;</span><span class="n">state</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Unit</span>
+	<span class="o">#</span> <span class="n">args</span><span class="o">:</span> <span class="n">n</span><span class="p">,</span> <span class="n">state</span><span class="p">,</span> <span class="n">tick</span>
+	<span class="o">#</span> <span class="n">run</span> <span class="n">tick</span> <span class="n">every</span> <span class="n">n</span> <span class="n">seconds</span><span class="o">.</span>
+
+</code></pre></div></div>
+<div class="language-haskell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">setUpdate</span> <span class="o">:</span> <span class="n">state</span> <span class="o">-&gt;</span> <span class="p">(</span><span class="n">state</span><span class="o">-&gt;</span><span class="n">state</span><span class="p">)</span> <span class="o">-&gt;</span><span class="kt">Unit</span>
+</code></pre></div></div>
+<h3 id="terminal">Terminal</h3>
+<div class="language-haskell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">cls</span> <span class="o">:</span> <span class="kt">Unit</span> <span class="o">-&gt;</span> <span class="kt">Unit</span>
+</code></pre></div></div>
+<div class="language-haskell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">error</span> <span class="o">:</span> <span class="kt">String</span> <span class="o">-&gt;</span> <span class="n">a</span>
+</code></pre></div></div>
+<div class="language-haskell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">setTermFontSize</span> <span class="o">:</span> <span class="kt">Number</span> <span class="o">-&gt;</span> <span class="kt">Unit</span>
+</code></pre></div></div>
+<div class="language-haskell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">str</span> <span class="o">:</span> <span class="n">a</span> <span class="o">-&gt;</span> <span class="kt">String</span>
+	<span class="o">#</span> <span class="n">deprecated</span><span class="o">.</span> <span class="kt">Use</span> <span class="n">lib</span><span class="o">.</span><span class="n">string</span> <span class="p">(</span><span class="n">str</span><span class="p">)</span>
+
+</code></pre></div></div>
+<div class="language-haskell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">printl</span> <span class="o">:</span> <span class="kt">List</span> <span class="n">a</span> <span class="o">-&gt;</span> <span class="kt">Unit</span>
+</code></pre></div></div>
+<h3 id="misc">Misc.</h3>
+<div class="language-haskell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">setreclimit</span> <span class="o">:</span> <span class="kt">Number</span> <span class="o">-&gt;</span> <span class="kt">Unit</span>
+</code></pre></div></div>
+<div class="language-haskell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">setCompilerCWD</span> <span class="o">:</span> <span class="kt">String</span> <span class="o">-&gt;</span> <span class="kt">Unit</span>
+</code></pre></div></div>
+<div class="language-haskell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">randint</span> <span class="o">:</span> <span class="kt">Number</span> <span class="o">-&gt;</span> <span class="kt">Number</span> <span class="o">-&gt;</span> <span class="kt">Number</span>
+</code></pre></div></div>
+<h3 id="file-system">File system</h3>
+<div class="language-haskell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">fileexists</span> <span class="o">:</span> <span class="kt">String</span> <span class="o">-&gt;</span> <span class="kt">Bool</span>
+</code></pre></div></div>
+<div class="language-haskell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">readFile</span> <span class="o">:</span> <span class="kt">String</span> <span class="o">-&gt;</span> <span class="kt">Maybe</span> <span class="kt">String</span>
+</code></pre></div></div>
+<div class="language-haskell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">readFileUnsafe</span> <span class="o">:</span> <span class="kt">String</span> <span class="o">-&gt;</span> <span class="kt">String</span>
+</code></pre></div></div>
+<h3 id="network">Network</h3>
+<div class="language-haskell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">download</span> <span class="o">:</span> <span class="kt">String</span> <span class="o">-&gt;</span> <span class="kt">String</span> <span class="o">-&gt;</span> <span class="kt">Unit</span>
+</code></pre></div></div>
+<h3 id="basic-functions">Basic functions</h3>
+<div class="language-haskell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">copy</span> <span class="o">:</span> <span class="n">a</span> <span class="o">-&gt;</span> <span class="n">a</span>
+</code></pre></div></div>
+<div class="language-haskell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">uncurry2</span> <span class="o">:</span> <span class="p">(</span><span class="n">a</span> <span class="o">-&gt;</span> <span class="n">b</span> <span class="o">-&gt;</span> <span class="n">c</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="n">b</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">c</span>
+</code></pre></div></div>
+<div class="language-haskell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">not</span> <span class="o">:</span> <span class="kt">Bool</span> <span class="o">-&gt;</span> <span class="kt">Bool</span>
+</code></pre></div></div>
+<div class="language-haskell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">float</span> <span class="o">:</span> <span class="n">a</span> <span class="o">-&gt;</span> <span class="kt">Number</span>
+</code></pre></div></div>
+<div class="language-haskell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">int</span> <span class="o">:</span> <span class="n">a</span> <span class="o">-&gt;</span> <span class="kt">Number</span>
+</code></pre></div></div>
+<div class="language-haskell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">neg</span> <span class="o">:</span> <span class="kt">Number</span> <span class="o">-&gt;</span> <span class="kt">Number</span>
+</code></pre></div></div>
+<div class="language-haskell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">between</span> <span class="o">:</span> <span class="kt">Number</span><span class="o">-&gt;</span> <span class="kt">Number</span> <span class="o">-&gt;</span> <span class="kt">Number</span> <span class="o">-&gt;</span> <span class="kt">Bool</span>
+</code></pre></div></div>
+<div class="language-haskell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">id</span> <span class="o">:</span> <span class="n">a</span> <span class="o">-&gt;</span> <span class="n">a</span>
+</code></pre></div></div>
+<div class="language-haskell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">const</span> <span class="o">:</span> <span class="n">a</span> <span class="o">-&gt;</span> <span class="n">b</span> <span class="o">-&gt;</span> <span class="n">a</span>
+</code></pre></div></div>
+<div class="language-haskell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">when</span> <span class="o">:</span> <span class="kt">Bool</span> <span class="o">-&gt;</span> <span class="p">(</span><span class="kt">Unit</span> <span class="o">-&gt;</span> <span class="kt">Unit</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Unit</span>
+</code></pre></div></div>
+<div class="language-haskell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">mapRecord</span> <span class="o">:</span> <span class="p">(</span><span class="n">a</span> <span class="o">-&gt;</span> <span class="n">a</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">a</span> <span class="o">-&gt;</span> <span class="n">a</span>
+</code></pre></div></div>
+<div class="language-haskell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">with</span> <span class="o">:</span> <span class="n">a</span> <span class="o">-&gt;</span> <span class="n">b</span> <span class="o">-&gt;</span> <span class="n">b</span>
+</code></pre></div></div>
+<div class="language-haskell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">union</span> <span class="o">:</span> <span class="n">a</span> <span class="o">-&gt;</span> <span class="n">a</span> <span class="o">-&gt;</span> <span class="n">a</span>
+</code></pre></div></div>
+<div class="language-haskell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">times</span> <span class="o">:</span> <span class="kt">Number</span> <span class="o">-&gt;</span> <span class="p">(</span><span class="n">a</span> <span class="o">-&gt;</span> <span class="n">a</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">a</span> <span class="o">-&gt;</span> <span class="n">a</span>
+</code></pre></div></div>
+<div class="language-haskell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">ftee</span> <span class="o">:</span> <span class="p">(</span><span class="n">a</span> <span class="o">-&gt;</span> <span class="kt">Unit</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="p">(</span><span class="n">a</span> <span class="o">-&gt;</span> <span class="n">a</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">a</span> <span class="o">-&gt;</span> <span class="n">a</span>
+</code></pre></div></div>
+
+  </body>
+</html>

@@ -1,0 +1,51 @@
+<html>
+  <head>
+    
+    
+    
+    <link rel="stylesheet" href="/assets/main.css">
+    <style>
+        body {
+            padding: 20px;
+        }
+
+        #navbar {
+            display: flex;
+            background-color: #f8f9fa;
+            padding: 10px;
+            border-bottom: 1px solid #dee2e6;
+        }
+    </style>
+  </head>
+  <body>
+    <div id="navbar">
+    <img src="../assets/logo.jpeg" alt="PocketML Logo" style="width: 100px; height: auto;">
+    </div>
+    <h1 id="calculusml">calculus.ml</h1>
+
+<p>Basic numeric calculus functions like differentiation, integration, series.</p>
+
+<h2 id="definitions">Definitions</h2>
+
+<h3 id="differentiation--integration">Differentiation &amp; Integration</h3>
+<div class="language-haskell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">diff</span> <span class="o">:</span> <span class="p">(</span><span class="kt">Number</span> <span class="o">-&gt;</span> <span class="kt">Number</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Number</span> <span class="o">-&gt;</span> <span class="p">(</span><span class="kt">Number</span> <span class="o">-&gt;</span> <span class="kt">Number</span><span class="p">)</span>
+	<span class="o">#</span> <span class="n">args</span><span class="o">:</span> <span class="n">func</span><span class="p">,</span> <span class="n">n</span>
+	<span class="o">#</span> <span class="n">returns</span><span class="o">:</span> <span class="n">n</span><span class="o">-</span><span class="n">th</span> <span class="n">derivative</span> <span class="kr">of</span> <span class="n">func</span><span class="o">.</span>
+
+</code></pre></div></div>
+<div class="language-haskell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">integral</span> <span class="o">:</span> <span class="p">(</span><span class="kt">Number</span> <span class="o">-&gt;</span> <span class="kt">Number</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Number</span> <span class="o">-&gt;</span> <span class="kt">Number</span> <span class="o">-&gt;</span> <span class="kt">Number</span>
+	<span class="o">#</span> <span class="n">args</span><span class="o">:</span> <span class="n">func</span><span class="p">,</span> <span class="n">x_start</span><span class="p">,</span> <span class="n">x_end</span>
+
+</code></pre></div></div>
+<h3 id="series-expansions-taylor-fourier-etc">Series expansions (Taylor, Fourier etc.)</h3>
+<div class="language-haskell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">taylor</span> <span class="o">:</span> <span class="p">(</span><span class="kt">Number</span> <span class="o">-&gt;</span> <span class="kt">Number</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Number</span> <span class="o">-&gt;</span> <span class="kt">Number</span> <span class="o">-&gt;</span> <span class="p">(</span><span class="kt">Number</span> <span class="o">-&gt;</span> <span class="kt">Number</span><span class="p">)</span>
+	<span class="o">#</span> <span class="n">args</span><span class="o">:</span> <span class="n">f</span><span class="p">,</span> <span class="n">n</span><span class="p">,</span> <span class="n">x0</span><span class="p">,</span> <span class="n">x</span>
+
+</code></pre></div></div>
+<div class="language-haskell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">fourier</span> <span class="o">:</span> <span class="p">(</span><span class="kt">Number</span> <span class="o">-&gt;</span> <span class="kt">Number</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Number</span> <span class="o">-&gt;</span> <span class="p">(</span><span class="kt">Number</span> <span class="o">-&gt;</span> <span class="kt">Number</span><span class="p">)</span>
+	<span class="o">#</span> <span class="n">args</span><span class="o">:</span> <span class="n">f</span><span class="p">,</span> <span class="n">m</span><span class="p">,</span> <span class="n">x</span>
+
+</code></pre></div></div>
+
+  </body>
+</html>

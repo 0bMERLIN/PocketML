@@ -1,0 +1,298 @@
+<html>
+  <head>
+    
+    
+    
+    <link rel="stylesheet" href="/assets/main.css">
+    <style>
+        body {
+            padding: 20px;
+        }
+
+        #navbar {
+            display: flex;
+            background-color: #f8f9fa;
+            padding: 10px;
+            border-bottom: 1px solid #dee2e6;
+        }
+    </style>
+  </head>
+  <body>
+    <div id="navbar">
+    <img src="../assets/logo.jpeg" alt="PocketML Logo" style="width: 100px; height: auto;">
+    </div>
+    
+<h2 id="language-guide">Language Guide</h2>
+
+<h4 id="10-installing">1.0 Installing</h4>
+<p>I recommend downloading the APK file
+from the <code class="language-plaintext highlighter-rouge">bin/</code> directory in the <a href="https://github.com/0bMERLIN/PocketML">github repo</a>.</p>
+
+<p>The editor also works on linux. Clone the repo.
+Run <code class="language-plaintext highlighter-rouge">main.py</code> in <code class="language-plaintext highlighter-rouge">python3.10</code> (or higher version) and
+install any libraries python complains about.</p>
+
+<blockquote>
+  <p>Note: On first startup the app will some time to load, while the library and example files are downloaded from the github repo. The loading time depends on your internet connection. Put a file into <code class="language-plaintext highlighter-rouge">Internal Storage/Android/data/org.test.myapp/files/</code> (over USB) if you want to stop the app from installing the default files.</p>
+</blockquote>
+
+<p>You can also build the project yourself using the <a href="https://buildozer.readthedocs.io/en/latest/">buildozer</a> tool.</p>
+
+<h4 id="11-data-types">1.1 Data Types</h4>
+<p>PocketML uses Sum types like most other statically 
+typed functional languages:</p>
+<div class="language-haskell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kr">data</span> <span class="kt">Maybe</span> <span class="n">a</span>
+    <span class="o">|</span> <span class="kt">Just</span> <span class="n">a</span>
+    <span class="o">|</span> <span class="kt">Nothing</span>
+</code></pre></div></div>
+
+<p>You can also declare that a type exists, for example to represent a value from a function implemented in python (see “Hacking / Python interop” page).</p>
+
+<div class="language-haskell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kr">data</span> <span class="kt">PythonObject</span><span class="p">;</span>
+</code></pre></div></div>
+
+<p>Type aliases can be used to abbreviate
+the names of other data types:</p>
+<div class="language-sml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kr">type</span> <span class="kt">Mb</span> <span class="kt">a</span> <span class="p">=</span> <span class="n">Maybe</span> <span class="n">a</span><span class="p">;</span>
+</code></pre></div></div>
+
+<h4 id="12-branching">1.2 Branching</h4>
+<p>Pattern matching is based on the <code class="language-plaintext highlighter-rouge">case</code> keyword
+and can match basic data types:</p>
+<div class="language-sml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kr">case</span> <span class="mi">1</span>
+    <span class="p">|</span> <span class="mi">1</span> <span class="p">-&gt;</span> <span class="s2">"One"</span>
+    <span class="p">|</span> <span class="p">_</span> <span class="p">-&gt;</span> <span class="s2">"Something else"</span>
+</code></pre></div></div>
+<p>And sum types (except for numpy arrays):</p>
+<div class="language-sml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kr">case</span> <span class="n">Just</span> <span class="mi">1</span>
+    <span class="p">|</span> <span class="n">Just</span> <span class="n">x</span> <span class="p">-&gt;</span> <span class="n">print</span> <span class="n">x</span>
+    <span class="p">|</span> <span class="n">Nothing</span> <span class="p">-&gt;</span> <span class="p">()</span>
+</code></pre></div></div>
+<p>Lists are also sum types:</p>
+<div class="language-sml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kr">case</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">]</span>
+    <span class="p">|</span> <span class="n">Cons</span> <span class="n">x</span> <span class="p">_</span> <span class="p">-&gt;</span> <span class="n">print</span> <span class="n">x</span>
+    <span class="p">|</span> <span class="n">Nil</span> <span class="p">-&gt;</span> <span class="n">print</span> <span class="s2">"empty..."</span>
+</code></pre></div></div>
+
+<p>Use if-then-else for branching:</p>
+<div class="language-sml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kr">let</span> <span class="n">f</span> <span class="n">x</span> <span class="p">=</span> <span class="kr">if</span> <span class="n">x</span> <span class="kr">then</span> <span class="s2">"True!"</span> <span class="kr">else</span> <span class="s2">"false :("</span><span class="p">;</span>
+<span class="n">f</span> <span class="n">True</span>
+</code></pre></div></div>
+<p>When programming with side effects, an else branch may
+not be needed. The if-then expression must always return
+Unit.</p>
+<div class="language-sml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kr">let</span> <span class="n">f</span> <span class="p">:</span> <span class="n">Bool</span> <span class="p">-&gt;</span> <span class="n">Unit</span><span class="p">;</span>
+<span class="kr">let</span> <span class="n">f</span> <span class="n">b</span> <span class="p">=</span> <span class="kr">if</span> <span class="n">b</span> <span class="kr">then</span> <span class="n">print</span> <span class="s2">"True!"</span><span class="p">;</span>
+<span class="p">...</span>
+</code></pre></div></div>
+
+<h4 id="13-do-syntax">1.3 Do-Syntax</h4>
+<p>When many functions need to be
+executed one after another, for example
+to cause side effects, the do-syntax
+can be used.</p>
+<div class="language-haskell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kr">let</span> <span class="n">f</span> <span class="kr">_</span> <span class="o">=</span> <span class="kr">do</span>
+    <span class="n">print</span> <span class="s">"1"</span>
+    <span class="n">print</span> <span class="s">"2"</span>
+    <span class="n">print</span> <span class="s">"3"</span>
+    <span class="n">launch_missiles</span> <span class="nb">()</span>
+<span class="p">;</span>
+</code></pre></div></div>
+<blockquote>
+  <p>Note: Do not confuse this do syntax
+with monadic do-notation in Haskell! This is more of a C-like block (e.g. <code class="language-plaintext highlighter-rouge">{ ...; ...; }</code>).
+The do-syntax is not perfect and might
+fail to parse in some situations. When in
+doubt use <code class="language-plaintext highlighter-rouge">let _ = a (); let _ = b (); ...</code></p>
+</blockquote>
+
+<h4 id="14-lists">1.4 Lists</h4>
+<p>Lists can be created like in the following example:</p>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">std</span><span class="p">;</span>
+
+<span class="k">print</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">]</span>
+<span class="c1"># =&gt; (Cons 1 (Cons 2 (Cons 3 Nil)))
+</span></code></pre></div></div>
+
+<p>Numpy arrays can be created using the <code class="language-plaintext highlighter-rouge">@(x1, x2, x3, ...)</code> syntax:</p>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">print</span> <span class="p">(</span><span class="o">@</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span> <span class="o">+</span> <span class="o">@</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span> <span class="c1"># =&gt; [4. 6.]
+</span></code></pre></div></div>
+<p>They have type <code class="language-plaintext highlighter-rouge">Vec</code>.</p>
+
+<h4 id="15-tuples-and-records">1.5 Tuples and Records</h4>
+<p>PocketML supports both tuples and records. It is
+best to use records and tuples sparingly,
+as custom data types carry more information
+and are more strongly typed.</p>
+<div class="language-sml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kr">type</span> <span class="kt">Point</span> <span class="p">=</span> <span class="p">(</span><span class="n">Number</span><span class="p">,</span> <span class="n">Number</span><span class="p">);</span>
+
+<span class="kr">type</span> <span class="kt">Person</span> <span class="p">=</span>
+    <span class="p">{</span> <span class="n">name</span><span class="p">:</span> <span class="n">String</span>
+    <span class="p">,</span> <span class="n">age</span><span class="p">:</span> <span class="n">Number</span>
+    <span class="p">,</span> <span class="n">location</span><span class="p">:</span> <span class="n">Point</span> <span class="p">};</span>
+</code></pre></div></div>
+
+<blockquote>
+  <p>Note that PocketML does not support tuple and record pattern
+matching yet!</p>
+</blockquote>
+
+<p>Records also support a sort of weak row-polymorphism.</p>
+
+<div class="language-sml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kr">let</span> <span class="n">getX</span> <span class="p">:</span> <span class="p">{</span> <span class="n">x</span> <span class="p">:</span> <span class="n">a</span> <span class="p">}</span> <span class="p">-&gt;</span> <span class="n">a</span><span class="p">;</span>
+<span class="kr">let</span> <span class="n">getX</span> <span class="n">r</span> <span class="p">=</span> <span class="nn">r</span><span class="p">.</span><span class="n">x</span><span class="p">;</span>
+
+<span class="n">print</span> <span class="n">$</span> <span class="n">getX</span> <span class="p">{</span><span class="n">x</span><span class="p">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">y</span><span class="p">=</span><span class="mi">20</span><span class="p">}</span>
+</code></pre></div></div>
+
+<p>Generally a record <code class="language-plaintext highlighter-rouge">{x : a, y : b}</code> and a record <code class="language-plaintext highlighter-rouge">{y : b}</code> unify. That also means that the following example only fails at runtime.</p>
+<div class="language-sml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kr">let</span> <span class="n">getX</span> <span class="p">:</span> <span class="p">{</span> <span class="n">x</span> <span class="p">:</span> <span class="n">a</span><span class="p">,</span> <span class="n">y</span> <span class="p">:</span> <span class="n">b</span> <span class="p">}</span> <span class="p">-&gt;</span> <span class="n">a</span><span class="p">;</span>
+<span class="kr">let</span> <span class="n">getX</span> <span class="n">r</span> <span class="p">=</span> <span class="nn">r</span><span class="p">.</span><span class="n">x</span><span class="p">;</span>
+
+<span class="n">print</span> <span class="n">$</span> <span class="n">getX</span> <span class="p">{</span><span class="n">y</span><span class="p">=</span><span class="mi">20</span><span class="p">}</span>
+</code></pre></div></div>
+
+<blockquote>
+  <p>Note: The section <em>Python Interop</em> has an example of how this can be used to implement named default arguments.</p>
+</blockquote>
+
+<p>The standard library <code class="language-plaintext highlighter-rouge">lib.std</code> has functions for updating records:</p>
+<div class="language-sml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">import</span> <span class="nn">lib</span><span class="p">.</span><span class="n">std</span><span class="p">;</span>
+
+<span class="kr">let</span> <span class="n">myrec</span> <span class="p">=</span> <span class="p">{</span><span class="n">x</span><span class="p">=</span><span class="mi">1</span><span class="p">,</span><span class="n">y</span><span class="p">=</span><span class="mi">2</span><span class="p">,</span><span class="n">z</span><span class="p">=</span><span class="mi">3</span><span class="p">};</span>
+
+<span class="kr">do</span>
+    <span class="n">print</span> <span class="p">(</span><span class="kr">with</span> <span class="p">{</span> <span class="n">x</span> <span class="p">=</span> <span class="mi">22</span> <span class="p">}</span> <span class="n">myrec</span><span class="p">)</span>
+    <span class="n">print</span> <span class="p">(</span><span class="n">recordMap</span> <span class="p">(</span><span class="n">\r</span> <span class="p">-&gt;</span> <span class="kr">with</span> <span class="p">{</span><span class="n">x</span><span class="p">=</span><span class="nn">r</span><span class="p">.</span><span class="n">x+</span><span class="mi">1</span><span class="p">}</span> <span class="n">r</span><span class="p">)</span> <span class="n">myrec</span><span class="p">)</span>
+</code></pre></div></div>
+
+<h4 id="16-functions-recursion-and-let">1.6 Functions, recursion and let</h4>
+<p>Variables are generally introduced using the <code class="language-plaintext highlighter-rouge">let</code>
+keyword. Let declarations can be used to introduce
+a variables type before defining it:</p>
+<div class="language-sml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kr">let</span> <span class="n">pi</span> <span class="p">:</span> <span class="n">Number</span><span class="p">;</span>
+<span class="kr">let</span> <span class="n">pi</span> <span class="p">=</span> <span class="mi">3</span><span class="p">;</span>
+</code></pre></div></div>
+
+<p>Functions can be introduced using <code class="language-plaintext highlighter-rouge">\</code> and are
+anonymous. To create recursive functions, 
+the <code class="language-plaintext highlighter-rouge">rec</code> keyword or an explicit type
+annotation is required:</p>
+
+<div class="language-sml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kr">let</span> <span class="kr">rec</span> <span class="n">sum</span> <span class="p">=</span> <span class="n">\x</span> <span class="p">-&gt;</span> <span class="kr">case</span> <span class="n">x</span>
+    <span class="p">|</span> <span class="n">Nil</span> <span class="p">-&gt;</span> <span class="mi">0</span>
+    <span class="p">|</span> <span class="n">Cons</span> <span class="n">x</span> <span class="n">xs</span> <span class="p">-&gt;</span> <span class="n">add</span> <span class="n">x</span> <span class="p">(</span><span class="n">sum</span> <span class="n">xs</span><span class="p">);</span>
+
+<span class="n">print</span> <span class="p">(</span><span class="n">sum</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">])</span>
+</code></pre></div></div>
+<p>Or alternatively:</p>
+<div class="language-sml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kr">let</span> <span class="n">sum</span> <span class="p">:</span> <span class="p">(</span><span class="n">List</span> <span class="n">Number</span><span class="p">)</span> <span class="p">-&gt;</span> <span class="n">Number</span>
+<span class="kr">let</span> <span class="n">sum</span> <span class="p">=</span> <span class="n">\</span><span class="kr">case</span>
+    <span class="p">|</span> <span class="n">Nil</span> <span class="p">-&gt;</span> <span class="mi">0</span>
+    <span class="p">|</span> <span class="n">Cons</span> <span class="n">x</span> <span class="n">xs</span> <span class="p">-&gt;</span> <span class="n">add</span> <span class="n">x</span> <span class="p">(</span><span class="n">sum</span> <span class="n">xs</span><span class="p">);</span>
+
+<span class="n">print</span> <span class="p">(</span><span class="n">sum</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">])</span>
+</code></pre></div></div>
+<blockquote>
+  <p>Note: The above example uses the <code class="language-plaintext highlighter-rouge">\case</code> notation
+which is equivalent to <code class="language-plaintext highlighter-rouge">\x -&gt; case x ...</code>.</p>
+</blockquote>
+
+<p>Functions can also be introduced using let:</p>
+<div class="language-ocaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">let</span> <span class="n">greet</span> <span class="n">x</span> <span class="o">=</span> <span class="n">print2</span> <span class="s2">"Hello,"</span> <span class="n">x</span><span class="p">;</span>
+<span class="n">greet</span> <span class="s2">"there!"</span>
+</code></pre></div></div>
+
+<h4 id="17-modules">1.7 Modules</h4>
+<p>PocketML projects are organized into modules.
+A module exports variables, types and type aliases.
+The explicit module declaration can limit what is exported:</p>
+<blockquote>
+  <p>Note: Constructors must be exported explicitly</p>
+</blockquote>
+
+<div class="language-ocaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">let</span> <span class="n">greet</span> <span class="n">x</span> <span class="o">=</span> <span class="n">print2</span> <span class="s2">"Hi,"</span> <span class="n">x</span><span class="p">;</span>
+<span class="k">let</span> <span class="n">pi</span> <span class="o">=</span> <span class="mi">4</span><span class="p">;</span>
+
+<span class="n">data</span> <span class="nc">MyType</span> <span class="o">=</span>
+    <span class="nc">MyConstructor</span> <span class="nc">Number</span><span class="p">;</span>
+
+<span class="k">module</span>
+    <span class="p">(</span> <span class="n">greet</span>
+    <span class="o">,</span> <span class="n">pi</span>
+    <span class="o">,</span> <span class="k">type</span> <span class="nc">MyType</span>
+    <span class="o">,</span> <span class="nc">MyConstructor</span>
+    <span class="p">)</span>
+</code></pre></div></div>
+
+<p>Modules can also use <code class="language-plaintext highlighter-rouge">(*)</code> to export <em>all</em>
+types and variables.</p>
+
+<div class="language-ocaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">let</span> <span class="n">greet</span> <span class="n">x</span> <span class="o">=</span> <span class="n">print2</span> <span class="s2">"Hi,"</span> <span class="n">x</span><span class="p">;</span>
+<span class="k">let</span> <span class="n">pi</span> <span class="o">=</span> <span class="mi">4</span><span class="p">;</span>
+<span class="k">module</span> <span class="p">(</span><span class="o">*</span><span class="p">)</span>
+</code></pre></div></div>
+<p>Modules inside a directory can be addressed using <code class="language-plaintext highlighter-rouge">.</code>:</p>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">directory.mymodule</span><span class="p">;</span>
+</code></pre></div></div>
+
+<p>Imports can also be selective (only importing <em>some</em> names from a module).
+Modules can also be aliased (given an explicit name).</p>
+
+<div class="language-haskell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kr">import</span> <span class="nn">lib.math</span> <span class="p">(</span><span class="n">sin</span><span class="p">)</span> <span class="n">as</span> <span class="kt">Math</span><span class="p">;</span>
+<span class="kr">import</span> <span class="nn">lib.calculus</span> <span class="n">as</span> <span class="kt">Calc</span><span class="p">;</span>
+<span class="kr">import</span> <span class="nn">lib.std</span><span class="p">;</span>
+
+<span class="n">print</span> <span class="o">$</span> <span class="p">(</span><span class="kt">Calc</span><span class="o">.</span><span class="n">diff</span> <span class="n">sin</span> <span class="mi">1</span><span class="p">)</span> <span class="kt">Math</span><span class="o">.</span><span class="n">pi</span>
+</code></pre></div></div>
+
+<h4 id="18-doc-comments">1.8 Doc comments</h4>
+<p>The editor has a builtin search panel for looking up types or searching for a function with a certain type.
+Any comments <em>before</em> the semicolon in a declaration will be included as a doc comment:</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">data</span> <span class="n">List</span> <span class="n">a</span>
+	<span class="o">=</span> <span class="n">Cons</span> <span class="n">a</span> <span class="p">(</span><span class="n">List</span> <span class="n">a</span><span class="p">)</span>
+	<span class="o">|</span> <span class="n">Nil</span>
+	<span class="c1"># The default list type generated
+</span>	<span class="c1"># by `[...]`
+</span><span class="p">;</span>
+
+<span class="n">let</span> <span class="n">mkDict</span> <span class="p">:</span> <span class="n">a</span> <span class="o">-&gt;</span> <span class="n">Dict</span> <span class="n">b</span>
+    <span class="c1"># WARNING: `a` should always be a record.
+</span><span class="p">;</span>
+
+<span class="nb">type</span> <span class="n">Color</span> <span class="o">=</span> <span class="n">Vec</span>
+	<span class="c1"># Just a vector...
+</span><span class="p">;</span>
+</code></pre></div></div>
+
+<p>Most of the standard library is written in a self-documenting way to save on excessive comment clutter when searching in the doc panel.</p>
+
+<p>If you want to hide a declaration from the search panel, you can include the
+<code class="language-plaintext highlighter-rouge">--hide</code> flag in the definition comment:</p>
+<div class="language-haskell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kr">data</span> <span class="kt">List</span> <span class="n">a</span>
+    <span class="o">#</span> <span class="n">my</span> <span class="n">own</span> <span class="n">list</span> <span class="o">:</span><span class="p">)</span>
+    <span class="o">#</span> <span class="c1">--hide</span>
+<span class="p">;</span>
+</code></pre></div></div>
+
+<p>For library authors:
+The <code class="language-plaintext highlighter-rouge">gen_lib_docs.py</code> script generates markdown doc files from all <code class="language-plaintext highlighter-rouge">.ml</code> modules in the <code class="language-plaintext highlighter-rouge">examples/lib/</code> directory.
+The module description can be defined using a <code class="language-plaintext highlighter-rouge">##</code>-comment. Markdown can be inserted using <code class="language-plaintext highlighter-rouge">###</code>:</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">## My module. It provides T!
+</span>
+<span class="c1">### ### Definitions
+</span><span class="n">data</span> <span class="n">T</span> <span class="o">=</span> <span class="n">C</span> <span class="n">Num</span><span class="p">;</span>
+
+<span class="c1">### ### Functions
+</span><span class="n">let</span> <span class="n">unT</span> <span class="p">:</span> <span class="n">T</span> <span class="o">-&gt;</span> <span class="n">Num</span><span class="p">;</span>
+<span class="n">let</span> <span class="n">unT</span> <span class="o">=</span> \<span class="n">case</span> <span class="n">C</span> <span class="n">n</span> <span class="o">-&gt;</span> <span class="n">n</span><span class="p">;</span>
+</code></pre></div></div>
+
+<hr />
+
+<p>For more information consult the “Docs” tab in the editor app that is available for android and linux.</p>
+
+  </body>
+</html>

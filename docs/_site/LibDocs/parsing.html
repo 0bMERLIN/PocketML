@@ -1,0 +1,45 @@
+<html>
+  <head>
+    
+    
+    
+    <link rel="stylesheet" href="/assets/main.css">
+    <style>
+        body {
+            padding: 20px;
+        }
+
+        #navbar {
+            display: flex;
+            background-color: #f8f9fa;
+            padding: 10px;
+            border-bottom: 1px solid #dee2e6;
+        }
+    </style>
+  </head>
+  <body>
+    <div id="navbar">
+    <img src="../assets/logo.jpeg" alt="PocketML Logo" style="width: 100px; height: auto;">
+    </div>
+    <h1 id="parsingml">parsing.ml</h1>
+
+<p>A lark-based parser. Generated data compatible with a sum type of the form <code class="language-plaintext highlighter-rouge">data Expr = CapitalizedRuleName ... | ...</code></p>
+
+<h2 id="definitions">Definitions</h2>
+
+<h3 id="types">Types</h3>
+<div class="language-haskell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">GrammarError</span> <span class="o">=</span> <span class="kt">String</span>
+</code></pre></div></div>
+<div class="language-haskell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">ParseError</span> <span class="o">=</span> <span class="kt">String</span>
+</code></pre></div></div>
+<h3 id="creating-parsers">Creating parsers</h3>
+<div class="language-haskell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">parser</span> <span class="o">:</span>
+	<span class="kt">String</span> <span class="o">-&gt;</span> <span class="kt">Either</span> <span class="kt">GrammarError</span> <span class="p">(</span>
+		<span class="kt">String</span> <span class="o">-&gt;</span> <span class="kt">Either</span> <span class="kt">ParseError</span> <span class="n">a</span>
+	<span class="p">)</span>
+	<span class="o">#</span> <span class="n">args</span><span class="o">:</span> <span class="n">grammar</span><span class="p">,</span> <span class="n">string</span>
+
+</code></pre></div></div>
+
+  </body>
+</html>

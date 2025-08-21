@@ -1,0 +1,98 @@
+<html>
+  <head>
+    
+    
+    
+    <link rel="stylesheet" href="/assets/main.css">
+    <style>
+        body {
+            padding: 20px;
+        }
+
+        #navbar {
+            display: flex;
+            background-color: #f8f9fa;
+            padding: 10px;
+            border-bottom: 1px solid #dee2e6;
+        }
+    </style>
+  </head>
+  <body>
+    <div id="navbar">
+    <img src="../assets/logo.jpeg" alt="PocketML Logo" style="width: 100px; height: auto;">
+    </div>
+    <h1 id="listml">list.ml</h1>
+
+<p>A simple linked list implementation.</p>
+
+<h2 id="definitions">Definitions</h2>
+
+<h3 id="types">Types</h3>
+<div class="language-haskell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">List</span> <span class="n">a</span>
+	<span class="o">=</span> <span class="kt">Cons</span> <span class="n">a</span> <span class="p">(</span><span class="kt">List</span> <span class="n">a</span><span class="p">)</span>
+	<span class="o">|</span> <span class="kt">Nil</span>
+	<span class="o">#</span> <span class="kt">The</span> <span class="kr">default</span> <span class="n">list</span> <span class="n">generated</span>
+	<span class="o">#</span> <span class="n">by</span> <span class="p">`[</span><span class="o">...</span><span class="p">]`</span>
+
+</code></pre></div></div>
+<div class="language-haskell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">error</span> <span class="o">:</span> <span class="kt">String</span> <span class="o">-&gt;</span> <span class="n">a</span>
+	<span class="o">#</span> <span class="c1">-- hide</span>
+
+</code></pre></div></div>
+<h3 id="creating-lists">Creating lists</h3>
+<div class="language-haskell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">range</span> <span class="o">:</span> <span class="kt">Number</span> <span class="o">-&gt;</span> <span class="kt">Number</span> <span class="o">-&gt;</span> <span class="kt">List</span> <span class="kt">Number</span>
+</code></pre></div></div>
+<div class="language-haskell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">srange</span> <span class="o">:</span> <span class="kt">Number</span> <span class="o">-&gt;</span> <span class="kt">Number</span> <span class="o">-&gt;</span> <span class="kt">Number</span> <span class="o">-&gt;</span> <span class="kt">List</span> <span class="kt">Number</span>
+	<span class="o">#</span> <span class="n">start</span><span class="p">,</span> <span class="n">end</span><span class="p">,</span> <span class="n">step</span>
+
+</code></pre></div></div>
+<h3 id="accessors">Accessors</h3>
+<div class="language-haskell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">tail</span> <span class="o">:</span> <span class="kt">List</span> <span class="n">a</span> <span class="o">-&gt;</span> <span class="kt">List</span> <span class="n">a</span>
+</code></pre></div></div>
+<div class="language-haskell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">tailSafe</span> <span class="o">:</span> <span class="kt">List</span> <span class="n">a</span> <span class="o">-&gt;</span> <span class="kt">List</span> <span class="n">a</span>
+</code></pre></div></div>
+<div class="language-haskell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">head</span> <span class="o">:</span> <span class="kt">List</span> <span class="n">a</span> <span class="o">-&gt;</span> <span class="n">a</span>
+</code></pre></div></div>
+<div class="language-haskell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">len</span> <span class="o">:</span> <span class="kt">List</span> <span class="n">a</span> <span class="o">-&gt;</span> <span class="kt">Number</span>
+</code></pre></div></div>
+<div class="language-haskell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">listAtSafe</span> <span class="o">:</span> <span class="kt">Number</span> <span class="o">-&gt;</span> <span class="kt">List</span> <span class="n">a</span> <span class="o">-&gt;</span> <span class="kt">Maybe</span> <span class="n">a</span>
+</code></pre></div></div>
+<div class="language-haskell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">listAt</span> <span class="o">:</span> <span class="kt">Number</span> <span class="o">-&gt;</span> <span class="kt">List</span> <span class="n">a</span> <span class="o">-&gt;</span> <span class="n">a</span>
+</code></pre></div></div>
+<div class="language-haskell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">take</span> <span class="o">:</span> <span class="kt">Number</span> <span class="o">-&gt;</span> <span class="kt">List</span> <span class="n">a</span> <span class="o">-&gt;</span> <span class="kt">List</span> <span class="n">a</span>
+</code></pre></div></div>
+<div class="language-haskell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">chunksOf</span> <span class="o">:</span> <span class="kt">Number</span> <span class="o">-&gt;</span> <span class="kt">List</span> <span class="n">a</span> <span class="o">-&gt;</span> <span class="kt">List</span> <span class="p">(</span><span class="kt">List</span> <span class="n">a</span><span class="p">)</span>
+</code></pre></div></div>
+<div class="language-haskell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">contains</span> <span class="o">:</span> <span class="n">a</span> <span class="o">-&gt;</span> <span class="kt">List</span> <span class="n">a</span> <span class="o">-&gt;</span> <span class="kt">Bool</span>
+</code></pre></div></div>
+<h3 id="sorting-etc">Sorting, etc.</h3>
+<div class="language-haskell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">sort</span> <span class="o">:</span> <span class="kt">List</span> <span class="n">a</span> <span class="o">-&gt;</span> <span class="kt">List</span> <span class="n">a</span>
+</code></pre></div></div>
+<div class="language-haskell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">nub</span> <span class="o">:</span> <span class="kt">List</span> <span class="n">a</span> <span class="o">-&gt;</span> <span class="kt">List</span> <span class="n">a</span>
+</code></pre></div></div>
+<h3 id="manipulating-lists">Manipulating lists</h3>
+<div class="language-haskell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">append</span> <span class="o">:</span> <span class="n">a</span> <span class="o">-&gt;</span> <span class="kt">List</span> <span class="n">a</span> <span class="o">-&gt;</span> <span class="kt">List</span> <span class="n">a</span>
+</code></pre></div></div>
+<div class="language-haskell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">foldr</span> <span class="o">:</span> <span class="p">(</span><span class="n">b</span> <span class="o">-&gt;</span> <span class="n">a</span> <span class="o">-&gt;</span> <span class="n">b</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">b</span> <span class="o">-&gt;</span> <span class="kt">List</span> <span class="n">a</span> <span class="o">-&gt;</span> <span class="n">b</span>
+</code></pre></div></div>
+<div class="language-haskell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">extend</span> <span class="o">:</span> <span class="kt">List</span> <span class="n">a</span> <span class="o">-&gt;</span> <span class="kt">List</span> <span class="n">a</span> <span class="o">-&gt;</span> <span class="kt">List</span> <span class="n">a</span>
+</code></pre></div></div>
+<div class="language-haskell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">concat</span> <span class="o">:</span> <span class="kt">List</span> <span class="p">(</span><span class="kt">List</span> <span class="n">a</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">List</span> <span class="n">a</span>
+</code></pre></div></div>
+<div class="language-haskell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">filter</span> <span class="o">:</span> <span class="p">(</span><span class="n">a</span> <span class="o">-&gt;</span> <span class="kt">Bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">List</span> <span class="n">a</span> <span class="o">-&gt;</span> <span class="kt">List</span> <span class="n">a</span>
+</code></pre></div></div>
+<div class="language-haskell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">reverse</span> <span class="o">:</span> <span class="kt">List</span> <span class="n">a</span> <span class="o">-&gt;</span> <span class="kt">List</span> <span class="n">a</span>
+</code></pre></div></div>
+<div class="language-haskell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">map</span> <span class="o">:</span> <span class="p">(</span><span class="n">a</span> <span class="o">-&gt;</span> <span class="n">b</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="p">(</span><span class="kt">List</span> <span class="n">a</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">List</span> <span class="n">b</span>
+</code></pre></div></div>
+<div class="language-haskell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">foreach2D</span> <span class="o">:</span> <span class="kt">Number</span> <span class="o">-&gt;</span> <span class="kt">Number</span> <span class="o">-&gt;</span> <span class="p">(</span><span class="kt">Number</span><span class="o">-&gt;</span><span class="kt">Number</span><span class="o">-&gt;</span> <span class="kt">Unit</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Unit</span>
+</code></pre></div></div>
+<div class="language-haskell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">imap</span> <span class="o">:</span> <span class="p">(</span><span class="kt">Number</span> <span class="o">-&gt;</span> <span class="n">a</span> <span class="o">-&gt;</span> <span class="n">b</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">List</span> <span class="n">a</span> <span class="o">-&gt;</span> <span class="kt">List</span> <span class="n">b</span>
+</code></pre></div></div>
+<div class="language-haskell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">any</span> <span class="o">:</span> <span class="kt">List</span> <span class="kt">Bool</span> <span class="o">-&gt;</span> <span class="kt">Bool</span>
+</code></pre></div></div>
+<div class="language-haskell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">zip</span> <span class="o">:</span> <span class="kt">List</span> <span class="n">a</span> <span class="o">-&gt;</span> <span class="kt">List</span> <span class="n">b</span> <span class="o">-&gt;</span> <span class="kt">List</span> <span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="n">b</span><span class="p">)</span>
+</code></pre></div></div>
+
+  </body>
+</html>

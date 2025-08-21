@@ -1,0 +1,26 @@
+<html>
+  <head>
+    {{ content_for_header }}
+    {{ content_for_head }}
+    {{ content_for_layout }}
+    <link rel="stylesheet" href="{{ '/assets/main.css' | relative_url }}">
+    <style>
+        body {
+            padding: 20px;
+        }
+
+        #navbar {
+            display: flex;
+            background-color: #f8f9fa;
+            padding: 10px;
+            border-bottom: 1px solid #dee2e6;
+        }
+    </style>
+  </head>
+  <body>
+    <div id="navbar">
+    <img src="../assets/logo.jpeg" alt="PocketML Logo" style="width: 100px; height: auto;">
+    </div>
+    {{ content }}
+  </body>
+</html>

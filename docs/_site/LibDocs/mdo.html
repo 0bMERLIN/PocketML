@@ -1,0 +1,41 @@
+<html>
+  <head>
+    
+    
+    
+    <link rel="stylesheet" href="/assets/main.css">
+    <style>
+        body {
+            padding: 20px;
+        }
+
+        #navbar {
+            display: flex;
+            background-color: #f8f9fa;
+            padding: 10px;
+            border-bottom: 1px solid #dee2e6;
+        }
+    </style>
+  </head>
+  <body>
+    <div id="navbar">
+    <img src="../assets/logo.jpeg" alt="PocketML Logo" style="width: 100px; height: auto;">
+    </div>
+    <h1 id="mdoml">mdo.ml</h1>
+
+<h2 id="definitions">Definitions</h2>
+
+<div class="language-haskell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">mkMDo</span> <span class="o">:</span>
+	<span class="p">((</span><span class="n">a</span> <span class="o">-&gt;</span> <span class="kt">M</span> <span class="n">b</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">M</span> <span class="n">a</span> <span class="o">-&gt;</span> <span class="kt">M</span> <span class="n">b</span><span class="p">)</span>
+	<span class="o">-&gt;</span> <span class="p">((</span><span class="kt">M</span> <span class="n">t</span> <span class="o">-&gt;</span> <span class="n">t</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">M</span> <span class="n">c</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">M</span> <span class="n">c</span>
+	<span class="o">#</span> <span class="n">args</span><span class="o">:</span> <span class="n">bind</span><span class="p">,</span> <span class="kr">do</span> <span class="n">block</span>
+	<span class="o">#</span> <span class="kt">Example</span><span class="o">:</span>
+	<span class="o">#</span>	<span class="n">mkMDo</span> <span class="kt">Maybe</span><span class="o">.</span><span class="n">bind</span> <span class="o">$</span> <span class="nf">\</span><span class="n">yield</span> <span class="o">-&gt;</span>
+	<span class="o">#</span> 		<span class="n">x</span> <span class="o">=</span> <span class="n">yield</span> <span class="o">$</span> <span class="kt">Just</span> <span class="mi">1</span>
+	<span class="o">#</span> 		<span class="n">y</span> <span class="o">=</span> <span class="n">yield</span> <span class="o">$</span> <span class="kt">Just</span> <span class="mi">2</span>
+	<span class="o">#</span> 		<span class="kt">Just</span> <span class="p">(</span><span class="n">x</span><span class="o">+</span><span class="n">y</span><span class="p">)</span>
+
+</code></pre></div></div>
+
+  </body>
+</html>

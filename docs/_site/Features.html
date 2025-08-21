@@ -1,0 +1,101 @@
+<html>
+  <head>
+    
+    
+    
+    <link rel="stylesheet" href="/assets/main.css">
+    <style>
+        body {
+            padding: 20px;
+        }
+
+        #navbar {
+            display: flex;
+            background-color: #f8f9fa;
+            padding: 10px;
+            border-bottom: 1px solid #dee2e6;
+        }
+    </style>
+  </head>
+  <body>
+    <div id="navbar">
+    <img src="../assets/logo.jpeg" alt="PocketML Logo" style="width: 100px; height: auto;">
+    </div>
+    <h2 id="features--the-type-system">Features &amp; The type system</h2>
+
+<h4 id="11-syntax">1.1 Syntax</h4>
+<p>PocketML`s syntax is largely based on Standard-ML
+and Haskell. Some quirks include:</p>
+<ul>
+  <li>Separation of top-level statements using <code class="language-plaintext highlighter-rouge">;</code>
+    <div class="language-sml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kr">let</span> <span class="n">a</span> <span class="p">=</span> <span class="mi">10</span><span class="p">;</span>
+<span class="kr">let</span> <span class="n">b</span> <span class="p">=</span> <span class="mi">20</span><span class="p">;</span>
+<span class="n">print</span> <span class="p">(</span><span class="n">a</span> <span class="n">+</span> <span class="n">b</span><span class="p">)</span>
+</code></pre></div>    </div>
+  </li>
+  <li>Comments using <code class="language-plaintext highlighter-rouge">#</code>
+    <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># i am a comment
+</span></code></pre></div>    </div>
+  </li>
+</ul>
+
+<h5 id="gui">GUI</h5>
+<p>A large part of PocketML is its editor.
+Use the <code class="language-plaintext highlighter-rouge">Editor</code> tab in the top toolbar
+to edit files. Close files by long pressing the
+file tab. Results show up in either
+the <code class="language-plaintext highlighter-rouge">Graphics</code> tab for graphics or the <code class="language-plaintext highlighter-rouge">Text Out</code>
+tab for text output. The info box above the keyboard shows the type
+of the symbol the cursor is on when clicked (no live type checking yet,
+because the typechecker is too slow). Manage project files and directories
+in the <code class="language-plaintext highlighter-rouge">Files</code> tab. For advanced file management
+use a File manager app that can access the
+<code class="language-plaintext highlighter-rouge">InternalStorage/Android/data/org.myapp.test/files/</code>
+directory. The <code class="language-plaintext highlighter-rouge">Docs</code> tab provides a Hoogle-like interface for searching types, names or libraries.</p>
+
+<h4 id="12-type-system">1.2 Type system</h4>
+
+<p>PocketML has a set of builtin types:
+Vec (numpy arrays), Number, String, Bool, Tuples,
+Lists, Dict and Maybe. Num is an alias for Number and will replace it eventually.</p>
+
+<p>The operators *, /, +, - support
+addition of strings, numbers, and Vecs,
+as long as both sides of the operator
+have the same type. The ° operator acts the
+same as *, but allows two different types to
+be multiplied (i.e. vector-scalar multiplication,
+string multiplication, etc.).</p>
+
+<table border="3">
+<tr><td>Operator</td><td>Type</td></tr>
+<tr><td>+,-,*,/</td><td>a -&gt; a -&gt; a</td></tr>
+<tr><td>°</td><td>a -&gt; b -&gt; a</td></tr>
+
+<tr><td>composition operators:</td></tr>
+<tr><td>&lt;&lt;</td><td>(y -&gt; z) -&gt; (x -&gt; y) -&gt; (x -&gt; z)</td></tr>
+<tr><td>&gt;&gt;</td><td>(x -&gt; y) -&gt; (y -&gt; z) -&gt; (x -&gt; z)</td></tr>
+<tr><td>$</td><td>(x -&gt; y) -&gt; x -&gt; y</td></tr>
+
+<tr><td>logical operators / equality:</td></tr>
+<tr><td>&amp;&amp;, ||</td><td>Bool -&gt; Bool -&gt; Bool</td></tr>
+<tr><td>&lt;=, &gt;=, &lt;, &gt;</td><td>Number -&gt; Number -&gt; Bool</td></tr>
+</table>
+
+<h4 id="13-builtins">1.3 Builtins</h4>
+<p>Most of the essentials are contained in the standard library <code class="language-plaintext highlighter-rouge">lib.std</code>, but some basic functions are passed through from python directly:</p>
+
+<table border="3">
+<tr><td>Function</td><td>Type</td></tr>
+<tr><td>and,or</td><td>Bool -&gt; Bool -&gt; Bool</td></tr>
+<tr><td>add,sub,mul,pow</td><td>Number -&gt; Number -&gt; Number</td></tr>
+<tr><td>sqrt, inc, dec</td><td>Number -&gt; Number</td></tr>
+<tr><td>True, False</td><td>Bool</td></tr>
+<tr><td>equal</td><td>a -&gt; a -&gt; Bool</td></tr>
+<tr><td>lt</td><td>Number -&gt; Number -&gt; Bool</td></tr>
+<tr><td>print</td><td>a -&gt; ()</td></tr>
+<tr><td>print2</td><td>a -&gt; b -&gt; ()</td></tr>
+</table>
+
+  </body>
+</html>

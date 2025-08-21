@@ -1,0 +1,101 @@
+<html>
+  <head>
+    
+    
+    
+    <link rel="stylesheet" href="/assets/main.css">
+    <style>
+        body {
+            padding: 20px;
+        }
+
+        #navbar {
+            display: flex;
+            background-color: #f8f9fa;
+            padding: 10px;
+            border-bottom: 1px solid #dee2e6;
+        }
+    </style>
+  </head>
+  <body>
+    <div id="navbar">
+    <img src="../assets/logo.jpeg" alt="PocketML Logo" style="width: 100px; height: auto;">
+    </div>
+    <h1 id="numpyml">numpy.ml</h1>
+
+<p>A library for using numpy in PocketML.</p>
+
+<h2 id="definitions">Definitions</h2>
+
+<h3 id="type-aliases">Type Aliases</h3>
+<div class="language-haskell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">Size</span> <span class="o">=</span> <span class="kt">List</span> <span class="kt">Number</span>
+</code></pre></div></div>
+<div class="language-haskell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">Index</span> <span class="o">=</span> <span class="kt">List</span> <span class="kt">Number</span>
+</code></pre></div></div>
+<h3 id="creating-arrays">Creating arrays</h3>
+<div class="language-haskell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">array</span> <span class="o">:</span> <span class="kt">List</span> <span class="kt">Number</span> <span class="o">-&gt;</span> <span class="kt">Vec</span>
+</code></pre></div></div>
+<div class="language-haskell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">zeros</span> <span class="o">:</span> <span class="kt">Size</span> <span class="o">-&gt;</span> <span class="kt">Vec</span>
+</code></pre></div></div>
+<div class="language-haskell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">full</span> <span class="o">:</span> <span class="kt">Size</span> <span class="o">-&gt;</span> <span class="kt">Number</span> <span class="o">-&gt;</span> <span class="kt">Vec</span>
+</code></pre></div></div>
+<div class="language-haskell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">linspace</span> <span class="o">:</span> <span class="kt">Number</span> <span class="o">-&gt;</span> <span class="kt">Number</span> <span class="o">-&gt;</span> <span class="kt">Number</span> <span class="o">-&gt;</span> <span class="kt">Vec</span>
+	<span class="o">#</span> <span class="n">start</span><span class="p">,</span> <span class="n">end</span><span class="p">,</span> <span class="n">nsteps</span>
+
+</code></pre></div></div>
+<h3 id="getters">Getters</h3>
+<div class="language-haskell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">toList</span> <span class="o">:</span> <span class="kt">Vec</span> <span class="o">-&gt;</span> <span class="kt">List</span> <span class="kt">Number</span>
+	<span class="o">#</span> <span class="n">only</span> <span class="mi">1</span><span class="o">-</span><span class="n">dim</span><span class="o">.!</span>
+
+</code></pre></div></div>
+<div class="language-haskell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">size</span> <span class="o">:</span> <span class="kt">Vec</span> <span class="o">-&gt;</span> <span class="kt">Size</span>
+	<span class="o">#</span> <span class="o">&lt;=&gt;</span> <span class="n">arr</span><span class="o">.</span><span class="n">shape</span> <span class="kr">in</span> <span class="n">numpy</span><span class="o">!</span>
+
+</code></pre></div></div>
+<div class="language-haskell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">get</span> <span class="o">:</span> <span class="kt">Index</span> <span class="o">-&gt;</span> <span class="kt">Vec</span> <span class="o">-&gt;</span> <span class="kt">Number</span>
+</code></pre></div></div>
+<div class="language-haskell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">slice</span> <span class="o">:</span> <span class="kt">Index</span> <span class="o">-&gt;</span> <span class="kt">Index</span> <span class="o">-&gt;</span> <span class="kt">Vec</span> <span class="o">-&gt;</span> <span class="kt">Vec</span>
+	<span class="o">#</span> <span class="o">-</span> <span class="n">start</span><span class="p">,</span> <span class="n">end</span><span class="p">,</span> <span class="n">input_array</span>
+	<span class="o">#</span> <span class="o">-</span> <span class="n">fails</span> <span class="kr">if</span> <span class="n">out</span> <span class="kr">of</span> <span class="n">bounds</span>
+
+</code></pre></div></div>
+<div class="language-haskell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">sliceInc</span> <span class="o">:</span> <span class="kt">Index</span> <span class="o">-&gt;</span> <span class="kt">Index</span> <span class="o">-&gt;</span> <span class="kt">Vec</span> <span class="o">-&gt;</span> <span class="kt">Vec</span>
+	<span class="o">#</span> <span class="n">like</span> <span class="n">slice</span> <span class="n">but</span> <span class="n">end</span> <span class="n">index</span> <span class="n">is</span> <span class="n">included</span><span class="o">.</span>
+
+</code></pre></div></div>
+<div class="language-haskell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">slicePartial</span> <span class="o">:</span> <span class="kt">Index</span> <span class="o">-&gt;</span> <span class="kt">Index</span> <span class="o">-&gt;</span> <span class="kt">Vec</span> <span class="o">-&gt;</span> <span class="kt">Vec</span>
+	<span class="o">#</span> <span class="n">same</span> <span class="n">as</span> <span class="n">slice</span><span class="p">,</span> <span class="n">but</span> <span class="n">return</span> <span class="n">all</span>
+	<span class="o">#</span> <span class="n">elements</span> <span class="kr">in</span> <span class="n">index</span> <span class="n">range</span> <span class="n">instead</span>
+	<span class="o">#</span> <span class="kr">of</span> <span class="n">failing</span>
+
+</code></pre></div></div>
+<h3 id="manipulating-vecs">Manipulating <code class="language-plaintext highlighter-rouge">Vec</code>s</h3>
+<div class="language-haskell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">set</span> <span class="o">:</span> <span class="kt">Index</span> <span class="o">-&gt;</span> <span class="kt">Number</span> <span class="o">-&gt;</span> <span class="kt">Vec</span> <span class="o">-&gt;</span> <span class="kt">Vec</span>
+</code></pre></div></div>
+<div class="language-haskell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">vectorize</span> <span class="o">:</span> <span class="p">(</span><span class="kt">Number</span> <span class="o">-&gt;</span> <span class="kt">Number</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Vec</span> <span class="o">-&gt;</span> <span class="kt">Vec</span>
+</code></pre></div></div>
+<div class="language-haskell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">ivectorize</span> <span class="o">:</span> <span class="p">(</span><span class="kt">Index</span> <span class="o">-&gt;</span> <span class="kt">Number</span> <span class="o">-&gt;</span> <span class="kt">Number</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Vec</span> <span class="o">-&gt;</span> <span class="kt">Vec</span>
+</code></pre></div></div>
+<div class="language-haskell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">sum</span> <span class="o">:</span> <span class="kt">Vec</span> <span class="o">-&gt;</span> <span class="kt">Number</span>
+</code></pre></div></div>
+<div class="language-haskell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">dot</span> <span class="o">:</span> <span class="kt">Vec</span> <span class="o">-&gt;</span> <span class="kt">Vec</span> <span class="o">-&gt;</span> <span class="kt">Number</span>
+</code></pre></div></div>
+<div class="language-haskell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">flatten</span> <span class="o">:</span> <span class="kt">Vec</span> <span class="o">-&gt;</span> <span class="kt">Vec</span>
+</code></pre></div></div>
+<div class="language-haskell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">delete</span> <span class="o">:</span> <span class="kt">Number</span> <span class="o">-&gt;</span> <span class="kt">Vec</span> <span class="o">-&gt;</span> <span class="kt">Vec</span>
+	<span class="o">#</span> <span class="n">args</span><span class="o">:</span> <span class="n">i</span><span class="p">,</span> <span class="n">arr</span>
+	<span class="o">#</span> <span class="n">remove</span> <span class="n">the</span> <span class="n">element</span> <span class="n">at</span> <span class="n">i</span>
+	<span class="o">#</span> <span class="n">only</span> <span class="n">for</span> <span class="n">flat</span> <span class="kt">Vecs</span>
+
+</code></pre></div></div>
+<div class="language-haskell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">concatenate</span> <span class="o">:</span> <span class="kt">Number</span> <span class="o">-&gt;</span> <span class="kt">Vec</span> <span class="o">-&gt;</span> <span class="kt">Vec</span> <span class="o">-&gt;</span> <span class="kt">Vec</span>
+	<span class="o">#</span> <span class="n">args</span><span class="o">:</span> <span class="n">axis</span><span class="p">,</span> <span class="n">arr1</span><span class="p">,</span> <span class="n">arr2</span>
+
+</code></pre></div></div>
+<div class="language-haskell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">reshape</span> <span class="o">:</span> <span class="kt">Size</span> <span class="o">-&gt;</span> <span class="kt">Vec</span> <span class="o">-&gt;</span> <span class="kt">Vec</span>
+</code></pre></div></div>
+<div class="language-haskell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">transpose</span> <span class="o">:</span> <span class="kt">Vec</span> <span class="o">-&gt;</span> <span class="kt">Vec</span>
+</code></pre></div></div>
+
+  </body>
+</html>

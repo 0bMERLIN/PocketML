@@ -1,0 +1,180 @@
+<html>
+  <head>
+    
+    
+    
+    <link rel="stylesheet" href="/assets/main.css">
+    <style>
+        body {
+            padding: 20px;
+        }
+
+        #navbar {
+            display: flex;
+            background-color: #f8f9fa;
+            padding: 10px;
+            border-bottom: 1px solid #dee2e6;
+        }
+    </style>
+  </head>
+  <body>
+    <div id="navbar">
+    <img src="../assets/logo.jpeg" alt="PocketML Logo" style="width: 100px; height: auto;">
+    </div>
+    <h2 id="walkthrough-coding-game-of-life-in-pocketml">Walkthrough: Coding Game of Life in PocketML</h2>
+
+<h4 id="11-conways-game-of-life">1.1 Conways Game of Life</h4>
+<p>I think most people in this space are familiar with Game of Life, but heres a quick overview:</p>
+
+<p>Conways Game of Life is a grid based simulation of cells. They can die, live or come to life. The rules are very simple but give rise to emergent organic-looking behaviour. Game of Life is actually Turing complete.</p>
+
+<p><img src="https://upload.wikimedia.org/wikipedia/commons/e/e5/Gospers_glider_gun.gif" /></p>
+
+<p>The rules are as follows:</p>
+<ul>
+  <li>A cells stays alive and/or gets born when it has three alive neighbours</li>
+  <li>A cell dies when it has more or less than 3 neighbours.</li>
+</ul>
+
+<h4 id="12-setup-in-pocketml">1.2 Setup in PocketML</h4>
+<p>First we’ll need some libraries:</p>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">lib.std</span><span class="p">;</span>
+<span class="kn">import</span> <span class="nn">lib.image</span><span class="p">;</span>
+<span class="kn">import</span> <span class="nn">lib.math</span><span class="p">;</span>
+<span class="kn">import</span> <span class="nn">lib.tea</span><span class="p">;</span>
+</code></pre></div></div>
+<p>We will represent the playing grid as a small image. Let’s start with
+a 60x60 grid. We can create an image by calling the <code class="language-plaintext highlighter-rouge">image</code> function
+with a vector that denotes the size (<code class="language-plaintext highlighter-rouge">@(width, height)</code>):</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>let w = 60;
+let i = image @(w,w);
+</code></pre></div></div>
+<blockquote>
+  <p>Note: I left out the types. PocketML can infer them. If you
+were to click on the typing-button in the editor with the
+cursor on our image <code class="language-plaintext highlighter-rouge">i</code>, you would get <code class="language-plaintext highlighter-rouge">i : Img</code>.</p>
+</blockquote>
+
+<h4 id="13-checking-neighbouring-cells">1.3 Checking neighbouring cells</h4>
+<p>To determine if a cell should live or die, we need to know the number of
+living neighbours. To access the neighbours we will use offsets from the
+position of the cell we want to check:</p>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">let</span> <span class="n">offsets</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="o">@</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">),</span><span class="o">@</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">),</span> <span class="o">@</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">),</span>
+    <span class="o">@</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">),</span><span class="o">@</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">),</span> <span class="c1"># The middle row has only two cells, because
+</span>    <span class="c1"># we do not want to count the cell itself.
+</span>    <span class="o">@</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">),</span><span class="o">@</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">),</span><span class="o">@</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span>
+<span class="p">];</span>
+</code></pre></div></div>
+
+<p>To get all the neighbouring pixels/cells we will map over the offsets:</p>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">map</span> <span class="p">(</span>\<span class="n">offset</span> <span class="o">-&gt;</span>
+    <span class="n">let</span> <span class="n">p</span> <span class="o">=</span> <span class="n">imgGet</span> <span class="n">buf</span> <span class="p">(</span><span class="n">v</span> <span class="o">+</span> <span class="n">offset</span><span class="p">);</span> <span class="c1"># v + o is vector addition!
+</span>    <span class="c1"># Out of bounds access to an image returns the empty vector.
+</span>    <span class="k">if</span> <span class="n">vecLen</span> <span class="n">p</span> <span class="o">==</span> <span class="mi">0</span> <span class="n">then</span> <span class="mi">0</span> <span class="k">else</span>
+    <span class="n">vecAt</span> <span class="mi">0</span> <span class="n">p</span><span class="p">)</span>
+<span class="n">offsets</span>
+</code></pre></div></div>
+
+<p>Now we can filter them to only get the live cells and then count them using <code class="language-plaintext highlighter-rouge">len</code>.
+Let’s also wrap the entire thing in a function:</p>
+<div class="language-sml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kr">let</span> <span class="n">nAlive</span> <span class="n">buf</span> <span class="n">v</span> <span class="p">=</span>
+	<span class="kr">let</span> <span class="n">offsets</span> <span class="p">=</span> <span class="p">[</span>
+		<span class="n">@</span><span class="p">(</span><span class="n">-</span><span class="mi">1</span><span class="p">,</span><span class="n">-</span><span class="mi">1</span><span class="p">),</span><span class="n">@</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="n">-</span><span class="mi">1</span><span class="p">),</span><span class="n">@</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="n">-</span><span class="mi">1</span><span class="p">),</span>
+		<span class="n">@</span><span class="p">(</span><span class="n">-</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">),</span><span class="n">@</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">),</span>
+		<span class="n">@</span><span class="p">(</span><span class="n">-</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">),</span><span class="n">@</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">),</span><span class="n">@</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span>
+	<span class="p">];</span>
+	
+	<span class="n">len</span> <span class="p">(</span><span class="n">filter</span> <span class="p">(</span><span class="n">\x</span> <span class="p">-&gt;</span> <span class="n">x</span> <span class="n">&gt;</span> <span class="mi">0</span><span class="p">)</span> <span class="n">$</span>
+		<span class="n">map</span> <span class="p">(</span><span class="n">\o</span> <span class="p">-&gt;</span>
+			<span class="kr">let</span> <span class="n">p</span> <span class="p">=</span> <span class="n">imgGet</span> <span class="n">buf</span> <span class="p">(</span><span class="n">v+o</span><span class="p">);</span>
+			<span class="kr">if</span> <span class="n">vecLen</span> <span class="n">p</span> <span class="n">==</span> <span class="mi">0</span> <span class="kr">then</span> <span class="mi">0</span> <span class="kr">else</span>
+			<span class="n">vecAt</span> <span class="mi">0</span> <span class="n">p</span><span class="p">)</span>
+		<span class="n">offsets</span><span class="p">);</span>
+</code></pre></div></div>
+
+<h4 id="14-updating-the-cells">1.4 Updating the cells</h4>
+<p>We can write the rules from above as a function:</p>
+<div class="language-sml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kr">let</span> <span class="n">determineAlive</span> <span class="p">:</span> <span class="n">Bool</span> <span class="p">-&gt;</span> <span class="n">Number</span> <span class="p">-&gt;</span> <span class="n">Bool</span><span class="p">;</span>
+<span class="kr">let</span> <span class="n">determineAlive</span> <span class="n">c</span> <span class="n">n</span> <span class="p">=</span>
+	<span class="kr">if</span> <span class="n">c</span> <span class="kr">then</span> <span class="n">not</span> <span class="p">(</span><span class="n">n</span> <span class="n">&lt;</span> <span class="mi">2</span> <span class="n">||</span> <span class="n">n</span> <span class="n">&gt;</span> <span class="mi">3</span><span class="p">)</span>
+	<span class="kr">else</span> <span class="p">(</span><span class="n">n</span> <span class="n">==</span> <span class="mi">3</span><span class="p">)</span>
+<span class="p">;</span>
+</code></pre></div></div>
+
+<p>Now we can copy our image to a buffer for fast read access and map over every pixel
+using <code class="language-plaintext highlighter-rouge">imgMap</code> from lib.image. We’ll color live pixels white and dead ones black.</p>
+<blockquote>
+  <p>Note: This mutates our image, which is a sin in
+functional languages, but we’ll go with it to
+increase performance</p>
+</blockquote>
+
+<div class="language-sml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kr">let</span> <span class="n">tick</span> <span class="n">img</span> <span class="p">=</span>
+	<span class="kr">let</span> <span class="n">buf</span> <span class="p">=</span> <span class="n">imgBuf</span> <span class="n">img</span><span class="p">;</span>
+	<span class="n">imgMap</span> <span class="n">img</span> <span class="p">(</span><span class="n">\x</span> <span class="n">y</span> <span class="n">cell</span> <span class="p">-&gt;</span>
+		<span class="kr">let</span> <span class="n">n</span> <span class="p">=</span> <span class="n">nAlive</span> <span class="n">buf</span> <span class="n">@</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">);</span>
+		<span class="kr">let</span> <span class="n">c</span> <span class="p">=</span> <span class="n">vecAt</span> <span class="mi">0</span> <span class="n">cell</span> <span class="n">&gt;</span> <span class="mi">0</span><span class="p">;</span>
+			<span class="kr">if</span> <span class="n">determineAlive</span> <span class="n">c</span> <span class="n">n</span>
+			<span class="kr">then</span> <span class="n">@</span><span class="p">(</span><span class="mi">255</span><span class="p">,</span><span class="mi">255</span><span class="p">,</span><span class="mi">255</span><span class="p">,</span><span class="mi">255</span><span class="p">)</span>
+			<span class="kr">else</span> <span class="n">@</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">255</span><span class="p">)</span>
+    <span class="p">);</span>
+</code></pre></div></div>
+
+<h4 id="15-populating-our-playing-grid">1.5 Populating our playing grid</h4>
+<p>We could have loaded our image from a file using <code class="language-plaintext highlighter-rouge">imgLoad</code>. Alternatively we
+can make a function to add cell patterns from a 2D list:</p>
+<blockquote>
+  <p>Note: imap &lt;=&gt; “map with index”. This is similar to/inspired by a for
+loop with enumerate in python.
+The builtin <code class="language-plaintext highlighter-rouge">map</code> functions are also fast because they use python for loops
+internally.</p>
+</blockquote>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">let</span> <span class="n">addPattern</span> <span class="n">img</span> <span class="n">v</span> <span class="n">p</span><span class="o">=</span><span class="n">imap</span> <span class="p">(</span>\<span class="n">y</span> <span class="n">l</span><span class="o">-&gt;</span> <span class="n">imap</span> <span class="c1"># rows
+</span>	<span class="p">(</span>\<span class="n">x</span> <span class="n">c</span><span class="o">-&gt;</span> <span class="n">setpixel</span> <span class="n">img</span> <span class="p">(</span><span class="n">v</span><span class="o">+@</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">))</span> <span class="c1"># columns
+</span>		<span class="p">(</span><span class="o">@</span><span class="p">(</span><span class="n">c</span><span class="p">,</span><span class="n">c</span><span class="p">,</span><span class="n">c</span><span class="p">,</span><span class="mi">255</span><span class="p">)</span> <span class="err">°</span> <span class="mi">255</span><span class="p">)</span>
+	<span class="p">)</span> <span class="n">l</span><span class="p">)</span> <span class="n">p</span><span class="p">;</span>
+</code></pre></div></div>
+
+<h4 id="16-running-the-app--event-loop">1.6 Running the app / Event loop</h4>
+<p>Because we want to actually see the game, we need to build a GUI.
+We need <code class="language-plaintext highlighter-rouge">update</code>, the initial state and <code class="language-plaintext highlighter-rouge">view</code> like in ELM.
+Let’s count the ticks since the app started to slow down the
+games tick/update rate a little:</p>
+<blockquote>
+  <p>Note: Our state is <code class="language-plaintext highlighter-rouge">Number</code> in this case (the number of ticks)!
+We’ll increase (<code class="language-plaintext highlighter-rouge">inc</code>) it every frame.</p>
+</blockquote>
+
+<div class="language-sml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kr">let</span> <span class="n">update</span> <span class="p">:</span> <span class="n">Event</span> <span class="p">-&gt;</span> <span class="n">Number</span> <span class="p">-&gt;</span> <span class="n">Number</span><span class="p">;</span>
+<span class="kr">let</span> <span class="n">update</span> <span class="n">e</span> <span class="n">t</span> <span class="p">=</span> <span class="kr">case</span> <span class="n">e</span>
+    <span class="p">|</span> <span class="n">Tick</span> <span class="p">-&gt;</span> <span class="kr">do</span>
+        <span class="n">when</span> <span class="p">(</span><span class="n">divisible</span> <span class="n">t</span> <span class="mi">5</span><span class="p">)</span> <span class="p">(</span><span class="n">\</span><span class="p">_</span> <span class="p">-&gt;</span> <span class="n">tick</span> <span class="n">i</span><span class="p">)</span>
+        <span class="n">inc</span> <span class="n">t</span>
+<span class="p">;</span>
+</code></pre></div></div>
+
+<p>The playing field will be displayed using a textured rectangle (<code class="language-plaintext highlighter-rouge">TRect</code>).</p>
+<div class="language-sml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kr">let</span> <span class="n">view</span> <span class="p">_</span> <span class="p">=</span> <span class="n">TRect</span> <span class="n">@</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">)</span> <span class="n">@</span><span class="p">(</span><span class="n">width</span><span class="p">,</span><span class="n">width</span><span class="p">)</span> <span class="n">i</span><span class="p">;</span>
+</code></pre></div></div>
+
+<p>Now we can start the app using <code class="language-plaintext highlighter-rouge">setTick</code>:</p>
+<div class="language-sml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">setTick</span> <span class="mi">0</span> <span class="n">update</span> <span class="n">view</span>
+</code></pre></div></div>
+
+<h4 id="17-add-patterns">1.7 Add patterns</h4>
+<p>I have added a gosper glider gun:</p>
+<div class="language-sml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kr">let</span> <span class="p">_</span> <span class="p">=</span> <span class="kr">do</span>
+	<span class="n">addPattern</span> <span class="n">i</span> <span class="n">@</span><span class="p">(</span><span class="mi">15</span><span class="p">,</span> <span class="mi">20</span><span class="p">)</span> <span class="n">gosper</span>
+<span class="p">;</span>
+</code></pre></div></div>
+<p><code class="language-plaintext highlighter-rouge">gosper</code> is a really big list, so you’ll have to see the source code (gol.ml)
+for the details :).</p>
+
+<h4 id="18-end-result--gallery">1.8 End result / Gallery</h4>
+
+<p><img src="/gameoflife.png" alt="An image of the end result (Glider gun)" /></p>
+
+  </body>
+</html>

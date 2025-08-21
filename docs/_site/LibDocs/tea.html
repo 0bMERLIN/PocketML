@@ -1,0 +1,102 @@
+<html>
+  <head>
+    
+    
+    
+    <link rel="stylesheet" href="/assets/main.css">
+    <style>
+        body {
+            padding: 20px;
+        }
+
+        #navbar {
+            display: flex;
+            background-color: #f8f9fa;
+            padding: 10px;
+            border-bottom: 1px solid #dee2e6;
+        }
+    </style>
+  </head>
+  <body>
+    <div id="navbar">
+    <img src="../assets/logo.jpeg" alt="PocketML Logo" style="width: 100px; height: auto;">
+    </div>
+    <h1 id="teaml">tea.ml</h1>
+
+<p>Graphics framework inspired by TEA. Uses kivy and VDOM-diffing internally. Supports GUIs, canvas graphics &amp; shaders</p>
+
+<h2 id="definitions">Definitions</h2>
+
+<h3 id="types">Types</h3>
+<div class="language-haskell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">Color</span> <span class="o">=</span> <span class="kt">Vec</span>
+</code></pre></div></div>
+<div class="language-haskell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">Uniform</span>
+	<span class="o">=</span> <span class="kt">UniformFloat</span> <span class="kt">String</span> <span class="kt">Number</span>
+	<span class="o">|</span> <span class="kt">UniformInt</span> <span class="kt">String</span> <span class="kt">Number</span>
+	<span class="o">|</span> <span class="kt">UniformVec2</span> <span class="kt">String</span> <span class="kt">Vec</span>
+	<span class="o">|</span> <span class="kt">UniformVec3</span> <span class="kt">String</span> <span class="kt">Vec</span>
+	<span class="o">|</span> <span class="kt">UniformVec4</span> <span class="kt">String</span> <span class="kt">Vec</span>
+	<span class="o">|</span> <span class="kt">UniformTex0</span> <span class="kt">String</span> <span class="kt">Img</span>
+
+</code></pre></div></div>
+<div class="language-haskell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">Widget</span>
+	<span class="o">=</span> <span class="kt">Rect</span> <span class="kt">Color</span> <span class="kt">Vec</span> <span class="kt">Vec</span>
+	<span class="o">|</span> <span class="kt">TRect</span> <span class="kt">Img</span> <span class="kt">Vec</span> <span class="kt">Vec</span>
+	<span class="o">|</span> <span class="kt">SRect</span> <span class="kt">String</span> <span class="p">(</span><span class="kt">List</span> <span class="kt">Uniform</span><span class="p">)</span> <span class="kt">Vec</span> <span class="kt">Vec</span>
+	<span class="o">|</span> <span class="kt">Btn</span> <span class="kt">String</span> <span class="kt">String</span> <span class="kt">Vec</span> <span class="kt">Vec</span>
+	<span class="o">|</span> <span class="kt">Slider</span> <span class="kt">String</span> <span class="kt">Number</span> <span class="kt">Number</span> <span class="kt">Number</span> <span class="kt">Number</span> <span class="kt">Vec</span> <span class="kt">Vec</span>
+	<span class="o">|</span> <span class="kt">Label</span> <span class="kt">String</span> <span class="kt">String</span> <span class="kt">Vec</span> <span class="kt">Vec</span>
+	<span class="o">|</span> <span class="kt">Line</span> <span class="p">(</span><span class="kt">List</span> <span class="kt">Vec</span><span class="p">)</span> <span class="kt">Number</span> <span class="kt">Color</span>
+	<span class="o">|</span> <span class="kt">Many</span> <span class="p">(</span><span class="kt">List</span> <span class="kt">Widget</span><span class="p">)</span>
+
+</code></pre></div></div>
+<div class="language-haskell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">WIDGET_DOCS</span> <span class="o">:</span> <span class="n">doc</span>
+	<span class="o">#</span> <span class="kt">Attributes</span> <span class="n">for</span> <span class="kt">Widgets</span><span class="o">:</span>
+	<span class="o">#</span> <span class="kt">Rect</span>  <span class="o">:</span> <span class="n">color</span><span class="p">,</span> <span class="n">size</span><span class="p">,</span> <span class="n">pos</span>
+	<span class="o">#</span> <span class="kt">TRect</span> <span class="o">:</span> <span class="n">texture</span><span class="p">,</span> <span class="n">size</span><span class="p">,</span> <span class="n">pos</span>
+	<span class="o">#</span> <span class="kt">Btn</span>   <span class="o">:</span> <span class="n">name</span><span class="p">,</span> <span class="n">text</span><span class="p">,</span> <span class="n">size</span><span class="p">,</span> <span class="n">pos</span>
+	<span class="o">#</span> <span class="kt">Slider</span><span class="o">:</span> <span class="n">name</span><span class="p">,</span> <span class="n">min</span><span class="p">,</span> <span class="n">max</span><span class="p">,</span> <span class="n">step</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">size</span><span class="p">,</span> <span class="n">pos</span>
+	<span class="o">#</span> <span class="kt">Label</span> <span class="o">:</span> <span class="n">name</span><span class="p">,</span> <span class="n">text</span><span class="p">,</span> <span class="n">size</span><span class="p">,</span> <span class="n">pos</span>
+	<span class="o">#</span> <span class="kt">Line</span>  <span class="o">:</span> <span class="n">polygon</span><span class="o">-</span><span class="n">points</span><span class="p">,</span> <span class="n">width</span><span class="p">,</span> <span class="n">color</span>
+	<span class="o">#</span> <span class="kt">Many</span>  <span class="o">:</span> <span class="n">children</span>
+
+</code></pre></div></div>
+<div class="language-haskell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">Event</span>
+	<span class="o">=</span> <span class="kt">Tick</span>
+	<span class="o">|</span> <span class="kt">BtnPressed</span> <span class="kt">String</span>
+	<span class="o">|</span> <span class="kt">BtnReleased</span> <span class="kt">String</span>
+	<span class="o">|</span> <span class="kt">BtnHeld</span> <span class="kt">String</span>
+	<span class="o">|</span> <span class="kt">SliderMoved</span> <span class="kt">String</span> <span class="kt">Number</span>
+
+</code></pre></div></div>
+<h3 id="starting-the-app">Starting the App</h3>
+<div class="language-haskell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">setTick</span> <span class="o">:</span> <span class="n">a</span> <span class="o">-&gt;</span> <span class="p">(</span><span class="kt">Event</span> <span class="o">-&gt;</span> <span class="n">a</span> <span class="o">-&gt;</span> <span class="n">a</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="p">(</span><span class="n">a</span> <span class="o">-&gt;</span> <span class="kt">Widget</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Unit</span>
+</code></pre></div></div>
+<div class="language-haskell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">forceUpdate</span> <span class="o">:</span> <span class="n">state</span> <span class="o">-&gt;</span> <span class="n">state</span>
+</code></pre></div></div>
+<div class="language-haskell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">stop</span> <span class="o">:</span> <span class="kt">Unit</span> <span class="o">-&gt;</span> <span class="kt">Unit</span>
+</code></pre></div></div>
+<h3 id="basic-kinds-of-apps--patterns">Basic kinds of apps / patterns</h3>
+<div class="language-haskell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">staticView</span> <span class="o">:</span> <span class="p">(</span><span class="kt">Unit</span> <span class="o">-&gt;</span> <span class="kt">Widget</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Unit</span>
+	<span class="o">#</span> <span class="kt">Renders</span> <span class="n">a</span> <span class="n">view</span> <span class="n">and</span> <span class="kr">then</span> <span class="n">halts</span> <span class="n">the</span> <span class="n">app</span><span class="o">.</span>
+	<span class="o">#</span> <span class="kt">Use</span> <span class="n">for</span> <span class="n">graphing</span><span class="p">,</span> <span class="n">etc</span><span class="o">.</span>
+
+</code></pre></div></div>
+<h3 id="getters">Getters</h3>
+<div class="language-haskell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">width</span> <span class="o">:</span> <span class="kt">Number</span>
+</code></pre></div></div>
+<div class="language-haskell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">height</span><span class="o">:</span> <span class="kt">Number</span>
+</code></pre></div></div>
+<div class="language-haskell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">getFPS</span> <span class="o">:</span> <span class="kt">Unit</span> <span class="o">-&gt;</span> <span class="kt">Number</span>
+</code></pre></div></div>
+<h3 id="positioning--layouts">Positioning / layouts</h3>
+<div class="language-haskell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">setPos</span> <span class="o">:</span> <span class="kt">Widget</span> <span class="o">-&gt;</span> <span class="kt">Vec</span> <span class="o">-&gt;</span> <span class="kt">Unit</span>
+</code></pre></div></div>
+<div class="language-haskell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">randPos</span> <span class="o">:</span> <span class="kt">Unit</span> <span class="o">-&gt;</span> <span class="kt">Vec</span>
+</code></pre></div></div>
+<div class="language-haskell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">grid</span> <span class="o">:</span> <span class="kt">Vec</span> <span class="o">-&gt;</span> <span class="kt">Vec</span> <span class="o">-&gt;</span> <span class="kt">Num</span> <span class="o">-&gt;</span> <span class="kt">Num</span> <span class="o">-&gt;</span> <span class="kt">List</span> <span class="p">(</span><span class="kt">Vec</span> <span class="o">-&gt;</span> <span class="kt">Widget</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Widget</span>
+</code></pre></div></div>
+<h3 id="colors--constants">Colors &amp; constants</h3>
+
+  </body>
+</html>

@@ -1,0 +1,141 @@
+<html>
+  <head>
+    
+    
+    
+    <link rel="stylesheet" href="/assets/main.css">
+    <style>
+        body {
+            padding: 20px;
+        }
+
+        #navbar {
+            display: flex;
+            background-color: #f8f9fa;
+            padding: 10px;
+            border-bottom: 1px solid #dee2e6;
+        }
+    </style>
+  </head>
+  <body>
+    <div id="navbar">
+    <img src="../assets/logo.jpeg" alt="PocketML Logo" style="width: 100px; height: auto;">
+    </div>
+    <h2 id="walkthrough-coding-a-gui-calculator-in-pocketml">Walkthrough: Coding a GUI calculator in PocketML</h2>
+
+<p>This walkthrough shows the core functionality of <code class="language-plaintext highlighter-rouge">lib.tea</code>.</p>
+
+<h4 id="11-tea-architecture">1.1 TEA-architecture</h4>
+<p>The Elm Architecture (TEA) is a GUI architecture that decouples
+the app logic (<code class="language-plaintext highlighter-rouge">tick</code>), visuals/GUI (<code class="language-plaintext highlighter-rouge">view</code>) and initial state (<code class="language-plaintext highlighter-rouge">init</code>).
+The essential data types for TEA in PocketML are:</p>
+
+<table>
+  <thead>
+    <tr>
+      <th> </th>
+      <th> </th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">Widget</code></td>
+      <td>GUI components like buttons, text or simple shapes/sprites</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">Event</code></td>
+      <td>When a button is pressed or a frame is rendered, the <code class="language-plaintext highlighter-rouge">update</code> function receives an event.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h4 id="12-evaluating-expressions">1.2 Evaluating expressions</h4>
+<p>Our calculator will have to calculate an expression from a string. PocketML does include an example with an expression evaluator, but in this case we’ll use python interop:</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">%%%</span>
+<span class="k">def</span> <span class="nf">PML_eval</span><span class="p">(</span><span class="n">s</span><span class="p">):</span>
+	<span class="k">try</span><span class="p">:</span>
+		<span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="nb">eval</span><span class="p">(</span><span class="n">s</span><span class="p">),</span><span class="mi">4</span><span class="p">))</span>
+	<span class="k">except</span> <span class="nb">ZeroDivisionError</span><span class="p">:</span>
+		<span class="k">return</span> <span class="s">"error: division by zero"</span>
+<span class="o">%%%</span><span class="p">;</span>
+<span class="n">let</span> <span class="nb">eval</span> <span class="p">:</span> <span class="n">String</span> <span class="o">-&gt;</span> <span class="n">String</span><span class="p">;</span>
+</code></pre></div></div>
+
+<h4 id="13-state--logic">1.3 State / Logic</h4>
+<p>Our calculator will have buttons and
+a text display that shows the current expression. When the “=” button is pressed, the text display will show the result of the calculation. So our state will just be a String.</p>
+
+<div class="language-sml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kr">type</span> <span class="kt">State</span> <span class="p">=</span> <span class="n">String</span><span class="p">;</span>
+<span class="kr">let</span> <span class="n">init</span> <span class="p">=</span> <span class="s2">""</span><span class="p">;</span>
+</code></pre></div></div>
+
+<p>To update our state we will use a tick function, that react to the button events. When “C” (clear) is pressed, the state will become the empty string. When “=” is pressed, the result of the expression is written into the state. When another button is pressed and that button happens to be a valid calculator button, the button text will be added to the state.</p>
+<blockquote>
+  <p>Note: We also have to include a default case! lib.tea automatically skips rerendering frames when the state didn’t change. The core assumption is that the <code class="language-plaintext highlighter-rouge">view</code> function is pure. Updates can be forced by using <code class="language-plaintext highlighter-rouge">forceUpdate state</code> in the default case of <code class="language-plaintext highlighter-rouge">tick</code>.</p>
+</blockquote>
+
+<div class="language-sml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kr">let</span> <span class="n">tick</span> <span class="p">:</span> <span class="n">Event</span> <span class="p">-&gt;</span> <span class="n">State</span> <span class="p">-&gt;</span> <span class="n">State</span><span class="p">;</span>
+<span class="kr">let</span> <span class="n">tick</span> <span class="n">e</span> <span class="n">s</span> <span class="p">=</span> <span class="kr">case</span> <span class="n">e</span>
+	<span class="p">|</span> <span class="n">BtnPressed</span> <span class="s2">"="</span> <span class="p">-&gt;</span>
+		<span class="n">eval</span> <span class="p">(</span><span class="n">replace</span> <span class="s2">"^"</span> <span class="s2">"**"</span> <span class="n">s</span><span class="p">)</span>
+	<span class="p">|</span> <span class="n">BtnPressed</span> <span class="s2">"C"</span> <span class="p">-&gt;</span> <span class="s2">""</span>
+	<span class="p">|</span> <span class="n">BtnPressed</span> <span class="n">x</span> <span class="p">-&gt;</span>
+		<span class="kr">if</span> <span class="n">isNumeric</span> <span class="n">x</span> <span class="n">||</span> <span class="n">strIn</span> <span class="n">x</span> <span class="s2">"()+-*/^."</span>
+		<span class="kr">then</span> <span class="n">s+x</span>
+		<span class="kr">else</span> <span class="n">s</span>
+	<span class="p">|</span> <span class="p">_</span> <span class="p">-&gt;</span> <span class="n">s</span><span class="p">;</span>
+</code></pre></div></div>
+
+<h4 id="14-making-the-ui-layout">1.4 Making the UI layout</h4>
+<p>Our view includes buttons and the state text. Buttons accept a text <em>and</em> a name, similar to <code class="language-plaintext highlighter-rouge">id</code> in html. It is used for UI-diffing in the backend and also the argument of <code class="language-plaintext highlighter-rouge">BtnPressed</code> in our <code class="language-plaintext highlighter-rouge">tick</code> function.</p>
+<blockquote>
+  <p>Note: We could write make all the buttons manually. Instead we will write a 1D list of button labels and then place / create the buttons based on the index in the list.</p>
+</blockquote>
+
+<div class="language-sml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kr">let</span> <span class="n">mkBtn</span> <span class="n">w</span> <span class="n">n</span> <span class="n">t</span> <span class="p">=</span>
+	<span class="kr">let</span> <span class="n">pos</span> <span class="p">=</span> <span class="n">@</span><span class="p">(</span><span class="n">n-</span><span class="mi">4</span><span class="n">*int</span> <span class="p">(</span><span class="n">n/</span><span class="mi">4</span><span class="p">),</span> <span class="mi">4</span><span class="n">-int</span> <span class="p">(</span><span class="n">n/</span><span class="mi">4</span><span class="p">))</span> <span class="err">°</span> <span class="n">w</span><span class="p">;</span>
+	<span class="n">Btn</span> <span class="n">t</span> <span class="n">t</span> <span class="n">pos</span> <span class="n">@</span><span class="p">(</span><span class="n">w*</span><span class="err">.</span><span class="mi">9</span><span class="p">,</span><span class="n">w*</span><span class="err">.</span><span class="mi">9</span><span class="p">);</span>
+</code></pre></div></div>
+
+<p>Our button layout is:</p>
+<div class="language-sml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kr">let</span> <span class="n">btnLayout</span> <span class="p">=</span> <span class="p">[</span>
+	<span class="s2">"C"</span><span class="p">,</span> <span class="s2">"("</span><span class="p">,</span> <span class="s2">")"</span><span class="p">,</span> <span class="s2">"/"</span><span class="p">,</span>
+	<span class="s2">"7"</span><span class="p">,</span> <span class="s2">"8"</span><span class="p">,</span> <span class="s2">"9"</span><span class="p">,</span> <span class="s2">"*"</span><span class="p">,</span>
+	<span class="s2">"4"</span><span class="p">,</span> <span class="s2">"5"</span><span class="p">,</span> <span class="s2">"6"</span><span class="p">,</span> <span class="s2">"-"</span><span class="p">,</span>
+	<span class="s2">"1"</span><span class="p">,</span> <span class="s2">"2"</span><span class="p">,</span> <span class="s2">"3"</span><span class="p">,</span> <span class="s2">"+"</span><span class="p">,</span>
+	<span class="s2">"."</span><span class="p">,</span> <span class="s2">"0"</span><span class="p">,</span> <span class="s2">"="</span><span class="p">,</span> <span class="s2">"^"</span>
+<span class="p">];</span>
+</code></pre></div></div>
+
+<h4 id="15-view">1.5 View</h4>
+<p>Putting it all together we can generate a view that includes both the buttons and a label with the current expression text:</p>
+
+<blockquote>
+  <p>Note: The Many widget is similar to a html div. It allows us to return multiple widgets from the view. They can also be nested.</p>
+</blockquote>
+
+<div class="language-sml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kr">let</span> <span class="n">view</span> <span class="p">:</span> <span class="n">State</span> <span class="p">-&gt;</span> <span class="n">Widget</span><span class="p">;</span>
+<span class="kr">let</span> <span class="n">view</span> <span class="n">s</span> <span class="p">=</span>
+	<span class="kr">let</span> <span class="n">w</span> <span class="p">=</span> <span class="n">width/</span><span class="mi">5</span><span class="p">;</span>
+	<span class="kr">let</span> <span class="n">btns</span> <span class="p">=</span> <span class="n">Many</span> <span class="p">(</span><span class="n">imap</span> <span class="p">(</span><span class="n">mkBtn</span> <span class="n">w</span><span class="p">)</span> <span class="n">btnLayout</span><span class="p">);</span>
+	<span class="kr">let</span> <span class="n">inp</span> <span class="p">=</span> <span class="n">Label</span> <span class="n">s</span> <span class="s2">"inp"</span> <span class="n">@</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="n">w*</span><span class="mi">5</span><span class="p">)</span> <span class="n">@</span><span class="p">(</span><span class="n">w*</span><span class="mi">4</span><span class="p">,</span><span class="n">w</span><span class="p">);</span>
+	<span class="n">Many</span> <span class="p">[</span><span class="n">inp</span><span class="p">,</span> <span class="n">btns</span><span class="p">];</span>
+</code></pre></div></div>
+
+<h4 id="16-running-the-app">1.6 Running the app</h4>
+<p><code class="language-plaintext highlighter-rouge">lib.tea</code> apps can be launched as follows:</p>
+
+<div class="language-sml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">setTick</span> <span class="n">init</span> <span class="n">tick</span> <span class="n">view</span>
+</code></pre></div></div>
+
+<h4 id="17-gallery--results">1.7 Gallery / Results</h4>
+<p><img src="/calculator.png" alt="" /></p>
+<blockquote>
+  <p>Note: This screenshot is from linux, on android the layout or font might change a little depending on your kivy installation / android version.</p>
+</blockquote>
+
+<p>Kivy labels don’t have background by default. As an excercise you could add a <code class="language-plaintext highlighter-rouge">Rect pos size color</code> behind the label inside <code class="language-plaintext highlighter-rouge">view</code>!</p>
+
+  </body>
+</html>

@@ -1,0 +1,85 @@
+<html>
+  <head>
+    
+    
+    
+    <link rel="stylesheet" href="/assets/main.css">
+    <style>
+        body {
+            padding: 20px;
+        }
+
+        #navbar {
+            display: flex;
+            background-color: #f8f9fa;
+            padding: 10px;
+            border-bottom: 1px solid #dee2e6;
+        }
+    </style>
+  </head>
+  <body>
+    <div id="navbar">
+    <img src="../assets/logo.jpeg" alt="PocketML Logo" style="width: 100px; height: auto;">
+    </div>
+    <h1 id="imageml">image.ml</h1>
+
+<p>A library for kivy textures. An <code class="language-plaintext highlighter-rouge">Img</code> is a kivy texture. Images can be loaded from disk or created programmatically.</p>
+
+<h2 id="definitions">Definitions</h2>
+
+<h3 id="definitions--creating-imagesbuffers">Definitions &amp; Creating images/buffers</h3>
+<div class="language-haskell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">Img</span>
+</code></pre></div></div>
+<div class="language-haskell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">Buffer</span>
+</code></pre></div></div>
+<div class="language-haskell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">Color</span> <span class="o">=</span> <span class="kt">Vec</span>
+</code></pre></div></div>
+<div class="language-haskell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">setpixel</span> <span class="o">:</span> <span class="kt">Img</span> <span class="o">-&gt;</span> <span class="kt">Vec</span> <span class="o">-&gt;</span> <span class="kt">Color</span> <span class="o">-&gt;</span> <span class="kt">Unit</span>
+</code></pre></div></div>
+<div class="language-haskell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">image</span> <span class="o">:</span> <span class="kt">Vec</span> <span class="o">-&gt;</span> <span class="kt">Img</span>
+</code></pre></div></div>
+<div class="language-haskell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">imgLoad</span> <span class="o">:</span> <span class="kt">String</span> <span class="o">-&gt;</span> <span class="kt">Img</span>
+</code></pre></div></div>
+<div class="language-haskell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">imgBuf</span> <span class="o">:</span> <span class="kt">Img</span> <span class="o">-&gt;</span> <span class="kt">Buffer</span>
+</code></pre></div></div>
+<h3 id="functions">Functions</h3>
+<div class="language-haskell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">imgSize</span> <span class="o">:</span> <span class="kt">Img</span> <span class="o">-&gt;</span> <span class="kt">Vec</span>
+</code></pre></div></div>
+<div class="language-haskell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">imgCopy</span> <span class="o">:</span> <span class="kt">Img</span> <span class="o">-&gt;</span> <span class="kt">Img</span>
+</code></pre></div></div>
+<div class="language-haskell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">imgMap</span> <span class="o">:</span> <span class="kt">Img</span> <span class="o">-&gt;</span> <span class="p">(</span><span class="kt">Number</span><span class="o">-&gt;</span><span class="kt">Number</span><span class="o">-&gt;</span><span class="kt">Color</span><span class="o">-&gt;</span><span class="kt">Color</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Unit</span>
+</code></pre></div></div>
+<div class="language-haskell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">imgGet</span> <span class="o">:</span> <span class="kt">Buffer</span> <span class="o">-&gt;</span> <span class="kt">Vec</span> <span class="o">-&gt;</span> <span class="kt">Vec</span>
+</code></pre></div></div>
+<div class="language-haskell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">imgSave</span> <span class="o">:</span> <span class="kt">String</span> <span class="o">-&gt;</span> <span class="kt">Img</span> <span class="o">-&gt;</span> <span class="kt">Unit</span>
+</code></pre></div></div>
+<div class="language-haskell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">imgClear</span> <span class="o">:</span> <span class="kt">Img</span> <span class="o">-&gt;</span> <span class="kt">Color</span> <span class="o">-&gt;</span> <span class="kt">Unit</span>
+</code></pre></div></div>
+<div class="language-haskell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">imgMapRect</span><span class="o">:</span> <span class="kt">Vec</span> <span class="o">-&gt;</span> <span class="kt">Vec</span> <span class="o">-&gt;</span> <span class="kt">Img</span> <span class="o">-&gt;</span> <span class="p">(</span><span class="kt">Number</span><span class="o">-&gt;</span><span class="kt">Number</span><span class="o">-&gt;</span><span class="kt">Color</span><span class="o">-&gt;</span><span class="kt">Color</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Unit</span>
+	<span class="o">#</span> <span class="n">args</span><span class="o">:</span> <span class="n">size</span><span class="p">,</span> <span class="n">pos</span><span class="p">,</span> <span class="n">img</span><span class="p">,</span> <span class="n">func</span>
+
+</code></pre></div></div>
+<div class="language-haskell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">imgSmooth</span> <span class="o">:</span> <span class="kt">Img</span> <span class="o">-&gt;</span> <span class="kt">Img</span>
+</code></pre></div></div>
+<div class="language-haskell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">imgFlipH</span> <span class="o">:</span> <span class="kt">Img</span> <span class="o">-&gt;</span> <span class="kt">Img</span>
+</code></pre></div></div>
+<div class="language-haskell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">imgFlipV</span> <span class="o">:</span> <span class="kt">Img</span> <span class="o">-&gt;</span> <span class="kt">Img</span>
+</code></pre></div></div>
+<div class="language-haskell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">Uniform</span>
+	<span class="o">=</span> <span class="kt">UniformFloat</span> <span class="kt">String</span> <span class="kt">Number</span>
+	<span class="o">|</span> <span class="kt">UniformInt</span> <span class="kt">String</span> <span class="kt">Number</span>
+	<span class="o">|</span> <span class="kt">UniformVec2</span> <span class="kt">String</span> <span class="kt">Vec</span>
+	<span class="o">|</span> <span class="kt">UniformVec3</span> <span class="kt">String</span> <span class="kt">Vec</span>
+	<span class="o">|</span> <span class="kt">UniformVec4</span> <span class="kt">String</span> <span class="kt">Vec</span>
+	<span class="o">|</span> <span class="kt">UniformTex0</span> <span class="kt">String</span> <span class="kt">Img</span>
+	<span class="o">#</span> <span class="c1">-- hide</span>
+	<span class="o">#</span> <span class="kt">TODO</span>
+
+</code></pre></div></div>
+<div class="language-haskell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">imgShade</span> <span class="o">:</span> <span class="kt">Img</span> <span class="o">-&gt;</span> <span class="kt">String</span> <span class="o">-&gt;</span> <span class="kt">Img</span>
+</code></pre></div></div>
+<div class="language-haskell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">mkAtlas</span> <span class="o">:</span> <span class="kt">List</span> <span class="kt">Img</span> <span class="o">-&gt;</span> <span class="kt">Img</span>
+</code></pre></div></div>
+
+  </body>
+</html>

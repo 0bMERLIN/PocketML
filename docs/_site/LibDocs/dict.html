@@ -1,0 +1,44 @@
+<html>
+  <head>
+    
+    
+    
+    <link rel="stylesheet" href="/assets/main.css">
+    <style>
+        body {
+            padding: 20px;
+        }
+
+        #navbar {
+            display: flex;
+            background-color: #f8f9fa;
+            padding: 10px;
+            border-bottom: 1px solid #dee2e6;
+        }
+    </style>
+  </head>
+  <body>
+    <div id="navbar">
+    <img src="../assets/logo.jpeg" alt="PocketML Logo" style="width: 100px; height: auto;">
+    </div>
+    <h1 id="dictml">dict.ml</h1>
+
+<p>Dictionaries with <code class="language-plaintext highlighter-rouge">String</code>-keys. Internally python dicts.</p>
+
+<h2 id="definitions">Definitions</h2>
+
+<h3 id="creation">Creation</h3>
+<div class="language-haskell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">Dict</span> <span class="n">a</span>
+</code></pre></div></div>
+<div class="language-haskell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">mkDict</span> <span class="o">:</span> <span class="kt">List</span> <span class="p">(</span><span class="kt">String</span><span class="p">,</span> <span class="n">a</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Dict</span> <span class="n">a</span>
+</code></pre></div></div>
+<h3 id="accessing">Accessing</h3>
+<div class="language-haskell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">dictItems</span> <span class="o">:</span> <span class="kt">Dict</span> <span class="n">a</span> <span class="o">-&gt;</span> <span class="kt">List</span> <span class="p">(</span><span class="kt">String</span><span class="p">,</span> <span class="n">a</span><span class="p">)</span>
+</code></pre></div></div>
+<div class="language-haskell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">dictGet</span> <span class="o">:</span> <span class="kt">Dict</span> <span class="n">a</span> <span class="o">-&gt;</span> <span class="kt">String</span> <span class="o">-&gt;</span> <span class="kt">Maybe</span> <span class="n">a</span>
+</code></pre></div></div>
+<div class="language-haskell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">dictInsert</span> <span class="o">:</span> <span class="kt">String</span> <span class="o">-&gt;</span> <span class="kt">Dict</span> <span class="n">a</span> <span class="o">-&gt;</span> <span class="n">a</span> <span class="o">-&gt;</span> <span class="kt">Dict</span> <span class="n">a</span>
+</code></pre></div></div>
+
+  </body>
+</html>

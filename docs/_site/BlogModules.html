@@ -1,0 +1,160 @@
+<html>
+  <head>
+    
+    
+    
+    <link rel="stylesheet" href="/assets/main.css">
+    <style>
+        body {
+            padding: 20px;
+        }
+
+        #navbar {
+            display: flex;
+            background-color: #f8f9fa;
+            padding: 10px;
+            border-bottom: 1px solid #dee2e6;
+        }
+    </style>
+  </head>
+  <body>
+    <div id="navbar">
+    <img src="../assets/logo.jpeg" alt="PocketML Logo" style="width: 100px; height: auto;">
+    </div>
+    <h1 id="blog-module-functors-in-pocketml">Blog: Module functors in PocketML</h1>
+<p><small>July 12th ‘25</small></p>
+
+<hr />
+<p>I recently posted about PocketML on reddit and got a comment about the lack of modules in a language with “ML” in the name.</p>
+
+<p>TL;DR for this post:</p>
+<ul>
+  <li>modules are good :)</li>
+  <li>PocketML can do modules using records (see code below)</li>
+  <li>No modules in the standard library though, because they take too long to compile and are not terse on the users side.</li>
+</ul>
+
+<h4 id="10-modules-in-standardml">1.0 Modules in StandardML</h4>
+
+<p>The core idea is to be able to reuse more of the (library) code we write, by replacing type-specific functions with a module that our code takes as a parameter and which can be switched out by the user/caller depending on what type they want our code to process. More on this in section 1.1.</p>
+
+<p>Here’s a quick rundown of how StandardML does this:</p>
+
+<ul>
+  <li>
+    <p><em>signatures</em> are the type signatures of modules. They specify the contents of the module.</p>
+  </li>
+  <li>
+    <p><em>modules</em> are the containers for the code/types we want to pass around.</p>
+  </li>
+  <li>
+    <p><em>functors</em> are (potentially compile-time) functions that take a module and return a module. An example could be a <code class="language-plaintext highlighter-rouge">Dictionary</code> functor that takes in a module describing a hashable type and returns a module with all the important dictionary functions for this type.</p>
+  </li>
+</ul>
+
+<h4 id="11-end-goal">1.1 End goal</h4>
+<p>Let’s take the example of getting the second (“snd”) element from a sequence:</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># gets the second element from a Vec
+</span><span class="n">let</span> <span class="n">vecSnd</span> <span class="p">:</span> <span class="n">Vec</span> <span class="o">-&gt;</span> <span class="n">Number</span><span class="p">;</span>
+<span class="n">let</span> <span class="n">vecSnd</span> <span class="o">=</span> <span class="p">...;</span>
+
+<span class="n">let</span> <span class="n">listSnd</span> <span class="p">:</span> <span class="n">List</span> <span class="n">a</span> <span class="o">-&gt;</span> <span class="n">a</span><span class="p">;</span>
+<span class="n">let</span> <span class="n">listSnd</span> <span class="o">=</span> <span class="p">...;</span>
+
+<span class="n">let</span> <span class="n">strSnd</span> <span class="p">:</span> <span class="n">String</span> <span class="o">-&gt;</span> <span class="n">String</span><span class="p">;</span>
+<span class="n">let</span> <span class="p">...</span>
+
+</code></pre></div></div>
+
+<p>We’d have to write the same function for every type! This pattern actually comes up in PocketML’s standard library: There’s <code class="language-plaintext highlighter-rouge">strLen</code>, <code class="language-plaintext highlighter-rouge">len</code> (for lists) and <code class="language-plaintext highlighter-rouge">vecLen</code>. That’s atrocious from an ML programmers point of view! Imagine adding another type - then we’d have to write every operation again.</p>
+
+<p>The most important use case for ML modules is now to turn the first code fragment (which scales badly) into the following one:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>let snd : (module Sequence l e) -&gt; l -&gt; e;
+let snd m seq = m.getElementAt 0 seq;
+</code></pre></div></div>
+
+<p>We can just write one generic function that works on every type that has a corresponding <code class="language-plaintext highlighter-rouge">Sequence</code> module implemented for it. In our example <code class="language-plaintext highlighter-rouge">String</code>, <code class="language-plaintext highlighter-rouge">List</code> and <code class="language-plaintext highlighter-rouge">Vec</code> all support indexing, so implementing <code class="language-plaintext highlighter-rouge">Sequence</code> is trivial.</p>
+
+<h4 id="12-actually-implementing-it">1.2 Actually implementing it</h4>
+<p>As noted at the start, we do have a way to store named values/functions and pass them around - records. Passing around types is actually just as easy, but only if we do some reparameterisation (<code class="language-plaintext highlighter-rouge">List a</code> would become <code class="language-plaintext highlighter-rouge">Seq (List a) a</code> in module form):</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">data</span> <span class="n">Seq</span> <span class="n">l</span> <span class="n">e</span> <span class="o">=</span> <span class="n">Seq</span>
+	<span class="p">{</span> <span class="n">hd</span> <span class="p">:</span> <span class="n">l</span> <span class="o">-&gt;</span> <span class="n">e</span>
+	<span class="p">,</span> <span class="n">tl</span> <span class="p">:</span> <span class="n">l</span> <span class="o">-&gt;</span> <span class="n">l</span>
+	<span class="p">}</span>
+	<span class="c1"># a sequence with a head and tail.
+</span><span class="p">;</span>
+</code></pre></div></div>
+
+<p>This is an example of how one would create a module <em>signature</em> in PocketML.</p>
+
+<p>Let’s implement this module for <code class="language-plaintext highlighter-rouge">Vec</code>s:</p>
+
+<div class="language-sml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kr">type</span> <span class="kt">VecSeq</span> <span class="p">=</span> <span class="n">Seq</span> <span class="n">Vec</span> <span class="n">Number</span><span class="p">;</span>
+
+<span class="kr">let</span> <span class="n">vecTail</span> <span class="p">:</span> <span class="n">Vec</span> <span class="p">-&gt;</span> <span class="n">Vec</span><span class="p">;</span>
+<span class="kr">let</span> <span class="n">vecTail</span> <span class="n">v</span> <span class="p">=</span> <span class="n">vecSlice</span> <span class="mi">1</span> <span class="p">(</span><span class="n">vecLen</span> <span class="n">v</span><span class="p">)</span> <span class="n">v</span><span class="p">;</span>
+
+<span class="kr">let</span> <span class="n">vecSeq</span> <span class="p">:</span> <span class="n">VecSeq</span><span class="p">;</span>
+<span class="kr">let</span> <span class="n">vecSeq</span> <span class="p">=</span> <span class="n">Seq</span> <span class="p">{</span> <span class="n">hd</span> <span class="p">=</span> <span class="n">vecAt</span> <span class="mi">0</span><span class="p">,</span> <span class="n">tl</span> <span class="p">=</span> <span class="n">vecTail</span> <span class="p">};</span>
+</code></pre></div></div>
+
+<p>That was easy and we need stuff like head and tail for vectors anyways! (I’d count this as zero overhead/unnescessary code for now!)</p>
+
+<p>Now another user might want to take the second element of a list. Hopefully, instead of writing a list-specific <code class="language-plaintext highlighter-rouge">snd</code> function, they do the following:</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">data</span> <span class="n">Snd</span> <span class="n">l</span> <span class="n">e</span> <span class="o">=</span> <span class="n">Snd</span> <span class="p">{</span> <span class="n">snd</span> <span class="p">:</span> <span class="n">l</span> <span class="o">-&gt;</span> <span class="n">e</span> <span class="p">}</span>
+	<span class="c1"># something `l` you can take the second
+</span>	<span class="c1"># element `e` of
+</span><span class="p">;</span>
+
+<span class="n">let</span> <span class="n">snd</span> <span class="p">:</span> <span class="n">Snd</span> <span class="n">l</span> <span class="n">e</span> <span class="o">-&gt;</span> <span class="n">l</span> <span class="o">-&gt;</span> <span class="n">e</span>
+	<span class="c1"># getter for ease of use
+</span><span class="p">;</span>
+<span class="n">let</span> <span class="n">snd</span> <span class="n">m</span> <span class="o">=</span> <span class="n">case</span> <span class="n">m</span> <span class="o">|</span> <span class="n">Snd</span> <span class="n">s</span> <span class="o">-&gt;</span> <span class="n">s</span><span class="p">.</span><span class="n">snd</span><span class="p">;</span>
+
+<span class="n">let</span> <span class="n">functorSnd</span> <span class="p">:</span> <span class="n">Seq</span> <span class="n">l</span> <span class="n">e</span> <span class="o">-&gt;</span> <span class="n">Snd</span> <span class="n">l</span> <span class="n">e</span><span class="p">;</span>
+<span class="n">let</span> <span class="n">functorSnd</span> <span class="n">m</span> <span class="o">=</span> <span class="n">case</span> <span class="n">m</span> <span class="o">|</span> <span class="n">Seq</span> <span class="n">s</span> <span class="o">-&gt;</span>
+	<span class="n">Snd</span> <span class="p">{</span> <span class="n">snd</span> <span class="o">=</span> <span class="n">times</span> <span class="mi">2</span> <span class="p">(</span><span class="n">s</span><span class="p">.</span><span class="n">tl</span><span class="p">)</span> <span class="o">&gt;&gt;</span> <span class="n">s</span><span class="p">.</span><span class="n">hd</span> <span class="p">};</span>
+</code></pre></div></div>
+
+<p>They might just pass in their implementation of <code class="language-plaintext highlighter-rouge">Seq</code> for lists, but we want to operate on vectors now. We can just reuse their code by passing in our <code class="language-plaintext highlighter-rouge">Vec</code> sequence!</p>
+
+<div class="language-sml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kr">let</span> <span class="n">vecSnd</span> <span class="p">:</span> <span class="n">Snd</span> <span class="n">Vec</span> <span class="n">Number</span><span class="p">;</span>
+<span class="kr">let</span> <span class="n">vecSnd</span> <span class="p">=</span> <span class="n">functorSnd</span> <span class="n">vecSeq</span><span class="p">;</span>
+</code></pre></div></div>
+
+<p>If we leave out the type annotation, that’s just one line per type.
+We’ve gone from writing every general function for every type (Imagine writing <code class="language-plaintext highlighter-rouge">map</code>, <code class="language-plaintext highlighter-rouge">filter</code>, <code class="language-plaintext highlighter-rouge">foldr</code>, <code class="language-plaintext highlighter-rouge">indexAt</code> etc. for all types that store multiple elements) to writing <em>a single line</em> for every type. Thats O(N^2) to O(N) lines of code, which is quite amazing actually.</p>
+
+<p>With 10 sequence-like types and 20 generic functions, we’d have to write at least 200 lines if every function was a one liner. Now we only have to write 30 lines.</p>
+
+<h4 id="13-overhead-for-the-user">1.3 Overhead for the user</h4>
+
+<p>Using our “snd” function for <code class="language-plaintext highlighter-rouge">Vec</code>s looks like this:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>(snd vecSnd) @(1,2,3,4);
+</code></pre></div></div>
+
+<p>That’s actually longer than with our naïve implementation, but the idea is that the time we waste using modules is completely offset by the time we saved earlier.</p>
+
+<p>Modern ML languages often use implicit modules to reduce boilerplate for the user.</p>
+
+<h4 id="14-modules-in-the-standard-library">1.4 Modules in the standard library</h4>
+<p>One issue is that compiling modules needs a lot of type checking. Because PocketML is mainly a mobile app, we can’t waste too much time compiling libraries.</p>
+
+<p>Using the naïve implementation, we just have to read in all the type declarations, because the functionality is usually implemented using python interop.</p>
+
+<p>One thing I will consider using this design pattern for, is to get rid of all the horrible variants of <code class="language-plaintext highlighter-rouge">len</code>. They introduce a lot of mental overhead which is not welcome in a language meant for tinkering.</p>
+
+<hr />
+
+<p>Thank you very much for reading ‘til the end. I might write some more blog posts if I come across another interesting concept I can bring into PocketML.</p>
+
+<h3 id="correction--update">Correction / Update</h3>
+<p>After more research &amp; discussion, this seems to be more of a dictionary-passing implementation of type-classes + module functors. PocketML might get opaque types in the future to harness the power of modular abstraction. Better (qualified/selective) imports have now been added to the language to allow for cleaner namespaces.</p>
+
+  </body>
+</html>

@@ -87,7 +87,11 @@ from copy import deepcopy as copy
 PML_copy=copy
 
 def PML_readFile(p):
-	p = path.storage_path+"/"+path.cwd+"/"+p
+	from kivy import platform
+	if platform == "android":
+		p = path.storage_path+"/"+path.cwd+"/"+p
+	else:
+		p = path.cwd+"/"+p
 	p = p.replace("//","/")
 	try:
 		with open(p,'r') \

@@ -5,8 +5,8 @@ import lib.numpy (get);
 import lib.util (copy, readFileUnsafe);
 import lib.list (listAt,filter);
 
-let myshader = readFileUnsafe "assets/voxelspace.glsl";
-let genMapShader = readFileUnsafe "assets/mapgen.glsl";
+let myshader = readFileUnsafe "../assets/voxelspace.glsl";
+let genMapShader = readFileUnsafe "../assets/mapgen.glsl";
 
 let startTime = time ();
 

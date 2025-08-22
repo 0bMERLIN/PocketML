@@ -95,6 +95,11 @@ let error : String -> a
 	# --hide
 ;
 
+
+data Maybe a = Just a | Nothing
+	# --hide
+;
+
 ### ### Creating lists
 
 let range : Number -> Number -> List Number;
@@ -176,10 +181,6 @@ let imap : (Number -> a -> b) -> List a -> List b;
 
 let any : List Bool -> Bool;
 let any = foldr or False;
-
-data Maybe a = Just a | Nothing
-	# --hide
-;
 
 let zip : List a -> List b -> List (a,b);
 let rec zip xs ys =

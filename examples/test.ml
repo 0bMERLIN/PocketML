@@ -1,4 +1,2 @@
-awdadwawddw
-adwawdawdawd
-awdadwadwadwadwawawadwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwawdddddddddddddddddddddddddddddddddd
-dawdawdc + 2
+import lib.util;
+print "awdadw"

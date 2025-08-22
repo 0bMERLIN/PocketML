@@ -1,4 +1,5 @@
 import os
+import sys
 import traceback
 import threading
 
@@ -27,6 +28,11 @@ class InputField(Widget):
         with open(self.filename, "w+") as f:
             f.write(self.code_input.code_input.text)
 
+    def comp_done(self):
+        self.editor.graphicalout.clear_widgets()
+        self.editor.graphicalout.clearUpdate()
+        self.run_button.disabled = False
+
     def run_file(self):
         self.save()
 
@@ -46,20 +52,16 @@ class InputField(Widget):
             """Clear terminalout (not thread safe)"""
             self.editor.terminalout.text = ""
 
-        def comp_done():
-            self.editor.graphicalout.clear_widgets()
-            self.editor.graphicalout.clearUpdate()
-            self.run_button.disabled = False
-
         def run():
             try:
                 run_compiled(output, env={"editor": self.editor})
             except Exception as e:
                 report(e.args[0] + "\n" + traceback.format_exc())
-                Clock.schedule_once(lambda _: comp_done())
+                Clock.schedule_once(lambda _: self.comp_done())
                 return
 
         def comp(*args, **kwargs):
+            sys.settrace(self.check_stop)
             try:
                 path.set_cwd(
                     "/".join((args[0].removeprefix(path.storage_path)).split("/")[:-1])
@@ -68,19 +70,19 @@ class InputField(Widget):
                 file_to_python(*args, **kwargs)
             except PMLTypeError as e:
                 report(e.args[0])
-                Clock.schedule_once(lambda _: comp_done())
+                Clock.schedule_once(lambda _: self.comp_done())
                 return
             except ParseError as e:
                 report(e.args[0])
-                Clock.schedule_once(lambda _: comp_done())
+                Clock.schedule_once(lambda _: self.comp_done())
                 return
             except Exception as e:
                 report(e.args[0] + "\n" + traceback.format_exc())
-                Clock.schedule_once(lambda _: comp_done())
+                Clock.schedule_once(lambda _: self.comp_done())
                 return
 
             self.loading_bar.value = self.loading_bar.max
-            Clock.schedule_once(lambda _: comp_done())
+            Clock.schedule_once(lambda _: self.comp_done())
             Clock.schedule_once(
                 lambda _: (
                     clear(),
@@ -105,9 +107,15 @@ class InputField(Widget):
         self.editor.run_tab.add_widget(gr)
         self.editor.graphicalout = gr
 
-        run_file_thread = threading.Thread(target=comp, args=args, kwargs=kwargs)
-        run_file_thread.start()
+        self.stop_flag = False
+        self.run_file_thread = threading.Thread(target=comp, args=args, kwargs=kwargs)
+        self.run_file_thread.start()
         self.run_button.disabled = True
+
+    def check_stop(self, frame, event, arg):
+        if self.stop_flag:
+            raise SystemExit()   # force the thread to exit
+        return self.check_stop
 
     def advance_loading_bar(self, t: float):
         self.loading_bar.value += t
@@ -121,6 +129,10 @@ class InputField(Widget):
 
     def stop_program(self):
         self.editor.graphicalout.clearUpdate()
+        self.stop_flag = True
+        if hasattr(self, "run_file_thread") and self.run_file_thread.is_alive():
+            self.run_file_thread.join()
+            self.comp_done()
 
     def find_type(self, nm, filename):
         """

@@ -1,5 +1,6 @@
 import os
 import re
+import time
 from lark import Lark, ParseError, ParseTree
 import interpreter.path as path
 
@@ -220,6 +221,7 @@ def add_infix_operators(g):
 
 
 def parse_file(filename, txt="") -> ParseTree:
+    t1 = time.time()
     # fail if invalid filename
     if not os.path.isfile(filename):
         raise ParseError(f"Module ({filename}) not found!")

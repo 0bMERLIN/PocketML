@@ -1,4 +1,5 @@
 from copy import copy
+import time
 from interpreter.parser import parse_file
 from interpreter.typecheck import global_module_cache
 from lark import Token, Tree, v_args

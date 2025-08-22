@@ -1,1 +1,1 @@
-examples/examples/game3d.ml[OPEN]
+examples/test.ml[OPEN]

@@ -370,10 +370,17 @@ class Compiler(Interpreter):
         # function definition (def ...)
         if len(params) > 1:
             self.emit("\n@curry")
-        self.emit(f"def PML_{x}({', '.join(map(lambda x:'PML_'+x,params))}):")
+        fn_params = ["_param"+str(i) for i in range(len(params))]
+        self.emit(f"def PML_{x}({', '.join(fn_params)}):")
+        self.indent()
+        self.emit(f"match [{', '.join(fn_params)}]:")
+        self.indent()
+        self.emit(f"case [{', '.join([*map(self.visit, params)])}]:")
         self.indent()
         res = self.visit(e)
         self.emit("return (" + res + ")")
+        self.dedent()
+        self.dedent()
         self.dedent()
         return self.visit(b)
 
@@ -400,10 +407,18 @@ class Compiler(Interpreter):
         # function definition (def ...)
         if len(xs) > 1:
             self.emit("\n@curry")
-        self.emit(f"def {fn_name}({', '.join(map(lambda x:'PML_'+x, xs))}):")
+        
+        fn_params = ["_param"+str(i) for i in range(len(xs))]
+        self.emit(f"def {fn_name}({', '.join(fn_params)}):")
+        self.indent()
+        self.emit(f"match [{', '.join(fn_params)}]:")
+        self.indent()
+        self.emit(f"case [{', '.join([*map(self.visit, xs)])}]:")
         self.indent()
         res = self.visit(b)
         self.emit("return (" + res + ")")
+        self.dedent()
+        self.dedent()
         self.dedent()
 
         return fn_name

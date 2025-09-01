@@ -6,7 +6,7 @@
 
 // lambdas and lambda-case
 ?atom:  "\\" "case" lamcases -> lamcase
-    | "\\" NAME+ "->" expr -> lam
+    | "\\" patternatom+ "->" expr -> lam
     | atom1
     | atom atom -> app
 
@@ -17,8 +17,8 @@
     | "module" "(" ("*" | _sep{export, ","}) ")" -> module // no empty modules allowed!
     | "case" expr "|" _sep{case, "|"} -> match
     | "if" expr "then" expr ("else" expr)? -> ite
-    | "let" "rec" " " NAME NAME* "=" expr ";" expr -> letrec
-    | "let" NAME NAME* "=" expr ";" expr -> let
+    | "let" "rec" " " NAME patternatom* "=" expr ";" expr -> letrec
+    | "let" NAME patternatom* "=" expr ";" expr -> let
     | "let" NAME ":" type ";" expr -> letdecl
     | "data" NAME NAME* "=" constructors ";" expr -> typedef
     | "data" NAME NAME* ";" expr -> typedecl

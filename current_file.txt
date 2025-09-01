@@ -1,1 +1,1 @@
-examples/test.ml[OPEN]
+examples/examples/lc.ml[OPEN]

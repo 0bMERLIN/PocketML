@@ -511,22 +511,17 @@ class Typechecker(Interpreter):
     def let(self, *args):
 
         x = args[0]
-        params = args[1:-2]
+        params = args[1:-2] # pattern params
         e, b = args[-2], args[-1]
         old_env = copy(self.env)
 
-        # add args into env
-        tvs = []
-        for a in params:
-            tv = newtv(a.line)
-            tvs += [tv]
-            if str(a) != "_":
-                self.env[a] = tv
+        # visit args
+        tvs = [*map(self.visit, params)]
 
         # build type of `e`
         t = self.visit(e)
         for tv, a in reversed(list(zip(tvs, params))):
-            t = Typ("->", [tv, t], a.line)
+            t = Typ("->", [tv, t], a.meta.line)
         t = solve(self.constraints, t)
 
         # assignment
@@ -536,6 +531,8 @@ class Typechecker(Interpreter):
         if type(t) == TRecord:
             t.baked = True
 
+        self.env = copy(old_env)
+        
         if x in self.env:
             self.constr(self.env[x].inst(), t, x.line)
         else:
@@ -543,10 +540,6 @@ class Typechecker(Interpreter):
         if PRINT_LETS:
             print(x, "=", self.env[x])
 
-        # remove args
-        for a in params:
-            if a in self.env:
-                del self.env[a]
         # body
         tb = self.visit(b)
 
@@ -575,14 +568,12 @@ class Typechecker(Interpreter):
         )
 
         t = solve(self.constraints, tvres)
+
+        self.env = copy(old_env)
+
         self.env[x] = Scheme.generalize(t)
         if PRINT_LETS:
             print(x, "=", self.env[x])
-
-        # remove args
-        for a in params:
-            if a in self.env:
-                del self.env[a]
 
         # body
         tb = self.visit(b)
@@ -616,27 +607,25 @@ class Typechecker(Interpreter):
 
     def lam(self, *args):
 
-        xs = args[:-1]
+        xs = args[:-1] # pattern params
         b = args[-1]
 
+        # visit args
         tvs = []
+        old_env = copy(self.env)
+        tvs = [*map(self.visit, xs)]
 
-        for x in xs:
-            tv = newtv(x.line)
-            tvs += [tv]
-            if str(x) != "_":
-                self.env[x] = tv
-
+        # visit body
         t = self.visit(b)
 
-        for x in xs:
-            if str(x) != "_":
-                del self.env[x]
+        # revert to old env
+        self.env = old_env
 
+        # built lambda type
         res = t
 
         for tv, x in reversed(list(zip(tvs, xs))):
-            res = Typ("->", [tv, res], x.line)
+            res = Typ("->", [tv, res], x.meta.line)
 
         return res
 

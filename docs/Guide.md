@@ -85,6 +85,19 @@ let f b = if b then print "True!";
 ...
 ```
 
+#### 1.2.1 Patterned let & lambda
+The arguments of a `let` definition and lambdas (`\... -> ...`)
+can be patterns:
+```sml
+let unwrapM (Just x) = x;
+let unwrapE = \(Right x) -> x;
+```
+Another example of patterned lets:
+```sml
+let f x 1 = x + 1;
+print $ f 2 1
+```
+
 #### 1.3 Do-Syntax
 When many functions need to be
 executed one after another, for example

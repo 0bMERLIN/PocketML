@@ -1,2 +1,2 @@
-case {a=1, b=2}
-    | {a, b=c} -> print c
+let f x 1 = x + 1;
+print $ f 2 1

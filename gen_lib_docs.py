@@ -31,9 +31,12 @@ for f in os.listdir('examples/lib'):
         doc.write("## Definitions\n\n")
         for _, line, d in find_defs("examples/lib/"+f, get_markdown_comments=True):
             if d.startswith("###"):
-                doc.write(d.strip("#").strip()+ "\n")
+                txt = d.strip("#").replace("\t", "    ")
+                if txt.strip().startswith("#"):
+                    txt = txt.strip()
+                doc.write(txt + "\n")
             else:
-                doc.write(process_def(d) + "\n")
+                doc.write("\n"+process_def(d) + "\n")
 
 with open("docs/LibDocs.md", "w") as doc:
     doc.write("---\n")

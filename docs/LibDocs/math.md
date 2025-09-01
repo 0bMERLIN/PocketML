@@ -12,9 +12,11 @@ Advanced mathematical functions, functions on `Number`s
 ## Definitions
 
 ### Trig
+
 ```haskell
 sin : Number -> Number
 ```
+
 
 
 
@@ -26,9 +28,11 @@ cos : Number -> Number
 
 
 
+
 ```haskell
 tan : Number -> Number
 ```
+
 
 
 
@@ -41,9 +45,11 @@ pi : Number
 
 
 ### Misc.
+
 ```haskell
 pow : Number -> Number -> Number
 ```
+
 
 
 
@@ -55,9 +61,11 @@ round : Number -> Number -> Number
 
 
 
+
 ```haskell
 ln : Number -> Number
 ```
+
 
 
 
@@ -69,6 +77,7 @@ fac : Number -> Number
 
 
 
+
 ```haskell
 exp : Number -> Number
 ```
@@ -76,9 +85,11 @@ exp : Number -> Number
 
 
 
+
 ```haskell
 min : Number -> Number -> Number
 ```
+
 
 
 
@@ -91,9 +102,11 @@ max : Number -> Number -> Number
 
 
 ### Predicates / Checking properties of numbers
+
 ```haskell
 mod : Number -> Number -> Number
 ```
+
 
 
 
@@ -105,9 +118,11 @@ divisible : Number -> Number -> Bool
 
 
 
+
 ```haskell
 odd : Number -> Bool
 ```
+
 
 
 
@@ -120,6 +135,7 @@ even : Number -> Bool
 
 
 ### Random
+
 ```haskell
 noise : Vec -> Number
 ```

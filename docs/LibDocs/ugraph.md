@@ -12,6 +12,7 @@ A simplistic Undirected graph.
 ## Definitions
 
 ### Types
+
 ```haskell
 type Edges a = Dict (List a)
 ```
@@ -19,9 +20,11 @@ type Edges a = Dict (List a)
 
 
 
+
 ```haskell
 type Vertices a = List a
 ```
+
 
 
 
@@ -34,6 +37,7 @@ data Graph a = Graph (Edges a) (Vertices a)
 
 
 ### Functions
+
 ```haskell
 edgesFromGraph : Graph a -> List (List a)
 ```

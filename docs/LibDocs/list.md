@@ -12,6 +12,7 @@ A simple linked list implementation.
 ## Definitions
 
 ### Types
+
 ```haskell
 data List a
 	= Cons a (List a)
@@ -23,9 +24,11 @@ data List a
 
 
 ### Creating lists
+
 ```haskell
 range : Number -> Number -> List Number
 ```
+
 
 
 
@@ -38,9 +41,11 @@ srange : Number -> Number -> Number -> List Number
 
 
 ### Accessors
+
 ```haskell
 tail : List a -> List a
 ```
+
 
 
 
@@ -52,9 +57,11 @@ tailSafe : List a -> List a
 
 
 
+
 ```haskell
 head : List a -> a
 ```
+
 
 
 
@@ -66,9 +73,11 @@ len : List a -> Number
 
 
 
+
 ```haskell
 listAtSafe : Number -> List a -> Maybe a
 ```
+
 
 
 
@@ -80,6 +89,7 @@ listAt : Number -> List a -> a
 
 
 
+
 ```haskell
 take : Number -> List a -> List a
 ```
@@ -87,9 +97,11 @@ take : Number -> List a -> List a
 
 
 
+
 ```haskell
 chunksOf : Number -> List a -> List (List a)
 ```
+
 
 
 
@@ -102,9 +114,11 @@ contains : a -> List a -> Bool
 
 
 ### Sorting, etc.
+
 ```haskell
 sort : List a -> List a
 ```
+
 
 
 
@@ -117,9 +131,11 @@ nub : List a -> List a
 
 
 ### Manipulating lists
+
 ```haskell
 append : a -> List a -> List a
 ```
+
 
 
 
@@ -131,9 +147,11 @@ foldr : (b -> a -> b) -> b -> List a -> b
 
 
 
+
 ```haskell
 extend : List a -> List a -> List a
 ```
+
 
 
 
@@ -145,9 +163,11 @@ concat : List (List a) -> List a
 
 
 
+
 ```haskell
 filter : (a -> Bool) -> List a -> List a
 ```
+
 
 
 
@@ -159,9 +179,11 @@ reverse : List a -> List a
 
 
 
+
 ```haskell
 map : (a -> b) -> (List a) -> List b
 ```
+
 
 
 
@@ -173,6 +195,7 @@ foreach2D : Number -> Number -> (Number->Number-> Unit) -> Unit
 
 
 
+
 ```haskell
 imap : (Number -> a -> b) -> List a -> List b
 ```
@@ -180,9 +203,11 @@ imap : (Number -> a -> b) -> List a -> List b
 
 
 
+
 ```haskell
 any : List Bool -> Bool
 ```
+
 
 
 

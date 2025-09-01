@@ -12,9 +12,11 @@ A lark-based parser. Generated data compatible with a sum type of the form `data
 ## Definitions
 
 ### Types
+
 ```haskell
 type GrammarError = String
 ```
+
 
 
 
@@ -27,6 +29,7 @@ type ParseError = String
 
 
 ### Creating parsers
+
 ```haskell
 parser :
 	String -> Either GrammarError (

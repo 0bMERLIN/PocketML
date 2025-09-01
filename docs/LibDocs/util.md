@@ -12,9 +12,11 @@ Util functions for the OS, kivy process, network and more.
 ## Definitions
 
 ### Time
+
 ```haskell
 time : Unit -> Number
 ```
+
 
 
 
@@ -26,12 +28,14 @@ traceTime : (Unit -> b) -> b
 > log the time an action takes to execute
 
 
+
 ```haskell
 setInterval : Number -> state -> (state->state) -> Unit
 ```
 
 > args: n, state, tick<br>
 > run tick every n seconds.
+
 
 
 ```haskell
@@ -42,9 +46,11 @@ setUpdate : state -> (state->state) ->Unit
 
 
 ### Terminal
+
 ```haskell
 cls : Unit -> Unit
 ```
+
 
 
 
@@ -56,9 +62,11 @@ error : String -> a
 
 
 
+
 ```haskell
 setTermFontSize : Number -> Unit
 ```
+
 
 
 
@@ -70,6 +78,7 @@ str : a -> String
 > deprecated. Use lib.string (str)
 
 
+
 ```haskell
 printl : List a -> Unit
 ```
@@ -78,6 +87,7 @@ printl : List a -> Unit
 
 
 ### Misc.
+
 ```haskell
 setreclimit : Number -> Unit
 ```
@@ -85,9 +95,11 @@ setreclimit : Number -> Unit
 
 
 
+
 ```haskell
 setCompilerCWD : String -> Unit
 ```
+
 
 
 
@@ -100,6 +112,7 @@ randint : Number -> Number -> Number
 
 
 ### File system
+
 ```haskell
 fileexists : String -> Bool
 ```
@@ -107,9 +120,11 @@ fileexists : String -> Bool
 
 
 
+
 ```haskell
 readFile : String -> Maybe String
 ```
+
 
 
 
@@ -122,6 +137,7 @@ readFileUnsafe : String -> String
 
 
 ### Network
+
 ```haskell
 download : String -> String -> Unit
 ```
@@ -130,9 +146,11 @@ download : String -> String -> Unit
 
 
 ### Basic functions
+
 ```haskell
 copy : a -> a
 ```
+
 
 
 
@@ -144,9 +162,11 @@ uncurry2 : (a -> b -> c) -> (a,b) -> c
 
 
 
+
 ```haskell
 not : Bool -> Bool
 ```
+
 
 
 
@@ -158,9 +178,11 @@ float : a -> Number
 
 
 
+
 ```haskell
 int : a -> Number
 ```
+
 
 
 
@@ -172,9 +194,11 @@ neg : Number -> Number
 
 
 
+
 ```haskell
 between : Number-> Number -> Number -> Bool
 ```
+
 
 
 
@@ -186,9 +210,11 @@ id : a -> a
 
 
 
+
 ```haskell
 const : a -> b -> a
 ```
+
 
 
 
@@ -200,9 +226,11 @@ when : Bool -> (Unit -> Unit) -> Unit
 
 
 
+
 ```haskell
 mapRecord : (a -> a) -> a -> a
 ```
+
 
 
 
@@ -214,6 +242,7 @@ with : a -> b -> b
 
 
 
+
 ```haskell
 union : a -> a -> a
 ```
@@ -221,9 +250,11 @@ union : a -> a -> a
 
 
 
+
 ```haskell
 times : Number -> (a -> a) -> a -> a
 ```
+
 
 
 

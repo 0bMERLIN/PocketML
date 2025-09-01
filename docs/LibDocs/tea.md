@@ -12,10 +12,12 @@ Graphics framework inspired by TEA. Uses kivy and VDOM-diffing internally. Suppo
 ## Definitions
 
 ### Types
+
 ```haskell
 type Color = Vec
 ```
 
+> Alias used for clarity. Vec of length 4.
 
 
 
@@ -29,6 +31,7 @@ data Uniform
 	| UniformTex0 String Img
 ```
 
+> Uniform types for shaders. Arguments: uniformName, value
 
 
 
@@ -47,19 +50,15 @@ data Widget
 
 
 
-```haskell
-WIDGET_DOCS : doc
-```
-
-> Attributes for Widgets:<br>
-> Rect  : color, size, pos<br>
-> TRect : texture, size, pos<br>
-> Btn   : name, text, size, pos<br>
-> Slider: name, min, max, step, value, size, pos<br>
-> Label : name, text, size, pos<br>
-> Line  : polygon-points, width, color<br>
-> Many  : children
-
+>| Attributes for Widgets | |
+>|-|-|
+>| Rect | color, size, pos |
+>| TRect | texture, size, pos |
+>| Btn   | name, text, size, pos |
+>| Slider| name, min, max, step, value, size, pos |
+>| Label | name, text, size, pos |
+>| Line  | polygon-points, width, color |
+>| Many  | children |
 
 ```haskell
 data Event
@@ -70,14 +69,17 @@ data Event
 	| SliderMoved String Number
 ```
 
-
+> Event type for the `tick` function in the app. Make sure pattern matching on<br>
+> events is exhaustive, so `tick` does not throw an error.
 
 
 ### Starting the App
+
 ```haskell
-setTick : a -> (Event -> a -> a) -> (a -> Widget) -> Unit
+app : state -> (Event -> state -> state) -> (state -> Widget) -> Unit
 ```
 
+> starts an app given an initial `state`, `tick` and `view`
 
 
 
@@ -88,14 +90,39 @@ forceUpdate : state -> state
 
 
 
+>The view gets updated based on the state. The app assumes that
+>view is pure: It always returns the same Widgets for the same state.
+>When side effects do need to be used for some reason, the `tick` function
+>can request an update.
+>
+>Example:
+>```
+>let view _ = Label "time" (str $ time ()) @(200, 200) @(0, 0);
+>let tick _ _ = forceUpdate (); # Note that the state is Unit and constant.
+>setTick () tick view
+>```
+
 ```haskell
 stop : Unit -> Unit
 ```
 
+> Effectful.<br>
+> Stops the app. Takes effect on the next tick, the current tick is stil executed.
 
 
+>Example:
+>```
+>let tick event state = do
+>    if state > 1000 then stop ()
+>    inc state;
+>
+>let view state = Label "mylabel" (str state) @(200, 200) @(0, 0);
+>
+>setTick 0
+>```
 
 ### Basic kinds of apps / patterns
+
 ```haskell
 staticView : (Unit -> Widget) -> Unit
 ```
@@ -105,6 +132,7 @@ staticView : (Unit -> Widget) -> Unit
 
 
 ### Getters
+
 ```haskell
 width : Number
 ```
@@ -112,9 +140,11 @@ width : Number
 
 
 
+
 ```haskell
 height: Number
 ```
+
 
 
 
@@ -127,6 +157,7 @@ getFPS : Unit -> Number
 
 
 ### Positioning / layouts
+
 ```haskell
 setPos : Widget -> Vec -> Unit
 ```
@@ -134,9 +165,11 @@ setPos : Widget -> Vec -> Unit
 
 
 
+
 ```haskell
 randPos : Unit -> Vec
 ```
+
 
 
 
@@ -149,3 +182,51 @@ grid : Vec -> Vec -> Num -> Num -> List (Vec -> Widget) -> Widget
 
 
 ### Colors & constants
+
+```haskell
+red : Color
+```
+
+
+
+
+
+```haskell
+black : Color
+```
+
+
+
+
+
+```haskell
+white : Color
+```
+
+
+
+
+
+```haskell
+blue : Color
+```
+
+
+
+
+
+```haskell
+green : Color
+```
+
+
+
+
+
+```haskell
+yellow : Color
+```
+
+
+
+

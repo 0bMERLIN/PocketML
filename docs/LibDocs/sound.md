@@ -12,6 +12,7 @@ Library for kivys sound system.
 ## Definitions
 
 ### Types
+
 ```haskell
 data Sound
 ```
@@ -20,6 +21,7 @@ data Sound
 
 
 ### Generating Sounds
+
 ```haskell
 max_amp : Number
 ```
@@ -27,9 +29,11 @@ max_amp : Number
 
 
 
+
 ```haskell
 sound : (Number -> Number) -> Number -> Sound
 ```
+
 
 
 
@@ -42,6 +46,7 @@ beep : Number -> Number -> Sound
 
 
 ### Playback
+
 ```haskell
 play : Sound -> Unit
 ```

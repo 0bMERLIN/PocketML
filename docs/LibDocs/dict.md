@@ -12,9 +12,11 @@ Dictionaries with `String`-keys. Internally python dicts.
 ## Definitions
 
 ### Creation
+
 ```haskell
 data Dict a
 ```
+
 
 
 
@@ -27,6 +29,7 @@ mkDict : List (String, a) -> Dict a
 
 
 ### Accessing
+
 ```haskell
 dictItems : Dict a -> List (String, a)
 ```
@@ -34,9 +37,11 @@ dictItems : Dict a -> List (String, a)
 
 
 
+
 ```haskell
 dictGet : Dict a -> String -> Maybe a
 ```
+
 
 
 

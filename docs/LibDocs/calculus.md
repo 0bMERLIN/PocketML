@@ -12,12 +12,14 @@ Basic numeric calculus functions like differentiation, integration, series.
 ## Definitions
 
 ### Differentiation & Integration
+
 ```haskell
 diff : (Number -> Number) -> Number -> (Number -> Number)
 ```
 
 > args: func, n<br>
 > returns: n-th derivative of func.
+
 
 
 ```haskell
@@ -28,11 +30,13 @@ integral : (Number -> Number) -> Number -> Number -> Number
 
 
 ### Series expansions (Taylor, Fourier etc.)
+
 ```haskell
 taylor : (Number -> Number) -> Number -> Number -> (Number -> Number)
 ```
 
 > args: f, n, x0, x
+
 
 
 ```haskell

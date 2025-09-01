@@ -12,9 +12,11 @@ A library for kivy textures. An `Img` is a kivy texture. Images can be loaded fr
 ## Definitions
 
 ### Definitions & Creating images/buffers
+
 ```haskell
 data Img
 ```
+
 
 
 
@@ -26,9 +28,11 @@ data Buffer
 
 
 
+
 ```haskell
 type Color = Vec
 ```
+
 
 
 
@@ -40,6 +44,7 @@ setpixel : Img -> Vec -> Color -> Unit
 
 
 
+
 ```haskell
 image : Vec -> Img
 ```
@@ -47,9 +52,11 @@ image : Vec -> Img
 
 
 
+
 ```haskell
 imgLoad : String -> Img
 ```
+
 
 
 
@@ -62,9 +69,11 @@ imgBuf : Img -> Buffer
 
 
 ### Functions
+
 ```haskell
 imgSize : Img -> Vec
 ```
+
 
 
 
@@ -76,9 +85,11 @@ imgCopy : Img -> Img
 
 
 
+
 ```haskell
 imgMap : Img -> (Number->Number->Color->Color) -> Unit
 ```
+
 
 
 
@@ -90,9 +101,11 @@ imgGet : Buffer -> Vec -> Vec
 
 
 
+
 ```haskell
 imgSave : String -> Img -> Unit
 ```
+
 
 
 
@@ -104,6 +117,7 @@ imgClear : Img -> Color -> Unit
 
 
 
+
 ```haskell
 imgMapRect: Vec -> Vec -> Img -> (Number->Number->Color->Color) -> Unit
 ```
@@ -111,9 +125,11 @@ imgMapRect: Vec -> Vec -> Img -> (Number->Number->Color->Color) -> Unit
 > args: size, pos, img, func
 
 
+
 ```haskell
 imgSmooth : Img -> Img
 ```
+
 
 
 
@@ -125,6 +141,7 @@ imgFlipH : Img -> Img
 
 
 
+
 ```haskell
 imgFlipV : Img -> Img
 ```
@@ -132,9 +149,11 @@ imgFlipV : Img -> Img
 
 
 
+
 ```haskell
 imgShade : Img -> String -> Img
 ```
+
 
 
 

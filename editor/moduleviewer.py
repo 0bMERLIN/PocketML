@@ -110,7 +110,7 @@ def find_defs(path, get_markdown_comments=False):
         ^data\s+.*?;     # Match 'data ... = ...;' non-greedy
     | ^let\s+[A-Za-z0-9_\s]*?:.*?;      # Match 'let ... : ...;' non-greedy
     | ^type\s+[A-Za-z0-9_\s]*?=.*?;  # Match 'type ...;' non-greedy
-    | ^\s\#\#\#.*?$           # Match comments starting with "##"
+    | ^\#\#\#.*?$           # Match comments starting with "##"
     """
     matches = list(re.finditer(pattern, text, re.DOTALL | re.VERBOSE | re.MULTILINE))
 

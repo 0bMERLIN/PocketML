@@ -12,9 +12,11 @@ A library for using numpy in PocketML.
 ## Definitions
 
 ### Type Aliases
+
 ```haskell
 type Size = List Number
 ```
+
 
 
 
@@ -27,9 +29,11 @@ type Index = List Number
 
 
 ### Creating arrays
+
 ```haskell
 array : List Number -> Vec
 ```
+
 
 
 
@@ -41,9 +45,11 @@ zeros : Size -> Vec
 
 
 
+
 ```haskell
 full : Size -> Number -> Vec
 ```
+
 
 
 
@@ -56,11 +62,13 @@ linspace : Number -> Number -> Number -> Vec
 
 
 ### Getters
+
 ```haskell
 toList : Vec -> List Number
 ```
 
 > only 1-dim.!
+
 
 
 ```haskell
@@ -70,9 +78,11 @@ size : Vec -> Size
 > <=> arr.shape in numpy!
 
 
+
 ```haskell
 get : Index -> Vec -> Number
 ```
+
 
 
 
@@ -85,11 +95,13 @@ slice : Index -> Index -> Vec -> Vec
 > - fails if out of bounds
 
 
+
 ```haskell
 sliceInc : Index -> Index -> Vec -> Vec
 ```
 
 > like slice but end index is included.
+
 
 
 ```haskell
@@ -102,9 +114,11 @@ slicePartial : Index -> Index -> Vec -> Vec
 
 
 ### Manipulating `Vec`s
+
 ```haskell
 set : Index -> Number -> Vec -> Vec
 ```
+
 
 
 
@@ -116,9 +130,11 @@ vectorize : (Number -> Number) -> Vec -> Vec
 
 
 
+
 ```haskell
 ivectorize : (Index -> Number -> Number) -> Vec -> Vec
 ```
+
 
 
 
@@ -130,6 +146,7 @@ sum : Vec -> Number
 
 
 
+
 ```haskell
 dot : Vec -> Vec -> Number
 ```
@@ -137,9 +154,11 @@ dot : Vec -> Vec -> Number
 
 
 
+
 ```haskell
 flatten : Vec -> Vec
 ```
+
 
 
 
@@ -153,6 +172,7 @@ delete : Number -> Vec -> Vec
 > only for flat Vecs
 
 
+
 ```haskell
 concatenate : Number -> Vec -> Vec -> Vec
 ```
@@ -160,9 +180,11 @@ concatenate : Number -> Vec -> Vec -> Vec
 > args: axis, arr1, arr2
 
 
+
 ```haskell
 reshape : Size -> Vec -> Vec
 ```
+
 
 
 

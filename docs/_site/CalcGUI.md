@@ -98,4 +98,4 @@ setTick init tick view
 ![](calculator.png)
 > Note: This screenshot is from linux, on android the layout or font might change a little depending on your kivy installation / android version.
 
-Kivy labels don't have background by default. As an excercise you could add a `Rect pos size color` behind the label inside `view`!
+Kivy labels don't have background by default. As an exercise you could add a `Rect pos size color` behind the label inside `view`!

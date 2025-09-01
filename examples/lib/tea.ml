@@ -361,7 +361,9 @@ import lib.image;
 
 
 ### ### Types
-type Color = Vec;
+type Color = Vec
+	# Alias used for clarity. Vec of length 4.
+;
 
 data Uniform
 	= UniformFloat String Number
@@ -370,6 +372,8 @@ data Uniform
 	| UniformVec3 String Vec
 	| UniformVec4 String Vec
 	| UniformTex0 String Img
+
+	# Uniform types for shaders. Arguments: uniformName, value
 ;
 
 data Widget
@@ -383,33 +387,62 @@ data Widget
 	| Many (List Widget)
 ;
 
-let WIDGET_DOCS : doc
-	# Attributes for Widgets:
-	# Rect  : color, size, pos
-	# TRect : texture, size, pos
-	# Btn   : name, text, size, pos
-	# Slider: name, min, max, step, value, size, pos
-	# Label : name, text, size, pos
-	# Line  : polygon-points, width, color
-	# Many  : children
-;
+###>| Attributes for Widgets | |
+###>|-|-|
+###>| Rect | color, size, pos |
+###>| TRect | texture, size, pos |
+###>| Btn   | name, text, size, pos |
+###>| Slider| name, min, max, step, value, size, pos |
+###>| Label | name, text, size, pos |
+###>| Line  | polygon-points, width, color |
+###>| Many  | children |
 
-# builtin event type
 data Event
 	= Tick
 	| BtnPressed String
 	| BtnReleased String
 	| BtnHeld String
 	| SliderMoved String Number
+	# Event type for the `tick` function in the app. Make sure pattern matching on
+	# events is exhaustive, so `tick` does not throw an error.
 ;
 
 ### ### Starting the App
 
-let setTick : a -> (Event -> a -> a) -> (a -> Widget) -> Unit;
+let app : state -> (Event -> state -> state) -> (state -> Widget) -> Unit
+	# starts an app given an initial `state`, `tick` and `view`
+;
 
 let forceUpdate : state -> state;
 
-let stop : Unit -> Unit;
+###>The view gets updated based on the state. The app assumes that
+###>view is pure: It always returns the same Widgets for the same state.
+###>When side effects do need to be used for some reason, the `tick` function
+###>can request an update.
+###>
+###>Example:
+###>```
+###>let view _ = Label "time" (str $ time ()) @(200, 200) @(0, 0);
+###>let tick _ _ = forceUpdate (); # Note that the state is Unit and constant.
+###>setTick () tick view
+###>```
+
+let stop : Unit -> Unit
+	# Effectful.
+	# Stops the app. Takes effect on the next tick, the current tick is stil executed.
+;
+
+###>Example:
+###>```
+###>let tick event state = do
+###>	if state > 1000 then stop ()
+###>	inc state;
+###>
+###>let view state = Label "mylabel" (str state) @(200, 200) @(0, 0);
+###>
+###>setTick 0 
+###>```
+###
 
 ### ### Basic kinds of apps / patterns
 
@@ -441,11 +474,23 @@ let grid pos spacing nx ny elems =
 ;
 
 ### ### Colors & constants
-let RED = @(255,0,0,255);
-let BLACK = @(0,0,0,255);
-let WHITE = @(255,255,255,255);
-let BLUE = @(0, 0, 255, 255);
-let GREEN = @(0,255,0,255);
+let red : Color;
+let red = @(255,0,0,255);
+
+let black : Color;
+let black = @(0,0,0,255);
+
+let white : Color;
+let white = @(255,255,255,255);
+
+let blue : Color;
+let blue = @(0, 0, 255, 255);
+
+let green : Color;
+let green = @(0,255,0,255);
+
+let yellow : Color;
+let yellow = @(255, 255, 0, 255);
 
 module (*)
 

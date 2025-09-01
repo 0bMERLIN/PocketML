@@ -11,9 +11,11 @@ Functions for working with the builtin `String` type.
 
 ## Definitions
 
+
 ```haskell
 str : a -> String
 ```
+
 
 
 
@@ -25,9 +27,11 @@ split : String -> String -> List String
 
 
 
+
 ```haskell
 replace : String -> String -> String -> String
 ```
+
 
 
 
@@ -39,9 +43,11 @@ isNumeric : String -> Bool
 
 
 
+
 ```haskell
 strIn : String -> String -> Bool
 ```
+
 
 
 
@@ -53,9 +59,11 @@ strLen : String -> Number
 
 
 
+
 ```haskell
 strHead : String -> String
 ```
+
 
 
 

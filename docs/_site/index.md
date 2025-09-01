@@ -15,7 +15,7 @@ Visit the [PocketML](https://github.com/0bMERLIN/PocketML) repository.
 - [Powerful ML Modules in PocketML](BlogModules.md)
 
 ## Docs
-[Library documentation](LibDocs.md)
+- [Library documentation](LibDocs.md)
 
 ## Motivation
 This project is an exercise in input schemes. A terse functional language paired with cursor navigation (AnysoftKeyboard) using hardware buttons might actually make coding on mobile/a small screen feasable.

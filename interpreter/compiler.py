@@ -486,6 +486,20 @@ class Compiler(Interpreter):
         self.dedent()
         return res
 
+    def pentry(self, nm, p):
+        return (str(nm), self.visit(p))
+
+    def precordvar(self, nm):
+        return (str(nm), "PML_"+str(nm))
+
+    def precord(self, *entries):
+        xs = list(map(self.visit, entries))
+        return "{" + ",".join([(f'"{k}": {v}') for k,v in xs]) + "}"
+
+    def ptuple(self, elems):
+        xs = self.visit_children(elems)
+        return "{" + ",".join([(f'"_{i}": {x}') for i, x in enumerate(xs)]) + "}"
+
     def pvar(self, nm):
         return "PML_" + str(nm)
 

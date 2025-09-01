@@ -64,10 +64,17 @@ none_expr: "(" ")"
     | patternatom
 ?patternatom: "_" -> pwildcard
     | LOWERNAME -> pvar
+    | "(" tuplepelems ")" -> ptuple
+    | "{" _sep{pentry, ","} "}" -> precord
     | "(" pattern ")"
     | NUMBER -> pnum
     | STRING -> pstr
     | pconstrname
+
+?pentry: NAME "=" pattern -> pentry
+    | LOWERNAME -> precordvar
+
+tuplepelems: pattern "," (pattern ("," pattern)*)?
 
 pconstrname: (NAME ".")? UPPERNAME
 

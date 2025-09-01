@@ -1,2 +1,2 @@
-import lib.util;
-print "awdadw"
+case {a=1, b=2}
+    | {a, b=c} -> print c

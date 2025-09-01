@@ -714,6 +714,26 @@ class Typechecker(Interpreter):
 
         return restype
 
+    def pentry(self, nm, p):
+        return (str(nm), self.visit(p))
+
+    def precordvar(self, nm):
+        tv = newtv(nm.line)
+        self.env[str(nm)] = tv
+        return (str(nm), tv)
+
+    def precord(self, *entries):
+        ts = [self.visit(e) for e in entries]
+        return TRecord(dict(ts), entries[0].meta.line, baked=True)
+
+    def ptuple(self, elems):
+        types = self.visit_children(elems)
+        t = TRecord(
+            {f"_{i}": t for i, t in enumerate(types)},
+            elems.meta.line,
+        )
+        return t
+
     def pvar(self, nm):
         tv = newtv(nm.line)
         self.env[str(nm)] = tv

@@ -58,6 +58,18 @@ case [1,2,3]
     | Cons x _ -> print x
     | Nil -> print "empty..."
 ```
+PocketML also supports matching on records.
+Fields can be matched with a value (a), a name (b) or without a "=" / with
+their own name (c).
+```sml
+case { a = 10, b = 42, c = 71 }
+    | {a = 10, b = x, c} -> print (x + c)
+```
+Tuples are supported aswell.
+```sml
+case (1, 2, 3)
+    | (a, b, c) -> print (a + b + c)
+```
 
 Use if-then-else for branching:
 ```sml
@@ -120,9 +132,6 @@ type Person =
     , age: Number
     , location: Point };
 ```
-
-> Note that PocketML does not support tuple and record pattern
-matching yet!
 
 Records also support a sort of weak row-polymorphism.
 

@@ -17,6 +17,10 @@ from kivy.graphics.opengl import *
 from kivy.graphics.texture import Texture
 from kivy.graphics import Callback,BindTexture
 
+from kivy.uix.boxlayout import BoxLayout;
+
+from kivy.uix.colorpicker import ColorWheel
+
 class SRectWidget(Widget):
 	def __init__(self, src, **kwargs):
 		self.canvas = RenderContext()
@@ -186,11 +190,24 @@ def update_srect(s, src,_,size,pos):
 	s.size = floats(2*size/np.array([Window.width,Window.height]))
 	s.pos = floats(2*pos/np.array([Window.width,Window.height]))
 
+def init_colpicker(name, size,pos):
+	l=BoxLayout(orientation="vertical",size=floats(size),pos=floats(pos))
+	c = ColorWheel()
+	l.add_widget(c)
+	editor.graphicalout.add_widget(l)
+	c.bind(color=lambda _,v:emit_event("ColorPicked",name,np.array(v)*255))
+	return l
+
+def update_colpicker(c,_,size,pos):
+	c.pos=floats(pos)
+	c.size=floats(size)
+
 UPDATERS = {
 	"PML_Btn": update_btn,
 	"PML_Slider": update_slider,
 	"PML_Label": update_label,
-	"PML_SRect": update_srect
+	"PML_SRect": update_srect,
+	"PML_ColorPicker": update_colpicker
 }
 
 # create widget objects
@@ -198,7 +215,8 @@ INITIALIZERS = {
 	"PML_Btn": init_btn,
 	"PML_Slider": init_slider,
 	"PML_Label": init_label,
-	"PML_SRect": init_srect
+	"PML_SRect": init_srect,
+	"PML_ColorPicker": init_colpicker
 }
 
 ######### VDOM / EVENTS
@@ -385,8 +403,8 @@ data Widget
 	| Label String String Vec Vec
 	| Line (List Vec) Number Color
 	| Many (List Widget)
+	| ColorPicker String Vec Vec
 ;
-
 ###>| Attributes for Widgets | |
 ###>|-|-|
 ###>| Rect | color, size, pos |
@@ -397,12 +415,14 @@ data Widget
 ###>| Line  | polygon-points, width, color |
 ###>| Many  | children |
 
+# builtin event type
 data Event
 	= Tick
 	| BtnPressed String
 	| BtnReleased String
 	| BtnHeld String
 	| SliderMoved String Number
+	| ColorPicked String Color
 	# Event type for the `tick` function in the app. Make sure pattern matching on
 	# events is exhaustive, so `tick` does not throw an error.
 ;

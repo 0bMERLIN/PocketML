@@ -5,34 +5,6 @@ import lib.numpy (get);
 import lib.util (copy, readFileUnsafe);
 import lib.list (listAt,filter);
 
-let myshader = readFileUnsafe "../assets/voxelspace.glsl";
-let genMapShader = readFileUnsafe "../assets/mapgen.glsl";
-
-let startTime = time ();
-
-let genMap w h =
-	let i = image @(w, h);
-	imgShade i genMapShader
-;
-
-let mymap = genMap 300 300;
-
-let atlas : Img;
-let atlas = imgSmooth $ mkAtlas [mymap, mymap];
-
-type State = { angle : Number, pos : Vec };
-
-let tick : Event -> State -> State;
-let tick e s =
-	let v = @(cos(s.angle), sin(s.angle))°.001;
-	case e
-	| BtnHeld ">" -> with {angle=s.angle+.05} s
-	| BtnHeld "<" -> with {angle=s.angle-.05} s
-	| BtnHeld "\\/" -> with {pos=s.pos-v} s
-	| BtnHeld "/\\" -> with {pos=s.pos+v} s
-	| _ -> forceUpdate s
-;
-
 data Sprite = Sprite Num Vec Vec;
 
 let spriteUniforms : Num -> Sprite -> List Uniform;
@@ -54,25 +26,62 @@ let cross u d l r size pos = Many
 	]
 ;
 
-let view : State -> Widget;
-let view s = Many
-	[ SRect myshader
-		([ UniformTex0 "tex" atlas
-		, UniformFloat "atlasMap[0]" 0
-		, UniformFloat "atlasMap[1]" 0.5
-		, UniformInt "atlasSize" 2
-		, UniformVec2 "atlasSizes[0]" (imgSize mymap)
-		, UniformVec2 "atlasSizes[1]" (imgSize mymap)
-		
-		, UniformInt "nSprites" 1
-		
-		, UniformFloat "angle" s.angle
-		, UniformVec2 "pos" s.pos
+let atlasMap : Atlas -> List Number;
+let atlasMap = \case Atlas tex szs ->
+	Cons 0 (take (len szs-1) (foldr (\acc s ->
+		let l = acc._1;
+		let y = acc._0;
+		let y1 = y + get [1] s;
+		(y1, append (y1/imgHeight tex) l)
+	)
+	(0, []) szs)._1);
+
+let myshader = readFileUnsafe
+	"../assets/voxelspace.glsl";
+let render3D : Vec -> Number -> List Sprite -> Atlas -> Widget;
+let render3D pos angle sprites atl =
+	let am = atlasMap atl;
+	case atl|Atlas tex szs ->
+	
+	SRect myshader
+		([UniformInt "atlasSize" (len szs)
+		, UniformInt "nSprites" (len sprites)
+		, UniformTex0 "tex" tex
+		, UniformFloat "angle" angle
+		, UniformVec2 "pos" pos
 		]
-		+ spriteUniforms 0
-			(Sprite 0 @(0,.05,0) @(0,0,.04))
-		)
-		@(width,width) @(0,height*.2)
+		# Atlas map
+		+ imap (\i ->
+			UniformFloat("atlasMap["+str i+"]"))
+			am
+		# Atlas image sizes
+		+ imap (\i ->
+			UniformVec2
+				("atlasSizes[+"+str i+"+]"))
+			szs
+		
+		+ concat (imap spriteUniforms sprites))
+		@(width,width) @(0,height*.2);
+
+type State =
+	{ angle : Number
+	, pos : Vec
+	};
+
+let genMapShader = readFileUnsafe
+	"../assets/mapgen.glsl";
+
+let genMap w h =
+	let i = image @(w, h);
+	imgShade i genMapShader;
+
+let mymap = genMap 300 300;
+
+let view : Atlas -> State -> Widget;
+let view atlas s = Many
+	[ render3D (s.pos) (s.angle)
+		[Sprite 0 @(0,.05,0) @(0,0,.04)]
+		atlas
 	, cross
 		(Btn "/\\" "/\\") (Btn "\\/" "\\/")
 		(Btn "<" "<") (Btn ">" ">")
@@ -81,5 +90,16 @@ let view s = Many
 	]
 ;
 
+let tick : Event -> State -> State;
+let tick e s =
+	let v = @(cos(s.angle), sin(s.angle))°.001;
+	case e
+	| BtnHeld ">" -> with {angle=s.angle+.05} s
+	| BtnHeld "<" -> with {angle=s.angle-.05} s
+	| BtnHeld "\\/" -> with {pos=s.pos-v} s
+	| BtnHeld "/\\" -> with {pos=s.pos+v} s
+	| _ -> forceUpdate s
+;
 
-setTick { pos = @(0,0), angle=0 } tick view
+setTick { pos = @(0,0), angle=0 } tick
+	(view $ mkAtlas [mymap, mymap, mymap])

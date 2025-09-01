@@ -58,6 +58,8 @@ def PML_imgMapRect(size, pos, texture, f):
 		arr = np.frombuffer(texture.pixels, 
 			dtype=np.uint8) \
 			.copy().reshape((h, w, 4))
+		pos=[*map(int,list(pos))]
+		size=[*map(int,list(size))]
 		for y in range(
 				pos[1], min(h, pos[1]+size[1])):
 			for x in range(
@@ -65,8 +67,10 @@ def PML_imgMapRect(size, pos, texture, f):
 					min(w, pos[0]+size[0])):
 				color = arr[y,x]
 				new_color = f(x)(y)(color)
-				arr[y,x] = new_color
-		texture.blit_buffer(arr.tobytes(), colorfmt='rgba', bufferfmt='ubyte')
+				arr[y,x] = [*map(int,list(new_color))]
+		texture.blit_buffer(arr.tobytes(), 
+			colorfmt='rgba',
+			bufferfmt='ubyte')
 	except Exception as e:
 		print(e)
 	setfilter(texture)
@@ -82,15 +86,16 @@ def PML_imgBuf(tex):
 def imgSave(fname, texture):
 	data = io.BytesIO()
 	CoreImage(texture).save(data, fmt='png')
-	with open(SP + fname, "wb+") as f:
+	with open(path.cwd + fname, "wb+") as f:
 		f.write(data.getvalue())
 	print("Image saved " + fname)
 
 def PML_imgLoad(p):
 	try:
-		t = CoreImage(SP + p).texture
+		t = CoreImage(path.cwd + p).texture
 		t.mag_filter = "nearest"
-		
+		if t.uvsize[1]<0:
+			t.flip_vertical()
 		return t
 	except Exception as e:
 		print("Oops", e)
@@ -115,7 +120,7 @@ PML_imgFlipV = lambda t: (t1 := PML_imgCopy(t), t1.flip_vertical(), t1)[-1]
 from kivy.graphics import Fbo, Rectangle, ClearBuffers, ClearColor
 from kivy.graphics.texture import Texture
 
-def PML_mkAtlas(textures):
+def PML_mkAtlasImg(textures):
     textures = convlist(textures)
     if not textures:
         raise ValueError("No textures provided")
@@ -149,6 +154,9 @@ def PML_mkAtlas(textures):
 
 PML_imgSize = lambda i: \
 	np.array([i.width,i.height])
+
+PML_imgWidth = lambda i: i.width
+PML_imgHeight = lambda i : i.height
 
 @curry
 def PML_imgShade(img, fs):
@@ -190,6 +198,8 @@ let imgBuf : Img -> Buffer;
 ### ### Functions
 
 let imgSize : Img -> Vec;
+let imgHeight : Img -> Number;
+let imgWidth : Img -> Number;
 let imgCopy : Img -> Img;
 let imgMap : Img -> (Number->Number->Color->Color) -> Unit;
 let imgGet : Buffer -> Vec -> Vec;
@@ -215,6 +225,21 @@ data Uniform
 
 let imgShade : Img -> String -> Img;
 
-let mkAtlas : List Img -> Img;
+data Atlas = Atlas Img (List Vec)
+	# arguments: atlasTex, imgSizes
+;
+
+let mkAtlasImg : List Img -> Img
+	# make an atlas of vertically stacked
+	# images from the input images.
+;
+
+let mkAtlas : List Img -> Atlas
+	# create an Atlas from the input images
+;
+let mkAtlas is = Atlas
+	(imgSmooth $ mkAtlasImg is)
+	(map imgSize is);
+
 
 module (*)

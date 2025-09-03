@@ -471,7 +471,7 @@ let staticView : (Unit -> Widget) -> Unit
 	# Use for graphing, etc.
 ;
 let staticView view =
-	setTick () (const stop) view;
+	app () (const stop) view;
 
 ### ### Getters
 

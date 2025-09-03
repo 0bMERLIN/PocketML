@@ -138,12 +138,7 @@ def load_file(filename, logger=print) -> Tuple[ParseTree, ModuleData]:
     and the parse tree.
     """
 
-    if "lib/" in filename:
-        # lib is a separate include dir (always in storage_path+"lib/")
-        filename = storage_path + "/lib/" + (filename.split("/")[-1])
-    else:
-        filename = (storage_path + path.cwd + filename.split("/")[-1]) if filename.startswith(storage_path) else filename
-    filename = filename.replace("//", "/")
+    filename = path.abspath(filename).replace("//", "/")
 
     if not os.path.isfile(filename):
         raise ParseError(f"Module ({filename}) not found!")

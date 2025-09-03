@@ -30,3 +30,10 @@ cwd = ""
 def set_cwd(new_cwd):
     global cwd
     cwd = new_cwd
+
+def abspath(filename):
+    if "lib/" in filename:
+        # lib is a separate include dir (always in storage_path+"lib/")
+        return storage_path + "/lib/" + (filename.split("/")[-1])
+    else:
+        return (cwd + "/" + filename.split("/")[-1]).replace("//", "/")

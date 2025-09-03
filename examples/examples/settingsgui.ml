@@ -1,5 +1,6 @@
 import lib.tea;
 import lib.util;
+import golpatterns;
 
 type State = Num;
 
@@ -18,4 +19,4 @@ let tick e s = case e
 		v
 	| _ -> s;
 
-setTick 30 tick view
+app 30 tick view

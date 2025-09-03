@@ -1,5 +1,6 @@
 from copy import copy
 import time
+from interpreter import path
 from interpreter.parser import parse_file
 from interpreter.typecheck import global_module_cache
 from lark import Token, Tree, v_args
@@ -221,12 +222,14 @@ class Compiler(Interpreter):
         )
         filename += ".ml"
 
-        if global_module_cache.cached(filename):
+        print("module cache keys:", list(global_module_cache.data.keys()))
+        p = path.abspath(filename)
+        if global_module_cache.cached(p):
             if SHOW_CACHE_USES:
-                print("----> used cached parse for", filename)
-            tree = global_module_cache.get(filename)[1]
+                print("----> used cached parse for", p)
+            tree = global_module_cache.get(p)[1]
         else:
-            tree = parse_file(filename)
+            tree = parse_file(p)
 
         # create the appropriate __EXPORTS__ dict, if import list is given
         exports = {}

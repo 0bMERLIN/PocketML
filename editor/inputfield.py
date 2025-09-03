@@ -64,8 +64,7 @@ class InputField(Widget):
             sys.settrace(self.check_stop)
             try:
                 path.set_cwd(
-                    "/".join((args[0].removeprefix(path.storage_path)).split("/")[:-1])
-                    + "/"
+                    "/".join(args[0].split("/")[:-1])+"/"
                 )
                 file_to_python(*args, **kwargs)
             except PMLTypeError as e:

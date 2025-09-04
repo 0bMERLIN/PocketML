@@ -108,7 +108,7 @@ tentry: NAME ":" type
 _sep{x, sep}: x (sep x)*
 
 UPPERNAME: /[A-Z]/(NAME?)
-LOWERNAME: /[a-z]/(NAME?)
+LOWERNAME: /[a-z]/(/[0-9]/*)(NAME?)
 
 // python-like comments
 COMMENT: /#.*/

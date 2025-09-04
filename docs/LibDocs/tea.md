@@ -45,6 +45,7 @@ data Widget
 	| Label String String Vec Vec
 	| Line (List Vec) Number Color
 	| Many (List Widget)
+	| ColorPicker String Vec Vec
 ```
 
 
@@ -67,6 +68,7 @@ data Event
 	| BtnReleased String
 	| BtnHeld String
 	| SliderMoved String Number
+	| ColorPicked String Color
 ```
 
 > Event type for the `tick` function in the app. Make sure pattern matching on<br>

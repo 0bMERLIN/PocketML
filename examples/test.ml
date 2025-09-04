@@ -1,2 +1,3 @@
-let f x 1 = x + 1;
-print $ f 2 1
+let f t1 t2 = t1 + t2;
+
+print $ f 1 2

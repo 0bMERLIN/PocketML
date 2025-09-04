@@ -48,5 +48,7 @@ let dictItems : Dict a -> List (String, a);
 
 let dictGet : Dict a -> String -> Maybe a;
 let dictInsert : String -> Dict a -> a -> Dict a;
+let dictEmpty : Dict a;
+let dictEmpty = mkDict [];
 
 module (*)

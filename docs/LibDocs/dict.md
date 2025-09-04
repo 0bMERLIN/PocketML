@@ -53,3 +53,11 @@ dictInsert : String -> Dict a -> a -> Dict a
 
 
 
+
+```haskell
+dictEmpty : Dict a
+```
+
+
+
+

@@ -73,6 +73,7 @@ def builtin_env(output):
         "PML_or": lambda x: lambda y: x or y,
         "PML_add": lambda x: lambda y: mklist(convlist(x) + convlist(y)) if type(x) == tuple and x[0] in ["PML_Cons", "PML_Nil"] else x + y,
         "PML_sub": lambda x: lambda y: x - y,
+        "PML_not": lambda x: not x,
         "PML_mul": lambda x: lambda y: x * y,
         "PML_pow": lambda x: lambda y: x**y,
         "PML_sqrt": lambda x: sqrt(x),
@@ -222,7 +223,6 @@ class Compiler(Interpreter):
         )
         filename += ".ml"
 
-        print("module cache keys:", list(global_module_cache.data.keys()))
         p = path.abspath(filename)
         if global_module_cache.cached(p):
             if SHOW_CACHE_USES:

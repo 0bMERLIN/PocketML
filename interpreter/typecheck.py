@@ -105,6 +105,7 @@ global_module_cache: Cache[Tuple[ModuleData, ParseTree]] = Cache()
 BUILTIN_TYPES = {
     "and": t_fn(t_bool, t_fn(t_bool, t_bool)),
     "or": t_fn(t_bool, t_fn(t_bool, t_bool)),
+    "not": t_fn(t_bool, t_bool),
     "add": t_fn(t_num, t_fn(t_num, t_num)),
     "sub": t_fn(t_num, t_fn(t_num, t_num)),
     "mul": t_fn(t_num, t_fn(t_num, t_num)),
@@ -139,7 +140,7 @@ def load_file(filename, logger=print) -> Tuple[ParseTree, ModuleData]:
     """
 
     filename = path.abspath(filename).replace("//", "/")
-
+    
     if not os.path.isfile(filename):
         raise ParseError(f"Module ({filename}) not found!")
 

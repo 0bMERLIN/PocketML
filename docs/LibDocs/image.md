@@ -79,6 +79,22 @@ imgSize : Img -> Vec
 
 
 ```haskell
+imgHeight : Img -> Number
+```
+
+
+
+
+
+```haskell
+imgWidth : Img -> Number
+```
+
+
+
+
+
+```haskell
 imgCopy : Img -> Img
 ```
 
@@ -159,9 +175,26 @@ imgShade : Img -> String -> Img
 
 
 ```haskell
-mkAtlas : List Img -> Img
+data Atlas = Atlas Img (List Vec)
 ```
 
+> arguments: atlasTex, imgSizes
 
+
+
+```haskell
+mkAtlasImg : List Img -> Img
+```
+
+> make an atlas of vertically stacked<br>
+> images from the input images.
+
+
+
+```haskell
+mkAtlas : List Img -> Atlas
+```
+
+> create an Atlas from the input images
 
 

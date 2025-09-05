@@ -9,7 +9,7 @@ My goal for this post is for it to be understandable and usable for programming 
 At the end of this post you can also find a breakdown of how much time the PocketML compiler spends compiling the code, which is quite interesting, because I don't think I've ever seen a compiler this slow!
 
 #### 1.0 λP
-Different type systems in the family of the lambda calculus are labeled by their functionality. The _Simply Typed Lambda Calculus_ (STLC) is the first step on our way to dependent typing and adds function types. Therefore, it's also sometimes called "$\lambda^\rightarrow$".
+Different type systems in the family of the lambda calculus are labeled by their functionality. The _Simply Typed Lambda Calculus_ (STLC) is the first step on our way to dependent typing and adds function types. Therefore, it's also sometimes called "λ→".
 
 > Here's an example:
 > ```
@@ -25,28 +25,28 @@ Different type systems in the family of the lambda calculus are labeled by their
 
 Formally, the STLC includes _type variables_ like `a` and function types like `a -> a`.
 
-To get basic dependent types, we only have to add one more thing: The dependent function type Π (Pi).  I like to see Pi as an extension on top of the regular `->`-type. The result is the language/type theory called $\lambda P$.  Let's have a look at some use cases for Pi in a basic hypothetical dependently typed language.
+To get basic dependent types, we only have to add one more thing: The dependent function type Π (Pi).  I like to see Pi as an extension on top of the regular `->`-type. The result is the language/type theory called λP.  Let's have a look at some use cases for Pi in a basic hypothetical dependently typed language.
 
->```elm
+>```
 >head = λ (n : Nat) -> λ (a : *) -> λ (v : Vec (n+1) a) -> case v
 >   | Cons x _ -> x
 >```
 > "\*" in this syntax just means "Type"; `a` is of type "*", meaning it is a _type variable_.
 > 
 > Notice the missing case for the empty Vec.
-> We don't need that because the type encodes that, for any natural number (here n = 0, 1, ... $\infty$), the Vec has a length one larger. That makes the length of the Vec $ \ge 1 $ or non-empty.
+> We don't need that because the type encodes that, for any natural number (here n = 0, 1, ... ∞), the Vec has a length one larger. That makes the length of the Vec >= 1 or non-empty.
 >
 > In the type of `head`, the `->` that would be used in the simply typed lambda calculus is now replaced with Pi-types:
-> ```haskell
+> ```
 > head : Π (n : Nat) -> Π (a : *) -> Π (v : Vec (n+a) a) -> a
 > ```
 > The return type `a` does not have any dependence on `v`, so we could also use the arrow type as a sort of syntax sugar for the  non-dependent Pi:
-> ```haskell
+> ```
 > head : Π (n : Nat) -> Π (a : *) -> (Vec (n+a) a -> a)
 > ```
 
 >Here's the identity function for all input types to further illustrate Pi:
->```elm
+>```
 >id : Π (t : *) -> t -> t
 >id = λ (t : *) -> λ (x : t) -> t
 >-- lets use id!
@@ -137,7 +137,7 @@ Next `betaEquiv` would determine that `Nat` != `Star` and we can throw a "Type m
 If we instead did get past the type match, we would substitute the parameter for the argument inside the return of the Pi-type.
 
 Let's look at a more complicated case to see what the substitution `subst` does:
-```haskell
+```
 head : Π (n : Nat) -> Π (a : *) -> Vec (n+1) a -> a
 head = ...
 
@@ -161,10 +161,10 @@ The substitution function just replaces any occurance of a given variable name w
 
 > `subst` is also the sort of substitution we intuitively do when plugging in a number into a mathematical function:
 >
->If we let $f(x) = x + 10$
->then applying $f$ means substituting $x$ for our input:
+>If we let `f(x) = x + 10`
+>then applying `f` means substituting `x` for our input:
 >
-> $f(10) = 10 + 10 = 20$
+> `f(10) = 10 + 10 = 20`
 
 ```sml
 let subst : String -> Term -> Term -> Term;
@@ -214,10 +214,10 @@ let alphaEquiv : Dict Num -> Dict Num -> Term -> Term -> Bool;
 let alphaEquiv c1 c2 t1 t2 = case (t1, t2)
 	| (Var x, Var y) ->
 		(case (dictGet c1 x, dictGet c2 y)
-			| (Just v1, Just v2) -> # compare by level
+			| (Just v1, Just v2) ->
 				let _ = print ("v1,v2: " + str v1 + ", " + str v2);
 				v1 == v2
-			| (Nothing, Nothing) -> # compare by name
+			| (Nothing, Nothing) ->
 				let _ = print ("x,y: " + str x + ", " + str y);
 				x == y
 			| _ -> False

@@ -13,6 +13,7 @@ Visit the [PocketML](https://github.com/0bMERLIN/PocketML) repository.
 
 ## Blog
 - [Powerful ML Modules in PocketML](BlogModules.md)
+- [Dependent types with PocketML](BlogDependentTypes.md)
 
 ## Docs
 - [Library documentation](LibDocs.md)

@@ -55,13 +55,10 @@ let alphaEquiv c1 c2 t1 t2 = case (t1, t2)
 		alphaEquiv c1 c2 m p && alphaEquiv c1 c2 n q
 	| (Lam x1 t1 b1, Lam x2 t2 b2) ->
 		let l = len (dictItems c1);
-		let tres = alphaEquiv c1 c2 t1 t2;
-		let bres =  alphaEquiv
+		alphaEquiv c1 c2 t1 t2 && alphaEquiv
 			(dictInsert x1 c1 l)
 			(dictInsert x2 c2 l)
-			b1 b2;
-		let _ = print ("tres,bres: " + str tres + ", " + str bres);
-		tres && bres
+			b1 b2
 	| (Pi x1 t1 b1, Pi x2 t2 b2) ->
 		let l = len (dictItems c1);
 		alphaEquiv c1 c2 t1 t2 && alphaEquiv
@@ -72,7 +69,7 @@ let alphaEquiv c1 c2 t1 t2 = case (t1, t2)
 ;
 
 let betaEquiv : Term -> Term -> Bool;
-let betaEquiv = alphaEquiv dictEmpty dictEmpty;
+let betaEquiv t1 t2 = alphaEquiv dictEmpty dictEmpty (normalForm t1) (normalForm t2);
 
 let typ : Ctx -> Term -> Term;
 let typ c = \case

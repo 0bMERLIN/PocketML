@@ -1,6 +1,5 @@
 import os
 import re
-import time
 from lark import Lark, ParseError, ParseTree
 import interpreter.path as path
 
@@ -178,9 +177,8 @@ DBG = False
 
 OPS = {
     -2: {"ops": ["$"], "assoc": "right"},
-    -1: { "ops": ["<<", ">>"], "assoc": "left"},
     0: {"ops": ["||", "&&"], "assoc": "left"},
-    1: {"ops": ["==", "!=", "<", ">", ">=", "<="], "assoc": "left"},
+    1: {"ops": ["==", "!=", "<<", ">>", "<", ">", ">=", "<="], "assoc": "left"},
     2: {"ops":["+", "-"], "assoc": "left"},
     3: {"ops":["*", "/", "°"], "assoc": "left"},
 }
@@ -206,7 +204,7 @@ def add_infix_operators(g):
         elif op["assoc"] == "right":
             res += f"?op{i}: {next} | {next} OP{i} op{i} -> infix_op"
         else:
-            raise ValueError(f"Unknown operator association: {res['assoc']}")
+            raise ValueError(f"Unknown operator associativity: {res['assoc']}")
         
         # the last infix layer contains prefix operators like negation
         if i == len(OPS_sorted) - 1:
@@ -214,14 +212,12 @@ def add_infix_operators(g):
         res += "\n"
 
     res += "\n"
-
     # add it to the grammar
     g = g.replace("%%%OPERATOR_TABLE%%%", res)
     return g
 
 
 def parse_file(filename, txt="") -> ParseTree:
-    t1 = time.time()
     # fail if invalid filename
     if not os.path.isfile(filename):
         raise ParseError(f"Module ({filename}) not found!")
@@ -233,7 +229,7 @@ def parse_file(filename, txt="") -> ParseTree:
     grammar = add_infix_operators(grammar)
 
     # parse
-    parser = Lark(grammar, parser="earley", propagate_positions=True)
+    parser = Lark(grammar, parser="lalr", propagate_positions=True)
 
     if txt == "":
         with open(filename) as f:

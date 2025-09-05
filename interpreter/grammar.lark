@@ -8,7 +8,7 @@
 ?atom:  "\\" "case" lamcases -> lamcase
     | "\\" patternatom+ "->" expr -> lam
     | atom1
-    | atom atom -> app
+    | atom atom1 -> app
 
 // statement expressions like let, if, etc.
 ?atom1: atom2 "." NAME -> access
@@ -17,7 +17,7 @@
     | "module" "(" ("*" | _sep{export, ","}) ")" -> module // no empty modules allowed!
     | "case" expr "|" _sep{case, "|"} -> match
     | "if" expr "then" expr ("else" expr)? -> ite
-    | "let" "rec" " " NAME patternatom* "=" expr ";" expr -> letrec
+    | "let" "rec" NAME patternatom* "=" expr ";" expr -> letrec
     | "let" NAME patternatom* "=" expr ";" expr -> let
     | "let" NAME ":" type ";" expr -> letdecl
     | "data" NAME NAME* "=" constructors ";" expr -> typedef
@@ -60,7 +60,6 @@ none_expr: "(" ")"
 ?case: pattern "->" expr
 
 ?pattern: pattern patternatom -> papp
-    | pconstrname
     | patternatom
 ?patternatom: "_" -> pwildcard
     | LOWERNAME -> pvar
@@ -82,24 +81,27 @@ pconstrname: (NAME ".")? UPPERNAME
 entry: NAME "=" expr
 
 constructors: _sep{constructor, "|"}
-constructor: UPPERNAME typeatom*
+constructor: UPPERNAME typeatom1*
 
 // types
-typename: (NAME ".")? UPPERNAME
+?type: typearrow
 
-?type: typeatom1
-    | typeatom1 "->" type -> tfun
+?typearrow: typeapp "->" typearrow -> tfun
+    | typeapp
 
-?typeatom1: typeatom
-    | typename typeatom* -> ttyp
+?typeapp: typename typeatom1* -> ttyp
+    | typeatom
 
 ?typeatom: LOWERNAME -> tvar
     | "(" tupletelems ")" -> ttuple
     | "(" type ")"
-    | typename -> ttyp
     | "{" tentry ("," tentry)* "}" -> trecord
 
-tupletelems: type "," (type ("," type)*)?
+?typeatom1: typeatom | typename -> ttyp
+
+typename: (NAME ".")? UPPERNAME
+
+tupletelems: typeatom1 "," (typeatom1 ("," typeatom1)*)?
 
 tentry: NAME ":" type
 

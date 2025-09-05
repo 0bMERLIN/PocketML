@@ -208,9 +208,6 @@ class Typechecker(Interpreter):
         self.constraints += [(a, b, line)]
 
     # ===================== module system
-    def cache(self, next):
-        return self.visit(next)
-
     def typeexport(self, tname):
         if str(tname) not in self.type_env:
             raise PMLTypeError(
@@ -519,6 +516,8 @@ class Typechecker(Interpreter):
         for tv, a in reversed(list(zip(tvs, params))):
             t = Typ("->", [tv, t], a.meta.line)
         t = solve(self.constraints, t)
+        
+        # self.constraints = [] # TODO: find out if this is allowed or if it breaks something
 
         # assignment
         if str(x) == "_":
@@ -915,7 +914,6 @@ class Typechecker(Interpreter):
         entries = [self.visit(e) for e in entries]
         return TRecord(dict(entries), entries[0][1].line)
 
-
 def solve(constraints, t):
     cs = deepcopy(constraints)
     grave = []  # all constraints that were not able to be used
@@ -931,13 +929,9 @@ def solve(constraints, t):
 
         a, b, line = cs.pop(0)
 
-        # maybe wrong?
         if not isinstance(t, ModuleData):
             t = t.subst(a, b)
 
-        # [Experimental]
-        # when unifying for example t3 = {y: ...} and t3 = {x: ....}
-        # return t3 = {x: ..., y: ...}
         if isinstance(a, TVar) and isinstance(b, TRecord) and b.access_check:
             newcs = []
 

@@ -353,7 +353,7 @@ def PML_randPos(_):
 	return np.array((random.randint(0,400), random.randint(0,400)))
 
 
-PML_setTick = set_tick
+PML_app = set_tick
 PML_width = Window.width
 PML_height = Window.height
 PML_stop = lambda _: editor.graphicalout.clearUpdate()

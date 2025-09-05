@@ -1,2 +1,1 @@
-examples/examples/testi.ml[OPEN]
-examples/examples/testo.ml
+examples/examples/game3d.ml[OPEN]

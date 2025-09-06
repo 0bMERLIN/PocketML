@@ -246,21 +246,27 @@ class Compiler(Interpreter):
         self.emit("\n__OLD_ENV__=copy(globals())\n")
         self.visit(tree)
         # if module alias, replace __EXPORTS__ with { "[alias]" : __EXPORTS__ }
-        self.emit("\nglobals().update({ " + f'"PML_{alias}" : __EXPORTS__' + " })")
+        if alias is not None:
+            self.emit("\nglobals().update({ " + f'"PML_{alias}" : __EXPORTS__' + " })")
 
         # handle import list
         exports_compiled = (
             "{" + ", ".join([f"'PML_{k}' : {v}" for k, v in exports.items()]) + "}"
         )
-        self.emit(
-            f"\nglobals().update(__EXPORTS__)\n"
-            if import_list is None
-            else f"\nglobals().update({exports_compiled})"
-        )
+        self.emit("\nif \"__EXPORTS__\" in __OLD_ENV__: del __OLD_ENV__[\"__EXPORTS__\"]\n")
         self.emit("\nglobals().update(__OLD_ENV__)\n")
 
+        if import_list is None and alias is None:
+            self.emit("\nglobals().update(__EXPORTS__)\n") # import all
+        
+        if import_list is not None:
+            self.emit(f"\nglobals().update({exports_compiled})")
+
         # body
-        return self.visit(e)
+        res = self.visit(e)
+
+
+        return res
 
     def valueexport(self, nm):
         return str(nm)

@@ -1,6 +1,4 @@
-let x = '
+print "Hi :)
 
-print("hello, world!")
-
-';
-print x
+hello
+"

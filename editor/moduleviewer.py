@@ -124,7 +124,7 @@ def find_defs(path, get_markdown_comments=False):
         (path, get_line_number(m.start()), m.group().strip())
         for m in matches
         if ("--hide" not in m.group()
-        and not (not get_markdown_comments and m.group()[0:4].strip()=="###"))
+        and (get_markdown_comments or not m.group().strip().startswith("###")))
     ]
 
 

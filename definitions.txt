@@ -4206,3 +4206,3224 @@ examples/lib/dict.ml: let dictEmpty : Dict a;
 examples/lib/dict.ml: let dictItems : Dict a -> List (String, a);
 examples/lib/dict.ml: let dictGet : Dict a -> String -> Maybe a;
 examples/lib/dict.ml: let dictInsert : String -> Dict a -> a -> Dict a;
+examples/examples/golnumpy.ml: let getNbSum : Vec -> Index -> Number;
+examples/examples/golnumpy.ml: let alive : Number -> Number -> Number;
+examples/examples/golnumpy.ml: let tick : Vec -> Vec;
+examples/examples/golnumpy.ml: let printG : Vec -> Unit;
+examples/examples/euler.ml: type Path = List String;
+examples/examples/euler.ml: let complete : Graph String -> Path -> Bool;
+examples/examples/euler.ml: let edgesFromPath : Path -> List (List String);
+examples/examples/euler.ml: let valid : Path -> Bool;
+examples/examples/euler.ml: let gen : Graph String -> Path -> List Path;
+examples/examples/euler.ml: let euler : Graph String -> Path -> List Path;
+examples/lib/calculus.ml: let diff : (Number -> Number) -> Number -> (Number -> Number)
+	# args: func, n
+	# returns: n-th derivative of func.
+;
+examples/lib/calculus.ml: let integral : (Number -> Number) -> Number -> Number -> Number
+	# args: func, x_start, x_end
+;
+examples/lib/calculus.ml: let taylor : (Number -> Number) -> Number -> Number -> (Number -> Number)
+	# args: f, n, x0, x
+;
+examples/lib/calculus.ml: let fourier : (Number -> Number) -> Number -> (Number -> Number)
+	# args: f, m, x
+;
+examples/lib/list.ml: data List a
+	= Cons a (List a)
+	| Nil
+	# The default list type generated
+	# by `[...]`
+;
+examples/lib/list.ml: let range : Number -> Number -> List Number;
+examples/lib/list.ml: let srange : Number -> Number -> Number -> List Number
+	# start, end, step
+;
+examples/lib/list.ml: let tail : List a -> List a;
+examples/lib/list.ml: let tailSafe : List a -> List a;
+examples/lib/list.ml: let head : List a -> a;
+examples/lib/list.ml: let len : List a -> Number;
+examples/lib/list.ml: let listAtSafe : Number -> List a -> Maybe a;
+examples/lib/list.ml: let listAt : Number -> List a -> a;
+examples/lib/list.ml: let take : Number -> List a -> List a;
+examples/lib/list.ml: let chunksOf : Number -> List a -> List (List a);
+examples/lib/list.ml: let contains : a -> List a -> Bool;
+examples/lib/list.ml: let sort : List a -> List a;
+examples/lib/list.ml: let nub : List a -> List a;
+examples/lib/list.ml: let append : a -> List a -> List a;
+examples/lib/list.ml: let foldr : (b -> a -> b) -> b -> List a -> b;
+examples/lib/list.ml: let extend : List a -> List a -> List a;
+examples/lib/list.ml: let concat : List (List a) -> List a;
+examples/lib/list.ml: let filter : (a -> Bool) -> List a -> List a;
+examples/lib/list.ml: let reverse : List a -> List a;
+examples/lib/list.ml: let map : (a -> b) -> (List a) -> List b;
+examples/lib/list.ml: let foreach2D : Number -> Number -> (Number->Number-> Unit) -> Unit;
+examples/lib/list.ml: let imap : (Number -> a -> b) -> List a -> List b;
+examples/lib/list.ml: let any : List Bool -> Bool;
+examples/lib/list.ml: let zip : List a -> List b -> List (a,b);
+examples/examples/gol.ml: let determineAlive : Bool -> Number -> Bool;
+examples/examples/gol.ml: let addPattern : Img -> Vec -> Vec -> Unit;
+examples/examples/gol.ml: let mygrid : Img;
+examples/examples/lc.ml: data Exp
+	= Num String
+	| Var String
+	| App Exp Exp
+	| Lam String Exp;
+examples/examples/lc.ml: data Value
+	= Clos (Dict Value) String Exp
+	| Fun (Value -> Either String Value)
+	| Atom Number;
+examples/examples/lc.ml: let eval : Dict Value -> Exp -> Either String Value;
+examples/examples/calcgui.ml: let eval : String -> String;
+examples/examples/calcgui.ml: type State = String;
+examples/examples/calcgui.ml: let tick : Event -> State -> State;
+examples/examples/calcgui.ml: let view : State -> Widget;
+examples/lib/maybe.ml: data Maybe a = Nothing | Just a;
+examples/lib/maybe.ml: let maybe : a -> Maybe a -> a;
+examples/lib/maybe.ml: let flatMap : (a -> Maybe b) -> Maybe a -> Maybe b;
+examples/lib/maybe.ml: let bind : Maybe a -> (a -> Maybe b) -> Maybe b;
+examples/lib/maybe.ml: let pure : a -> Maybe a;
+examples/lib/maybe.ml: let fmap : (a -> b) -> Maybe a -> Maybe b;
+examples/lib/maybe.ml: let mapM : (a -> Maybe b) -> List a -> Maybe (List b);
+examples/lib/string.ml: let str : a -> String;
+examples/lib/string.ml: let split : String -> String -> List String;
+examples/lib/string.ml: let replace : String -> String -> String -> String;
+examples/lib/string.ml: let isNumeric : String -> Bool;
+examples/lib/string.ml: let strIn : String -> String -> Bool;
+examples/lib/string.ml: let strLen : String -> Number;
+examples/lib/string.ml: let strHead : String -> String;
+examples/lib/string.ml: let strTail : String-> String;
+examples/examples/settingsgui.ml: type State = Num;
+examples/examples/settingsgui.ml: let view : State -> Widget;
+examples/examples/settingsgui.ml: let tick : Event -> State -> State;
+examples/lib/either.ml: data Either a b = Left a | Right b;
+examples/lib/either.ml: let unRight : Either a b -> b;
+examples/lib/either.ml: let fromMaybe : b -> Maybe a -> Either b a;
+examples/lib/either.ml: let bind : Either e a -> (a -> Either e b) -> Either e b;
+examples/lib/either.ml: let flatMap : (a -> Either e b) -> Either e a -> Either e b;
+examples/lib/either.ml: let fmap : (a -> b) -> Either e a -> Either e b;
+examples/lib/either.ml: let pure : a -> Either e a;
+examples/lib/parsing.ml: type GrammarError = String;
+examples/lib/parsing.ml: type ParseError = String;
+examples/lib/parsing.ml: let parser :
+	String -> Either GrammarError (
+		String -> Either ParseError a
+	)
+	# args: grammar, string
+;
+examples/lib/math.ml: let sin : Number -> Number;
+examples/lib/math.ml: let cos : Number -> Number;
+examples/lib/math.ml: let tan : Number -> Number;
+examples/lib/math.ml: let pi : Number;
+examples/lib/math.ml: let pow : Number -> Number -> Number;
+examples/lib/math.ml: let round : Number -> Number -> Number;
+examples/lib/math.ml: let ln : Number -> Number;
+examples/lib/math.ml: let fac : Number -> Number;
+examples/lib/math.ml: let exp : Number -> Number;
+examples/lib/math.ml: let min : Number -> Number -> Number;
+examples/lib/math.ml: let max : Number -> Number -> Number;
+examples/lib/math.ml: let mod : Number -> Number -> Number;
+examples/lib/math.ml: let divisible : Number -> Number -> Bool;
+examples/lib/math.ml: let odd : Number -> Bool;
+examples/lib/math.ml: let even : Number -> Bool;
+examples/lib/math.ml: let noise : Vec -> Number;
+examples/examples/bouncybtn.ml: type State = { zoom : Number, y : Number,
+	v : Number, data : Vec, nticks : Number };
+examples/examples/bouncybtn.ml: let view : State -> Widget;
+examples/examples/bouncybtn.ml: let update : Event -> State -> State;
+examples/examples/game3d.ml: data Sprite = Sprite Num Vec Vec;
+examples/examples/game3d.ml: let spriteUniforms : Num -> Sprite -> List Uniform;
+examples/examples/game3d.ml: let atlasMap : Atlas -> List Number;
+examples/examples/game3d.ml: let render3D : Vec -> Number -> List Sprite -> Atlas -> Widget;
+examples/examples/game3d.ml: type State =
+	{ angle : Number
+	, pos : Vec
+	};
+examples/examples/game3d.ml: let view : Atlas -> State -> Widget;
+examples/examples/game3d.ml: let tick : Event -> State -> State;
+examples/examples/pixel.ml: let getMouse : Unit -> Vec;
+examples/examples/pixel.ml: data Brush = Brush Number Vec;
+examples/lib/util.ml: let time : Unit -> Number;
+examples/lib/util.ml: let traceTime : (Unit -> b) -> b
+	# log the time an action takes to execute
+;
+examples/lib/util.ml: let setInterval : Number -> state -> (state->state) -> Unit
+	# args: n, state, tick
+	# run tick every n seconds.
+;
+examples/lib/util.ml: let setUpdate : state -> (state->state) ->Unit;
+examples/lib/util.ml: let cls : Unit -> Unit;
+examples/lib/util.ml: let error : String -> a;
+examples/lib/util.ml: let setTermFontSize : Number -> Unit;
+examples/lib/util.ml: let str : a -> String
+	# deprecated. Use lib.string (str)
+;
+examples/lib/util.ml: let printl : List a -> Unit;
+examples/lib/util.ml: let setreclimit : Number -> Unit;
+examples/lib/util.ml: let setCompilerCWD : String -> Unit;
+examples/lib/util.ml: let randint : Number -> Number -> Number;
+examples/lib/util.ml: let fileexists : String -> Bool;
+examples/lib/util.ml: let readFile : String -> Maybe String;
+examples/lib/util.ml: let readFileUnsafe : String -> String;
+examples/lib/util.ml: let download : String -> String -> Unit;
+examples/lib/util.ml: let copy : a -> a;
+examples/lib/util.ml: let uncurry2 : (a -> b -> c) -> (a,b) -> c;
+examples/lib/util.ml: let not : Bool -> Bool;
+examples/lib/util.ml: let float : a -> Number;
+examples/lib/util.ml: let int : a -> Number;
+examples/lib/util.ml: let neg : Number -> Number;
+examples/lib/util.ml: let between : Number-> Number -> Number -> Bool;
+examples/lib/util.ml: let id : a -> a;
+examples/lib/util.ml: let const : a -> b -> a;
+examples/lib/util.ml: let when : Bool -> (Unit -> Unit) -> Unit;
+examples/lib/util.ml: let mapRecord : (a -> a) -> a -> a;
+examples/lib/util.ml: let with : a -> b -> b;
+examples/lib/util.ml: let union : a -> a -> a;
+examples/lib/util.ml: let times : Number -> (a -> a) -> a -> a;
+examples/lib/util.ml: let ftee : (a -> Unit) -> (a -> a) -> a -> a;
+examples/examples/lp.ml: data Term
+    = Var String
+    | Lam String Term Term
+    | Pi String Term Term
+    | App Term Term
+    | Star
+    | Nat
+    | NatLit Number
+;
+examples/examples/lp.ml: type Ctx = Dict Term;
+examples/examples/lp.ml: let subst : String -> Term -> Term -> Term;
+examples/examples/lp.ml: let betaReduce : Term -> Term;
+examples/examples/lp.ml: let normalForm : Term -> Term;
+examples/examples/lp.ml: let alphaEquiv : Dict Num -> Dict Num -> Term -> Term -> Bool;
+examples/examples/lp.ml: let betaEquiv : Term -> Term -> Bool;
+examples/examples/lp.ml: let typ : Ctx -> Term -> Term;
+examples/lib/dict.ml: data Dict a;
+examples/lib/dict.ml: let mkDict : List (String, a) -> Dict a;
+examples/lib/dict.ml: let dictItems : Dict a -> List (String, a);
+examples/lib/dict.ml: let dictGet : Dict a -> String -> Maybe a;
+examples/lib/dict.ml: let dictInsert : String -> Dict a -> a -> Dict a;
+examples/lib/dict.ml: let dictEmpty : Dict a;
+examples/lib/tea.ml: type Color = Vec
+	# Alias used for clarity. Vec of length 4.
+;
+examples/lib/tea.ml: data Uniform
+	= UniformFloat String Number
+	| UniformInt String Number
+	| UniformVec2 String Vec
+	| UniformVec3 String Vec
+	| UniformVec4 String Vec
+	| UniformTex0 String Img
+
+	# Uniform types for shaders. Arguments: uniformName, value
+;
+examples/lib/tea.ml: data Widget
+	= Rect Color Vec Vec
+	| TRect Img Vec Vec
+	| SRect String (List Uniform) Vec Vec
+	| Btn String String Vec Vec
+	| Slider String Number Number Number Number Vec Vec
+	| Label String String Vec Vec
+	| Line (List Vec) Number Color
+	| Many (List Widget)
+	| ColorPicker String Vec Vec
+;
+examples/lib/tea.ml: ###>| Attributes for Widgets | |
+examples/lib/tea.ml: ###>|-|-|
+examples/lib/tea.ml: ###>| Rect | color, size, pos |
+examples/lib/tea.ml: ###>| TRect | texture, size, pos |
+examples/lib/tea.ml: ###>| Btn   | name, text, size, pos |
+examples/lib/tea.ml: ###>| Slider| name, min, max, step, value, size, pos |
+examples/lib/tea.ml: ###>| Label | name, text, size, pos |
+examples/lib/tea.ml: ###>| Line  | polygon-points, width, color |
+examples/lib/tea.ml: ###>| Many  | children |
+examples/lib/tea.ml: data Event
+	= Tick
+	| BtnPressed String
+	| BtnReleased String
+	| BtnHeld String
+	| SliderMoved String Number
+	| ColorPicked String Color
+	# Event type for the `tick` function in the app. Make sure pattern matching on
+	# events is exhaustive, so `tick` does not throw an error.
+;
+examples/lib/tea.ml: let app : state -> (Event -> state -> state) -> (state -> Widget) -> Unit
+	# starts an app given an initial `state`, `tick` and `view`
+;
+examples/lib/tea.ml: let forceUpdate : state -> state;
+examples/lib/tea.ml: ###>The view gets updated based on the state. The app assumes that
+examples/lib/tea.ml: ###>view is pure: It always returns the same Widgets for the same state.
+examples/lib/tea.ml: ###>When side effects do need to be used for some reason, the `tick` function
+examples/lib/tea.ml: ###>can request an update.
+examples/lib/tea.ml: ###>
+examples/lib/tea.ml: ###>Example:
+examples/lib/tea.ml: ###>```
+examples/lib/tea.ml: ###>let view _ = Label "time" (str $ time ()) @(200, 200) @(0, 0);
+examples/lib/tea.ml: ###>let tick _ _ = forceUpdate (); # Note that the state is Unit and constant.
+examples/lib/tea.ml: ###>setTick () tick view
+examples/lib/tea.ml: ###>```
+examples/lib/tea.ml: let stop : Unit -> Unit
+	# Effectful.
+	# Stops the app. Takes effect on the next tick, the current tick is stil executed.
+;
+examples/lib/tea.ml: ###>Example:
+examples/lib/tea.ml: ###>```
+examples/lib/tea.ml: ###>let tick event state = do
+examples/lib/tea.ml: ###>	if state > 1000 then stop ()
+examples/lib/tea.ml: ###>	inc state;
+examples/lib/tea.ml: ###>
+examples/lib/tea.ml: ###>let view state = Label "mylabel" (str state) @(200, 200) @(0, 0);
+examples/lib/tea.ml: ###>
+examples/lib/tea.ml: ###>setTick 0
+examples/lib/tea.ml: ###>```
+examples/lib/tea.ml: let staticView : (Unit -> Widget) -> Unit
+	# Renders a view and then halts the app.
+	# Use for graphing, etc.
+;
+examples/lib/tea.ml: let width : Number;
+examples/lib/tea.ml: let height: Number;
+examples/lib/tea.ml: let getFPS : Unit -> Number;
+examples/lib/tea.ml: let setPos : Widget -> Vec -> Unit;
+examples/lib/tea.ml: let randPos : Unit -> Vec;
+examples/lib/tea.ml: let grid : Vec -> Vec -> Num -> Num -> List (Vec -> Widget) -> Widget;
+examples/lib/tea.ml: let red : Color;
+examples/lib/tea.ml: let black : Color;
+examples/lib/tea.ml: let white : Color;
+examples/lib/tea.ml: let blue : Color;
+examples/lib/tea.ml: let green : Color;
+examples/lib/tea.ml: let yellow : Color;
+examples/lib/ugraph.ml: type Edges a = Dict (List a);
+examples/lib/ugraph.ml: type Vertices a = List a;
+examples/lib/ugraph.ml: data Graph a = Graph (Edges a) (Vertices a);
+examples/lib/ugraph.ml: let edgesFromGraph : Graph a -> List (List a);
+examples/lib/graphing.ml: let viewGraphs : List (Number->Number) -> Number -> Number -> Number -> Widget;
+examples/lib/input.ml: let input : String -> (String -> Unit) -> Unit;
+examples/lib/sound.ml: data Sound;
+examples/lib/sound.ml: let max_amp : Number;
+examples/lib/sound.ml: let sound : (Number -> Number) -> Number -> Sound;
+examples/lib/sound.ml: let beep : Number -> Number -> Sound;
+examples/lib/sound.ml: let play : Sound -> Unit
+    # example:
+    # play $ beep 440 1
+;
+examples/lib/image.ml: data Img;
+examples/lib/image.ml: data Buffer;
+examples/lib/image.ml: type Color = Vec;
+examples/lib/image.ml: let setpixel : Img -> Vec -> Color -> Unit;
+examples/lib/image.ml: let image : Vec -> Img;
+examples/lib/image.ml: let imgLoad : String -> Img;
+examples/lib/image.ml: let imgBuf : Img -> Buffer;
+examples/lib/image.ml: let imgSize : Img -> Vec;
+examples/lib/image.ml: let imgHeight : Img -> Number;
+examples/lib/image.ml: let imgWidth : Img -> Number;
+examples/lib/image.ml: let imgCopy : Img -> Img;
+examples/lib/image.ml: let imgMap : Img -> (Number->Number->Color->Color) -> Unit;
+examples/lib/image.ml: let imgGet : Buffer -> Vec -> Vec;
+examples/lib/image.ml: let imgSave : String -> Img -> Unit;
+examples/lib/image.ml: let imgClear : Img -> Color -> Unit;
+examples/lib/image.ml: let imgMapRect: Vec -> Vec -> Img -> (Number->Number->Color->Color) -> Unit
+	# args: size, pos, img, func
+;
+examples/lib/image.ml: let imgSmooth : Img -> Img;
+examples/lib/image.ml: let imgFlipH : Img -> Img;
+examples/lib/image.ml: let imgFlipV : Img -> Img;
+examples/lib/image.ml: let imgShade : Img -> String -> Img;
+examples/lib/image.ml: data Atlas = Atlas Img (List Vec)
+	# arguments: atlasTex, imgSizes
+;
+examples/lib/image.ml: let mkAtlasImg : List Img -> Img
+	# make an atlas of vertically stacked
+	# images from the input images.
+;
+examples/lib/image.ml: let mkAtlas : List Img -> Atlas
+	# create an Atlas from the input images
+;
+examples/lib/numpy.ml: type Size = List Number;
+examples/lib/numpy.ml: type Index = List Number;
+examples/lib/numpy.ml: let array : List Number -> Vec;
+examples/lib/numpy.ml: let zeros : Size -> Vec;
+examples/lib/numpy.ml: let full : Size -> Number -> Vec;
+examples/lib/numpy.ml: let linspace : Number -> Number -> Number -> Vec
+	# start, end, nsteps
+;
+examples/lib/numpy.ml: let toList : Vec -> List Number
+	# only 1-dim.!
+;
+examples/lib/numpy.ml: let size : Vec -> Size
+	# <=> arr.shape in numpy!
+;
+examples/lib/numpy.ml: let get : Index -> Vec -> Number;
+examples/lib/numpy.ml: let slice : Index -> Index -> Vec -> Vec
+	# - start, end, input_array
+	# - fails if out of bounds
+;
+examples/lib/numpy.ml: let sliceInc : Index -> Index -> Vec -> Vec
+	# like slice but end index is included.
+;
+examples/lib/numpy.ml: let slicePartial : Index -> Index -> Vec -> Vec
+	# same as slice, but return all
+	# elements in index range instead
+	# of failing
+;
+examples/lib/numpy.ml: let set : Index -> Number -> Vec -> Vec;
+examples/lib/numpy.ml: let vectorize : (Number -> Number) -> Vec -> Vec;
+examples/lib/numpy.ml: let ivectorize : (Index -> Number -> Number) -> Vec -> Vec;
+examples/lib/numpy.ml: let sum : Vec -> Number;
+examples/lib/numpy.ml: let dot : Vec -> Vec -> Number;
+examples/lib/numpy.ml: let flatten : Vec -> Vec;
+examples/lib/numpy.ml: let delete : Number -> Vec -> Vec
+	# args: i, arr
+	# remove the element at i
+	# only for flat Vecs
+;
+examples/lib/numpy.ml: let concatenate : Number -> Vec -> Vec -> Vec
+	# args: axis, arr1, arr2
+;
+examples/lib/numpy.ml: let reshape : Size -> Vec -> Vec;
+examples/lib/numpy.ml: let transpose : Vec -> Vec;
+examples/examples/lc.ml: data Exp
+	= Num String
+	| Var String
+	| App Exp Exp
+	| Lam String Exp;
+examples/examples/lc.ml: data Value
+	= Clos (Dict Value) String Exp
+	| Fun (Value -> Either String Value)
+	| Atom Number;
+examples/examples/lc.ml: let eval : Dict Value -> Exp -> Either String Value;
+examples/lib/image.ml: ### ### Definitions & Creating images/buffers
+examples/lib/image.ml: data Img;
+examples/lib/image.ml: data Buffer;
+examples/lib/image.ml: type Color = Vec;
+examples/lib/image.ml: let setpixel : Img -> Vec -> Color -> Unit;
+examples/lib/image.ml: let image : Vec -> Img;
+examples/lib/image.ml: let imgLoad : String -> Img;
+examples/lib/image.ml: let imgBuf : Img -> Buffer;
+examples/lib/image.ml: ### ### Functions
+examples/lib/image.ml: let imgSize : Img -> Vec;
+examples/lib/image.ml: let imgHeight : Img -> Number;
+examples/lib/image.ml: let imgWidth : Img -> Number;
+examples/lib/image.ml: let imgCopy : Img -> Img;
+examples/lib/image.ml: let imgMap : Img -> (Number->Number->Color->Color) -> Unit;
+examples/lib/image.ml: let imgGet : Buffer -> Vec -> Vec;
+examples/lib/image.ml: let imgSave : String -> Img -> Unit;
+examples/lib/image.ml: let imgClear : Img -> Color -> Unit;
+examples/lib/image.ml: let imgMapRect: Vec -> Vec -> Img -> (Number->Number->Color->Color) -> Unit
+	# args: size, pos, img, func
+;
+examples/lib/image.ml: let imgSmooth : Img -> Img;
+examples/lib/image.ml: let imgFlipH : Img -> Img;
+examples/lib/image.ml: let imgFlipV : Img -> Img;
+examples/lib/image.ml: let imgShade : Img -> String -> Img;
+examples/lib/image.ml: data Atlas = Atlas Img (List Vec)
+	# arguments: atlasTex, imgSizes
+;
+examples/lib/image.ml: let mkAtlasImg : List Img -> Img
+	# make an atlas of vertically stacked
+	# images from the input images.
+;
+examples/lib/image.ml: let mkAtlas : List Img -> Atlas
+	# create an Atlas from the input images
+;
+examples/lib/util.ml: ### ### Time
+examples/lib/util.ml: let time : Unit -> Number;
+examples/lib/util.ml: let traceTime : (Unit -> b) -> b
+	# log the time an action takes to execute
+;
+examples/lib/util.ml: let setInterval : Number -> state -> (state->state) -> Unit
+	# args: n, state, tick
+	# run tick every n seconds.
+;
+examples/lib/util.ml: let setUpdate : state -> (state->state) ->Unit;
+examples/lib/util.ml: ### ### Terminal
+examples/lib/util.ml: let cls : Unit -> Unit;
+examples/lib/util.ml: let error : String -> a;
+examples/lib/util.ml: let setTermFontSize : Number -> Unit;
+examples/lib/util.ml: let str : a -> String
+	# deprecated. Use lib.string (str)
+;
+examples/lib/util.ml: let printl : List a -> Unit;
+examples/lib/util.ml: ### ### Misc.
+examples/lib/util.ml: let setreclimit : Number -> Unit;
+examples/lib/util.ml: let setCompilerCWD : String -> Unit;
+examples/lib/util.ml: let randint : Number -> Number -> Number;
+examples/lib/util.ml: ### ### File system
+examples/lib/util.ml: let fileexists : String -> Bool;
+examples/lib/util.ml: let readFile : String -> Maybe String;
+examples/lib/util.ml: let readFileUnsafe : String -> String;
+examples/lib/util.ml: ### ### Network
+examples/lib/util.ml: let download : String -> String -> Unit;
+examples/lib/util.ml: ### ### Basic functions
+examples/lib/util.ml: let copy : a -> a;
+examples/lib/util.ml: let uncurry2 : (a -> b -> c) -> (a,b) -> c;
+examples/lib/util.ml: let not : Bool -> Bool;
+examples/lib/util.ml: let float : a -> Number;
+examples/lib/util.ml: let int : a -> Number;
+examples/lib/util.ml: let neg : Number -> Number;
+examples/lib/util.ml: let between : Number-> Number -> Number -> Bool;
+examples/lib/util.ml: let id : a -> a;
+examples/lib/util.ml: let const : a -> b -> a;
+examples/lib/util.ml: let when : Bool -> (Unit -> Unit) -> Unit;
+examples/lib/util.ml: let mapRecord : (a -> a) -> a -> a;
+examples/lib/util.ml: let with : a -> b -> b;
+examples/lib/util.ml: let union : a -> a -> a;
+examples/lib/util.ml: let times : Number -> (a -> a) -> a -> a;
+examples/lib/util.ml: let ftee : (a -> Unit) -> (a -> a) -> a -> a;
+examples/examples/lp.ml: data Term
+    = Var String
+    | Lam String Term Term
+    | Pi String Term Term
+    | App Term Term
+    | Star
+    | Nat
+    | NatLit Number
+;
+examples/examples/lp.ml: type Ctx = Dict Term;
+examples/examples/lp.ml: let subst : String -> Term -> Term -> Term;
+examples/examples/lp.ml: let betaReduce : Term -> Term;
+examples/examples/lp.ml: let normalForm : Term -> Term;
+examples/examples/lp.ml: let alphaEquiv : Dict Num -> Dict Num -> Term -> Term -> Bool;
+examples/examples/lp.ml: let betaEquiv : Term -> Term -> Bool;
+examples/examples/lp.ml: let typ : Ctx -> Term -> Term;
+examples/lib/numpy.ml: ### ### Type Aliases
+examples/lib/numpy.ml: type Size = List Number;
+examples/lib/numpy.ml: type Index = List Number;
+examples/lib/numpy.ml: ### ### Creating arrays
+examples/lib/numpy.ml: let array : List Number -> Vec;
+examples/lib/numpy.ml: let zeros : Size -> Vec;
+examples/lib/numpy.ml: let full : Size -> Number -> Vec;
+examples/lib/numpy.ml: let linspace : Number -> Number -> Number -> Vec
+	# start, end, nsteps
+;
+examples/lib/numpy.ml: ### ### Getters
+examples/lib/numpy.ml: let toList : Vec -> List Number
+	# only 1-dim.!
+;
+examples/lib/numpy.ml: let size : Vec -> Size
+	# <=> arr.shape in numpy!
+;
+examples/lib/numpy.ml: let get : Index -> Vec -> Number;
+examples/lib/numpy.ml: let slice : Index -> Index -> Vec -> Vec
+	# - start, end, input_array
+	# - fails if out of bounds
+;
+examples/lib/numpy.ml: let sliceInc : Index -> Index -> Vec -> Vec
+	# like slice but end index is included.
+;
+examples/lib/numpy.ml: let slicePartial : Index -> Index -> Vec -> Vec
+	# same as slice, but return all
+	# elements in index range instead
+	# of failing
+;
+examples/lib/numpy.ml: ### ### Manipulating `Vec`s
+examples/lib/numpy.ml: let set : Index -> Number -> Vec -> Vec;
+examples/lib/numpy.ml: let vectorize : (Number -> Number) -> Vec -> Vec;
+examples/lib/numpy.ml: let ivectorize : (Index -> Number -> Number) -> Vec -> Vec;
+examples/lib/numpy.ml: let sum : Vec -> Number;
+examples/lib/numpy.ml: let dot : Vec -> Vec -> Number;
+examples/lib/numpy.ml: let flatten : Vec -> Vec;
+examples/lib/numpy.ml: let delete : Number -> Vec -> Vec
+	# args: i, arr
+	# remove the element at i
+	# only for flat Vecs
+;
+examples/lib/numpy.ml: let concatenate : Number -> Vec -> Vec -> Vec
+	# args: axis, arr1, arr2
+;
+examples/lib/numpy.ml: let reshape : Size -> Vec -> Vec;
+examples/lib/numpy.ml: let transpose : Vec -> Vec;
+examples/examples/pixel.ml: let getMouse : Unit -> Vec;
+examples/examples/pixel.ml: data Brush = Brush Number Vec;
+examples/examples/gol.ml: let determineAlive : Bool -> Number -> Bool;
+examples/examples/gol.ml: let addPattern : Img -> Vec -> Vec -> Unit;
+examples/examples/gol.ml: let mygrid : Img;
+examples/examples/settingsgui.ml: type State = Num;
+examples/examples/settingsgui.ml: let view : State -> Widget;
+examples/examples/settingsgui.ml: let tick : Event -> State -> State;
+examples/lib/maybe.ml: ### ### Type & Creating / unwrapping
+examples/lib/maybe.ml: data Maybe a = Nothing | Just a;
+examples/lib/maybe.ml: let maybe : a -> Maybe a -> a;
+examples/lib/maybe.ml: ### ### Monad implementation
+examples/lib/maybe.ml: let flatMap : (a -> Maybe b) -> Maybe a -> Maybe b;
+examples/lib/maybe.ml: let bind : Maybe a -> (a -> Maybe b) -> Maybe b;
+examples/lib/maybe.ml: let pure : a -> Maybe a;
+examples/lib/maybe.ml: let fmap : (a -> b) -> Maybe a -> Maybe b;
+examples/lib/maybe.ml: let mapM : (a -> Maybe b) -> List a -> Maybe (List b);
+examples/lib/tea.ml: ### ### Types
+examples/lib/tea.ml: type Color = Vec
+	# Alias used for clarity. Vec of length 4.
+;
+examples/lib/tea.ml: data Uniform
+	= UniformFloat String Number
+	| UniformInt String Number
+	| UniformVec2 String Vec
+	| UniformVec3 String Vec
+	| UniformVec4 String Vec
+	| UniformTex0 String Img
+
+	# Uniform types for shaders. Arguments: uniformName, value
+;
+examples/lib/tea.ml: data Widget
+	= Rect Color Vec Vec
+	| TRect Img Vec Vec
+	| SRect String (List Uniform) Vec Vec
+	| Btn String String Vec Vec
+	| Slider String Number Number Number Number Vec Vec
+	| Label String String Vec Vec
+	| Line (List Vec) Number Color
+	| Many (List Widget)
+	| ColorPicker String Vec Vec
+;
+examples/lib/tea.ml: ###>| Attributes for Widgets | |
+examples/lib/tea.ml: ###>|-|-|
+examples/lib/tea.ml: ###>| Rect | color, size, pos |
+examples/lib/tea.ml: ###>| TRect | texture, size, pos |
+examples/lib/tea.ml: ###>| Btn   | name, text, size, pos |
+examples/lib/tea.ml: ###>| Slider| name, min, max, step, value, size, pos |
+examples/lib/tea.ml: ###>| Label | name, text, size, pos |
+examples/lib/tea.ml: ###>| Line  | polygon-points, width, color |
+examples/lib/tea.ml: ###>| Many  | children |
+examples/lib/tea.ml: data Event
+	= Tick
+	| BtnPressed String
+	| BtnReleased String
+	| BtnHeld String
+	| SliderMoved String Number
+	| ColorPicked String Color
+	# Event type for the `tick` function in the app. Make sure pattern matching on
+	# events is exhaustive, so `tick` does not throw an error.
+;
+examples/lib/tea.ml: ### ### Starting the App
+examples/lib/tea.ml: let app : state -> (Event -> state -> state) -> (state -> Widget) -> Unit
+	# starts an app given an initial `state`, `tick` and `view`
+;
+examples/lib/tea.ml: let forceUpdate : state -> state;
+examples/lib/tea.ml: ###>The view gets updated based on the state. The app assumes that
+examples/lib/tea.ml: ###>view is pure: It always returns the same Widgets for the same state.
+examples/lib/tea.ml: ###>When side effects do need to be used for some reason, the `tick` function
+examples/lib/tea.ml: ###>can request an update.
+examples/lib/tea.ml: ###>
+examples/lib/tea.ml: ###>Example:
+examples/lib/tea.ml: ###>```
+examples/lib/tea.ml: ###>let view _ = Label "time" (str $ time ()) @(200, 200) @(0, 0);
+examples/lib/tea.ml: ###>let tick _ _ = forceUpdate (); # Note that the state is Unit and constant.
+examples/lib/tea.ml: ###>setTick () tick view
+examples/lib/tea.ml: ###>```
+examples/lib/tea.ml: let stop : Unit -> Unit
+	# Effectful.
+	# Stops the app. Takes effect on the next tick, the current tick is stil executed.
+;
+examples/lib/tea.ml: ###>Example:
+examples/lib/tea.ml: ###>```
+examples/lib/tea.ml: ###>let tick event state = do
+examples/lib/tea.ml: ###>	if state > 1000 then stop ()
+examples/lib/tea.ml: ###>	inc state;
+examples/lib/tea.ml: ###>
+examples/lib/tea.ml: ###>let view state = Label "mylabel" (str state) @(200, 200) @(0, 0);
+examples/lib/tea.ml: ###>
+examples/lib/tea.ml: ###>setTick 0
+examples/lib/tea.ml: ###>```
+examples/lib/tea.ml: ### ### Basic kinds of apps / patterns
+examples/lib/tea.ml: let staticView : (Unit -> Widget) -> Unit
+	# Renders a view and then halts the app.
+	# Use for graphing, etc.
+;
+examples/lib/tea.ml: ### ### Getters
+examples/lib/tea.ml: let width : Number;
+examples/lib/tea.ml: let height: Number;
+examples/lib/tea.ml: let getFPS : Unit -> Number;
+examples/lib/tea.ml: ### ### Positioning / layouts
+examples/lib/tea.ml: let setPos : Widget -> Vec -> Unit;
+examples/lib/tea.ml: let randPos : Unit -> Vec;
+examples/lib/tea.ml: let grid : Vec -> Vec -> Num -> Num -> List (Vec -> Widget) -> Widget;
+examples/lib/tea.ml: ### ### Colors & constants
+examples/lib/tea.ml: let red : Color;
+examples/lib/tea.ml: let black : Color;
+examples/lib/tea.ml: let white : Color;
+examples/lib/tea.ml: let blue : Color;
+examples/lib/tea.ml: let green : Color;
+examples/lib/tea.ml: let yellow : Color;
+examples/lib/string.ml: let str : a -> String;
+examples/lib/string.ml: let split : String -> String -> List String;
+examples/lib/string.ml: let replace : String -> String -> String -> String;
+examples/lib/string.ml: let isNumeric : String -> Bool;
+examples/lib/string.ml: let strIn : String -> String -> Bool;
+examples/lib/string.ml: let strLen : String -> Number;
+examples/lib/string.ml: let strHead : String -> String;
+examples/lib/string.ml: let strTail : String-> String;
+examples/lib/graphing.ml: ### ### Functions
+examples/lib/graphing.ml: let viewGraphs : List (Number->Number) -> Number -> Number -> Number -> Widget;
+examples/lib/sound.ml: ### ### Types
+examples/lib/sound.ml: data Sound;
+examples/lib/sound.ml: ### ### Generating Sounds
+examples/lib/sound.ml: let max_amp : Number;
+examples/lib/sound.ml: let sound : (Number -> Number) -> Number -> Sound;
+examples/lib/sound.ml: let beep : Number -> Number -> Sound;
+examples/lib/sound.ml: ### ### Playback
+examples/lib/sound.ml: let play : Sound -> Unit
+    # example:
+    # play $ beep 440 1
+;
+examples/lib/ugraph.ml: ### ### Types
+examples/lib/ugraph.ml: type Edges a = Dict (List a);
+examples/lib/ugraph.ml: type Vertices a = List a;
+examples/lib/ugraph.ml: data Graph a = Graph (Edges a) (Vertices a);
+examples/lib/ugraph.ml: ### ### Functions
+examples/lib/ugraph.ml: let edgesFromGraph : Graph a -> List (List a);
+examples/lib/input.ml: let input : String -> (String -> Unit) -> Unit;
+examples/lib/calculus.ml: ### ### Differentiation & Integration
+examples/lib/calculus.ml: let diff : (Number -> Number) -> Number -> (Number -> Number)
+	# args: func, n
+	# returns: n-th derivative of func.
+;
+examples/lib/calculus.ml: let integral : (Number -> Number) -> Number -> Number -> Number
+	# args: func, x_start, x_end
+;
+examples/lib/calculus.ml: ### ### Series expansions (Taylor, Fourier etc.)
+examples/lib/calculus.ml: let taylor : (Number -> Number) -> Number -> Number -> (Number -> Number)
+	# args: f, n, x0, x
+;
+examples/lib/calculus.ml: let fourier : (Number -> Number) -> Number -> (Number -> Number)
+	# args: f, m, x
+;
+examples/examples/bouncybtn.ml: type State = { zoom : Number, y : Number,
+	v : Number, data : Vec, nticks : Number };
+examples/examples/bouncybtn.ml: let view : State -> Widget;
+examples/examples/bouncybtn.ml: let update : Event -> State -> State;
+examples/lib/math.ml: ### ### Trig
+examples/lib/math.ml: let sin : Number -> Number;
+examples/lib/math.ml: let cos : Number -> Number;
+examples/lib/math.ml: let tan : Number -> Number;
+examples/lib/math.ml: let pi : Number;
+examples/lib/math.ml: ### ### Misc.
+examples/lib/math.ml: let pow : Number -> Number -> Number;
+examples/lib/math.ml: let round : Number -> Number -> Number;
+examples/lib/math.ml: let ln : Number -> Number;
+examples/lib/math.ml: let fac : Number -> Number;
+examples/lib/math.ml: let exp : Number -> Number;
+examples/lib/math.ml: let min : Number -> Number -> Number;
+examples/lib/math.ml: let max : Number -> Number -> Number;
+examples/lib/math.ml: ### ### Predicates / Checking properties of numbers
+examples/lib/math.ml: let mod : Number -> Number -> Number;
+examples/lib/math.ml: let divisible : Number -> Number -> Bool;
+examples/lib/math.ml: let odd : Number -> Bool;
+examples/lib/math.ml: let even : Number -> Bool;
+examples/lib/math.ml: ### ### Random
+examples/lib/math.ml: let noise : Vec -> Number;
+examples/examples/golnumpy.ml: let getNbSum : Vec -> Index -> Number;
+examples/examples/golnumpy.ml: let alive : Number -> Number -> Number;
+examples/examples/golnumpy.ml: let tick : Vec -> Vec;
+examples/examples/golnumpy.ml: let printG : Vec -> Unit;
+examples/lib/list.ml: ### ### Types
+examples/lib/list.ml: data List a
+	= Cons a (List a)
+	| Nil
+	# The default list type generated
+	# by `[...]`
+;
+examples/lib/list.ml: ### ### Creating lists
+examples/lib/list.ml: let range : Number -> Number -> List Number;
+examples/lib/list.ml: let srange : Number -> Number -> Number -> List Number
+	# start, end, step
+;
+examples/lib/list.ml: ### ### Accessors
+examples/lib/list.ml: let tail : List a -> List a;
+examples/lib/list.ml: let tailSafe : List a -> List a;
+examples/lib/list.ml: let head : List a -> a;
+examples/lib/list.ml: let len : List a -> Number;
+examples/lib/list.ml: let listAtSafe : Number -> List a -> Maybe a;
+examples/lib/list.ml: let listAt : Number -> List a -> a;
+examples/lib/list.ml: let take : Number -> List a -> List a;
+examples/lib/list.ml: let chunksOf : Number -> List a -> List (List a);
+examples/lib/list.ml: let contains : a -> List a -> Bool;
+examples/lib/list.ml: ### ### Sorting, etc.
+examples/lib/list.ml: let sort : List a -> List a;
+examples/lib/list.ml: let nub : List a -> List a;
+examples/lib/list.ml: ### ### Manipulating lists
+examples/lib/list.ml: let append : a -> List a -> List a;
+examples/lib/list.ml: let foldr : (b -> a -> b) -> b -> List a -> b;
+examples/lib/list.ml: let extend : List a -> List a -> List a;
+examples/lib/list.ml: let concat : List (List a) -> List a;
+examples/lib/list.ml: let filter : (a -> Bool) -> List a -> List a;
+examples/lib/list.ml: let reverse : List a -> List a;
+examples/lib/list.ml: let map : (a -> b) -> (List a) -> List b;
+examples/lib/list.ml: let foreach2D : Number -> Number -> (Number->Number-> Unit) -> Unit;
+examples/lib/list.ml: let imap : (Number -> a -> b) -> List a -> List b;
+examples/lib/list.ml: let any : List Bool -> Bool;
+examples/lib/list.ml: let zip : List a -> List b -> List (a,b);
+examples/examples/game3d.ml: data Sprite = Sprite Num Vec Vec;
+examples/examples/game3d.ml: let spriteUniforms : Num -> Sprite -> List Uniform;
+examples/examples/game3d.ml: let atlasMap : Atlas -> List Number;
+examples/examples/game3d.ml: let render3D : Vec -> Number -> List Sprite -> Atlas -> Widget;
+examples/examples/game3d.ml: type State =
+	{ angle : Number
+	, pos : Vec
+	};
+examples/examples/game3d.ml: let view : Atlas -> State -> Widget;
+examples/examples/game3d.ml: let tick : Event -> State -> State;
+examples/lib/parsing.ml: ### ### Types
+examples/lib/parsing.ml: type GrammarError = String;
+examples/lib/parsing.ml: type ParseError = String;
+examples/lib/parsing.ml: ### ### Creating parsers
+examples/lib/parsing.ml: let parser :
+	String -> Either GrammarError (
+		String -> Either ParseError a
+	)
+	# args: grammar, string
+;
+examples/lib/dict.ml: ### ### Creation
+examples/lib/dict.ml: data Dict a;
+examples/lib/dict.ml: let mkDict : List (String, a) -> Dict a;
+examples/lib/dict.ml: ### ### Accessing
+examples/lib/dict.ml: let dictItems : Dict a -> List (String, a);
+examples/lib/dict.ml: let dictGet : Dict a -> String -> Maybe a;
+examples/lib/dict.ml: let dictInsert : String -> Dict a -> a -> Dict a;
+examples/lib/dict.ml: let dictEmpty : Dict a;
+examples/examples/euler.ml: type Path = List String;
+examples/examples/euler.ml: let complete : Graph String -> Path -> Bool;
+examples/examples/euler.ml: let edgesFromPath : Path -> List (List String);
+examples/examples/euler.ml: let valid : Path -> Bool;
+examples/examples/euler.ml: let gen : Graph String -> Path -> List Path;
+examples/examples/euler.ml: let euler : Graph String -> Path -> List Path;
+examples/examples/calcgui.ml: let eval : String -> String;
+examples/examples/calcgui.ml: type State = String;
+examples/examples/calcgui.ml: let tick : Event -> State -> State;
+examples/examples/calcgui.ml: let view : State -> Widget;
+examples/lib/either.ml: ### ### Definitions / Working with `Either`
+examples/lib/either.ml: data Either a b = Left a | Right b;
+examples/lib/either.ml: let unRight : Either a b -> b;
+examples/lib/either.ml: let fromMaybe : b -> Maybe a -> Either b a;
+examples/lib/either.ml: ### ### Monad definition
+examples/lib/either.ml: let bind : Either e a -> (a -> Either e b) -> Either e b;
+examples/lib/either.ml: let flatMap : (a -> Either e b) -> Either e a -> Either e b;
+examples/lib/either.ml: let fmap : (a -> b) -> Either e a -> Either e b;
+examples/lib/either.ml: let pure : a -> Either e a;
+examples/examples/lc.ml: data Exp
+	= Num String
+	| Var String
+	| App Exp Exp
+	| Lam String Exp;
+examples/examples/lc.ml: data Value
+	= Clos (Dict Value) String Exp
+	| Fun (Value -> Either String Value)
+	| Atom Number;
+examples/examples/lc.ml: let eval : Dict Value -> Exp -> Either String Value;
+examples/lib/image.ml: ### ### Definitions & Creating images/buffers
+examples/lib/image.ml: data Img;
+examples/lib/image.ml: data Buffer;
+examples/lib/image.ml: type Color = Vec;
+examples/lib/image.ml: let setpixel : Img -> Vec -> Color -> Unit;
+examples/lib/image.ml: let image : Vec -> Img;
+examples/lib/image.ml: let imgLoad : String -> Img;
+examples/lib/image.ml: let imgBuf : Img -> Buffer;
+examples/lib/image.ml: ### ### Functions
+examples/lib/image.ml: let imgSize : Img -> Vec;
+examples/lib/image.ml: let imgHeight : Img -> Number;
+examples/lib/image.ml: let imgWidth : Img -> Number;
+examples/lib/image.ml: let imgCopy : Img -> Img;
+examples/lib/image.ml: let imgMap : Img -> (Number->Number->Color->Color) -> Unit;
+examples/lib/image.ml: let imgGet : Buffer -> Vec -> Vec;
+examples/lib/image.ml: let imgSave : String -> Img -> Unit;
+examples/lib/image.ml: let imgClear : Img -> Color -> Unit;
+examples/lib/image.ml: let imgMapRect: Vec -> Vec -> Img -> (Number->Number->Color->Color) -> Unit
+	# args: size, pos, img, func
+;
+examples/lib/image.ml: let imgSmooth : Img -> Img;
+examples/lib/image.ml: let imgFlipH : Img -> Img;
+examples/lib/image.ml: let imgFlipV : Img -> Img;
+examples/lib/image.ml: let imgShade : Img -> String -> Img;
+examples/lib/image.ml: data Atlas = Atlas Img (List Vec)
+	# arguments: atlasTex, imgSizes
+;
+examples/lib/image.ml: let mkAtlasImg : List Img -> Img
+	# make an atlas of vertically stacked
+	# images from the input images.
+;
+examples/lib/image.ml: let mkAtlas : List Img -> Atlas
+	# create an Atlas from the input images
+;
+examples/lib/util.ml: ### ### Time
+examples/lib/util.ml: let time : Unit -> Number;
+examples/lib/util.ml: let traceTime : (Unit -> b) -> b
+	# log the time an action takes to execute
+;
+examples/lib/util.ml: let setInterval : Number -> state -> (state->state) -> Unit
+	# args: n, state, tick
+	# run tick every n seconds.
+;
+examples/lib/util.ml: let setUpdate : state -> (state->state) ->Unit;
+examples/lib/util.ml: ### ### Terminal
+examples/lib/util.ml: let cls : Unit -> Unit;
+examples/lib/util.ml: let error : String -> a;
+examples/lib/util.ml: let setTermFontSize : Number -> Unit;
+examples/lib/util.ml: let str : a -> String
+	# deprecated. Use lib.string (str)
+;
+examples/lib/util.ml: let printl : List a -> Unit;
+examples/lib/util.ml: ### ### Misc.
+examples/lib/util.ml: let setreclimit : Number -> Unit;
+examples/lib/util.ml: let setCompilerCWD : String -> Unit;
+examples/lib/util.ml: let randint : Number -> Number -> Number;
+examples/lib/util.ml: ### ### File system
+examples/lib/util.ml: let fileexists : String -> Bool;
+examples/lib/util.ml: let readFile : String -> Maybe String;
+examples/lib/util.ml: let readFileUnsafe : String -> String;
+examples/lib/util.ml: ### ### Network
+examples/lib/util.ml: let download : String -> String -> Unit;
+examples/lib/util.ml: ### ### Basic functions
+examples/lib/util.ml: let copy : a -> a;
+examples/lib/util.ml: let uncurry2 : (a -> b -> c) -> (a,b) -> c;
+examples/lib/util.ml: let not : Bool -> Bool;
+examples/lib/util.ml: let float : a -> Number;
+examples/lib/util.ml: let int : a -> Number;
+examples/lib/util.ml: let neg : Number -> Number;
+examples/lib/util.ml: let between : Number-> Number -> Number -> Bool;
+examples/lib/util.ml: let id : a -> a;
+examples/lib/util.ml: let const : a -> b -> a;
+examples/lib/util.ml: let when : Bool -> (Unit -> Unit) -> Unit;
+examples/lib/util.ml: let mapRecord : (a -> a) -> a -> a;
+examples/lib/util.ml: let with : a -> b -> b;
+examples/lib/util.ml: let union : a -> a -> a;
+examples/lib/util.ml: let times : Number -> (a -> a) -> a -> a;
+examples/lib/util.ml: let ftee : (a -> Unit) -> (a -> a) -> a -> a;
+examples/examples/lp.ml: data Term
+    = Var String
+    | Lam String Term Term
+    | Pi String Term Term
+    | App Term Term
+    | Star
+    | Nat
+    | NatLit Number
+;
+examples/examples/lp.ml: type Ctx = Dict Term;
+examples/examples/lp.ml: let subst : String -> Term -> Term -> Term;
+examples/examples/lp.ml: let betaReduce : Term -> Term;
+examples/examples/lp.ml: let normalForm : Term -> Term;
+examples/examples/lp.ml: let alphaEquiv : Dict Num -> Dict Num -> Term -> Term -> Bool;
+examples/examples/lp.ml: let betaEquiv : Term -> Term -> Bool;
+examples/examples/lp.ml: let typ : Ctx -> Term -> Term;
+examples/lib/numpy.ml: ### ### Type Aliases
+examples/lib/numpy.ml: type Size = List Number;
+examples/lib/numpy.ml: type Index = List Number;
+examples/lib/numpy.ml: ### ### Creating arrays
+examples/lib/numpy.ml: let array : List Number -> Vec;
+examples/lib/numpy.ml: let zeros : Size -> Vec;
+examples/lib/numpy.ml: let full : Size -> Number -> Vec;
+examples/lib/numpy.ml: let linspace : Number -> Number -> Number -> Vec
+	# start, end, nsteps
+;
+examples/lib/numpy.ml: ### ### Getters
+examples/lib/numpy.ml: let toList : Vec -> List Number
+	# only 1-dim.!
+;
+examples/lib/numpy.ml: let size : Vec -> Size
+	# <=> arr.shape in numpy!
+;
+examples/lib/numpy.ml: let get : Index -> Vec -> Number;
+examples/lib/numpy.ml: let slice : Index -> Index -> Vec -> Vec
+	# - start, end, input_array
+	# - fails if out of bounds
+;
+examples/lib/numpy.ml: let sliceInc : Index -> Index -> Vec -> Vec
+	# like slice but end index is included.
+;
+examples/lib/numpy.ml: let slicePartial : Index -> Index -> Vec -> Vec
+	# same as slice, but return all
+	# elements in index range instead
+	# of failing
+;
+examples/lib/numpy.ml: ### ### Manipulating `Vec`s
+examples/lib/numpy.ml: let set : Index -> Number -> Vec -> Vec;
+examples/lib/numpy.ml: let vectorize : (Number -> Number) -> Vec -> Vec;
+examples/lib/numpy.ml: let ivectorize : (Index -> Number -> Number) -> Vec -> Vec;
+examples/lib/numpy.ml: let sum : Vec -> Number;
+examples/lib/numpy.ml: let dot : Vec -> Vec -> Number;
+examples/lib/numpy.ml: let flatten : Vec -> Vec;
+examples/lib/numpy.ml: let delete : Number -> Vec -> Vec
+	# args: i, arr
+	# remove the element at i
+	# only for flat Vecs
+;
+examples/lib/numpy.ml: let concatenate : Number -> Vec -> Vec -> Vec
+	# args: axis, arr1, arr2
+;
+examples/lib/numpy.ml: let reshape : Size -> Vec -> Vec;
+examples/lib/numpy.ml: let transpose : Vec -> Vec;
+examples/examples/pixel.ml: let getMouse : Unit -> Vec;
+examples/examples/pixel.ml: data Brush = Brush Number Vec;
+examples/examples/gol.ml: let determineAlive : Bool -> Number -> Bool;
+examples/examples/gol.ml: let addPattern : Img -> Vec -> Vec -> Unit;
+examples/examples/gol.ml: let mygrid : Img;
+examples/examples/settingsgui.ml: type State = Num;
+examples/examples/settingsgui.ml: let view : State -> Widget;
+examples/examples/settingsgui.ml: let tick : Event -> State -> State;
+examples/lib/maybe.ml: ### ### Type & Creating / unwrapping
+examples/lib/maybe.ml: data Maybe a = Nothing | Just a;
+examples/lib/maybe.ml: let maybe : a -> Maybe a -> a;
+examples/lib/maybe.ml: ### ### Monad implementation
+examples/lib/maybe.ml: let flatMap : (a -> Maybe b) -> Maybe a -> Maybe b;
+examples/lib/maybe.ml: let bind : Maybe a -> (a -> Maybe b) -> Maybe b;
+examples/lib/maybe.ml: let pure : a -> Maybe a;
+examples/lib/maybe.ml: let fmap : (a -> b) -> Maybe a -> Maybe b;
+examples/lib/maybe.ml: let mapM : (a -> Maybe b) -> List a -> Maybe (List b);
+examples/lib/tea.ml: ### ### Types
+examples/lib/tea.ml: type Color = Vec
+	# Alias used for clarity. Vec of length 4.
+;
+examples/lib/tea.ml: data Uniform
+	= UniformFloat String Number
+	| UniformInt String Number
+	| UniformVec2 String Vec
+	| UniformVec3 String Vec
+	| UniformVec4 String Vec
+	| UniformTex0 String Img
+
+	# Uniform types for shaders. Arguments: uniformName, value
+;
+examples/lib/tea.ml: data Widget
+	= Rect Color Vec Vec
+	| TRect Img Vec Vec
+	| SRect String (List Uniform) Vec Vec
+	| Btn String String Vec Vec
+	| Slider String Number Number Number Number Vec Vec
+	| Label String String Vec Vec
+	| Line (List Vec) Number Color
+	| Many (List Widget)
+	| ColorPicker String Vec Vec
+;
+examples/lib/tea.ml: ###>| Attributes for Widgets | |
+examples/lib/tea.ml: ###>|-|-|
+examples/lib/tea.ml: ###>| Rect | color, size, pos |
+examples/lib/tea.ml: ###>| TRect | texture, size, pos |
+examples/lib/tea.ml: ###>| Btn   | name, text, size, pos |
+examples/lib/tea.ml: ###>| Slider| name, min, max, step, value, size, pos |
+examples/lib/tea.ml: ###>| Label | name, text, size, pos |
+examples/lib/tea.ml: ###>| Line  | polygon-points, width, color |
+examples/lib/tea.ml: ###>| Many  | children |
+examples/lib/tea.ml: data Event
+	= Tick
+	| BtnPressed String
+	| BtnReleased String
+	| BtnHeld String
+	| SliderMoved String Number
+	| ColorPicked String Color
+	# Event type for the `tick` function in the app. Make sure pattern matching on
+	# events is exhaustive, so `tick` does not throw an error.
+;
+examples/lib/tea.ml: ### ### Starting the App
+examples/lib/tea.ml: let app : state -> (Event -> state -> state) -> (state -> Widget) -> Unit
+	# starts an app given an initial `state`, `tick` and `view`
+;
+examples/lib/tea.ml: let forceUpdate : state -> state;
+examples/lib/tea.ml: ###>The view gets updated based on the state. The app assumes that
+examples/lib/tea.ml: ###>view is pure: It always returns the same Widgets for the same state.
+examples/lib/tea.ml: ###>When side effects do need to be used for some reason, the `tick` function
+examples/lib/tea.ml: ###>can request an update.
+examples/lib/tea.ml: ###>
+examples/lib/tea.ml: ###>Example:
+examples/lib/tea.ml: ###>```
+examples/lib/tea.ml: ###>let view _ = Label "time" (str $ time ()) @(200, 200) @(0, 0);
+examples/lib/tea.ml: ###>let tick _ _ = forceUpdate (); # Note that the state is Unit and constant.
+examples/lib/tea.ml: ###>setTick () tick view
+examples/lib/tea.ml: ###>```
+examples/lib/tea.ml: let stop : Unit -> Unit
+	# Effectful.
+	# Stops the app. Takes effect on the next tick, the current tick is stil executed.
+;
+examples/lib/tea.ml: ###>Example:
+examples/lib/tea.ml: ###>```
+examples/lib/tea.ml: ###>let tick event state = do
+examples/lib/tea.ml: ###>	if state > 1000 then stop ()
+examples/lib/tea.ml: ###>	inc state;
+examples/lib/tea.ml: ###>
+examples/lib/tea.ml: ###>let view state = Label "mylabel" (str state) @(200, 200) @(0, 0);
+examples/lib/tea.ml: ###>
+examples/lib/tea.ml: ###>setTick 0
+examples/lib/tea.ml: ###>```
+examples/lib/tea.ml: ### ### Basic kinds of apps / patterns
+examples/lib/tea.ml: let staticView : (Unit -> Widget) -> Unit
+	# Renders a view and then halts the app.
+	# Use for graphing, etc.
+;
+examples/lib/tea.ml: ### ### Getters
+examples/lib/tea.ml: let width : Number;
+examples/lib/tea.ml: let height: Number;
+examples/lib/tea.ml: let getFPS : Unit -> Number;
+examples/lib/tea.ml: ### ### Positioning / layouts
+examples/lib/tea.ml: let setPos : Widget -> Vec -> Unit;
+examples/lib/tea.ml: let randPos : Unit -> Vec;
+examples/lib/tea.ml: let grid : Vec -> Vec -> Num -> Num -> List (Vec -> Widget) -> Widget;
+examples/lib/tea.ml: ### ### Colors & constants
+examples/lib/tea.ml: let red : Color;
+examples/lib/tea.ml: let black : Color;
+examples/lib/tea.ml: let white : Color;
+examples/lib/tea.ml: let blue : Color;
+examples/lib/tea.ml: let green : Color;
+examples/lib/tea.ml: let yellow : Color;
+examples/lib/string.ml: let str : a -> String;
+examples/lib/string.ml: let split : String -> String -> List String;
+examples/lib/string.ml: let replace : String -> String -> String -> String;
+examples/lib/string.ml: let isNumeric : String -> Bool;
+examples/lib/string.ml: let strIn : String -> String -> Bool;
+examples/lib/string.ml: let strLen : String -> Number;
+examples/lib/string.ml: let strHead : String -> String;
+examples/lib/string.ml: let strTail : String-> String;
+examples/lib/graphing.ml: ### ### Functions
+examples/lib/graphing.ml: let viewGraphs : List (Number->Number) -> Number -> Number -> Number -> Widget;
+examples/lib/sound.ml: ### ### Types
+examples/lib/sound.ml: data Sound;
+examples/lib/sound.ml: ### ### Generating Sounds
+examples/lib/sound.ml: let max_amp : Number;
+examples/lib/sound.ml: let sound : (Number -> Number) -> Number -> Sound;
+examples/lib/sound.ml: let beep : Number -> Number -> Sound;
+examples/lib/sound.ml: ### ### Playback
+examples/lib/sound.ml: let play : Sound -> Unit
+    # example:
+    # play $ beep 440 1
+;
+examples/lib/ugraph.ml: ### ### Types
+examples/lib/ugraph.ml: type Edges a = Dict (List a);
+examples/lib/ugraph.ml: type Vertices a = List a;
+examples/lib/ugraph.ml: data Graph a = Graph (Edges a) (Vertices a);
+examples/lib/ugraph.ml: ### ### Functions
+examples/lib/ugraph.ml: let edgesFromGraph : Graph a -> List (List a);
+examples/lib/input.ml: let input : String -> (String -> Unit) -> Unit;
+examples/lib/calculus.ml: ### ### Differentiation & Integration
+examples/lib/calculus.ml: let diff : (Number -> Number) -> Number -> (Number -> Number)
+	# args: func, n
+	# returns: n-th derivative of func.
+;
+examples/lib/calculus.ml: let integral : (Number -> Number) -> Number -> Number -> Number
+	# args: func, x_start, x_end
+;
+examples/lib/calculus.ml: ### ### Series expansions (Taylor, Fourier etc.)
+examples/lib/calculus.ml: let taylor : (Number -> Number) -> Number -> Number -> (Number -> Number)
+	# args: f, n, x0, x
+;
+examples/lib/calculus.ml: let fourier : (Number -> Number) -> Number -> (Number -> Number)
+	# args: f, m, x
+;
+examples/examples/bouncybtn.ml: type State = { zoom : Number, y : Number,
+	v : Number, data : Vec, nticks : Number };
+examples/examples/bouncybtn.ml: let view : State -> Widget;
+examples/examples/bouncybtn.ml: let update : Event -> State -> State;
+examples/lib/math.ml: ### ### Trig
+examples/lib/math.ml: let sin : Number -> Number;
+examples/lib/math.ml: let cos : Number -> Number;
+examples/lib/math.ml: let tan : Number -> Number;
+examples/lib/math.ml: let pi : Number;
+examples/lib/math.ml: ### ### Misc.
+examples/lib/math.ml: let pow : Number -> Number -> Number;
+examples/lib/math.ml: let round : Number -> Number -> Number;
+examples/lib/math.ml: let ln : Number -> Number;
+examples/lib/math.ml: let fac : Number -> Number;
+examples/lib/math.ml: let exp : Number -> Number;
+examples/lib/math.ml: let min : Number -> Number -> Number;
+examples/lib/math.ml: let max : Number -> Number -> Number;
+examples/lib/math.ml: ### ### Predicates / Checking properties of numbers
+examples/lib/math.ml: let mod : Number -> Number -> Number;
+examples/lib/math.ml: let divisible : Number -> Number -> Bool;
+examples/lib/math.ml: let odd : Number -> Bool;
+examples/lib/math.ml: let even : Number -> Bool;
+examples/lib/math.ml: ### ### Random
+examples/lib/math.ml: let noise : Vec -> Number;
+examples/examples/golnumpy.ml: let getNbSum : Vec -> Index -> Number;
+examples/examples/golnumpy.ml: let alive : Number -> Number -> Number;
+examples/examples/golnumpy.ml: let tick : Vec -> Vec;
+examples/examples/golnumpy.ml: let printG : Vec -> Unit;
+examples/lib/list.ml: ### ### Types
+examples/lib/list.ml: data List a
+	= Cons a (List a)
+	| Nil
+	# The default list type generated
+	# by `[...]`
+;
+examples/lib/list.ml: ### ### Creating lists
+examples/lib/list.ml: let range : Number -> Number -> List Number;
+examples/lib/list.ml: let srange : Number -> Number -> Number -> List Number
+	# start, end, step
+;
+examples/lib/list.ml: ### ### Accessors
+examples/lib/list.ml: let tail : List a -> List a;
+examples/lib/list.ml: let tailSafe : List a -> List a;
+examples/lib/list.ml: let head : List a -> a;
+examples/lib/list.ml: let len : List a -> Number;
+examples/lib/list.ml: let listAtSafe : Number -> List a -> Maybe a;
+examples/lib/list.ml: let listAt : Number -> List a -> a;
+examples/lib/list.ml: let take : Number -> List a -> List a;
+examples/lib/list.ml: let chunksOf : Number -> List a -> List (List a);
+examples/lib/list.ml: let contains : a -> List a -> Bool;
+examples/lib/list.ml: ### ### Sorting, etc.
+examples/lib/list.ml: let sort : List a -> List a;
+examples/lib/list.ml: let nub : List a -> List a;
+examples/lib/list.ml: ### ### Manipulating lists
+examples/lib/list.ml: let append : a -> List a -> List a;
+examples/lib/list.ml: let foldr : (b -> a -> b) -> b -> List a -> b;
+examples/lib/list.ml: let extend : List a -> List a -> List a;
+examples/lib/list.ml: let concat : List (List a) -> List a;
+examples/lib/list.ml: let filter : (a -> Bool) -> List a -> List a;
+examples/lib/list.ml: let reverse : List a -> List a;
+examples/lib/list.ml: let map : (a -> b) -> (List a) -> List b;
+examples/lib/list.ml: let foreach2D : Number -> Number -> (Number->Number-> Unit) -> Unit;
+examples/lib/list.ml: let imap : (Number -> a -> b) -> List a -> List b;
+examples/lib/list.ml: let any : List Bool -> Bool;
+examples/lib/list.ml: let zip : List a -> List b -> List (a,b);
+examples/examples/game3d.ml: data Sprite = Sprite Num Vec Vec;
+examples/examples/game3d.ml: let spriteUniforms : Num -> Sprite -> List Uniform;
+examples/examples/game3d.ml: let atlasMap : Atlas -> List Number;
+examples/examples/game3d.ml: let render3D : Vec -> Number -> List Sprite -> Atlas -> Widget;
+examples/examples/game3d.ml: type State =
+	{ angle : Number
+	, pos : Vec
+	};
+examples/examples/game3d.ml: let view : Atlas -> State -> Widget;
+examples/examples/game3d.ml: let tick : Event -> State -> State;
+examples/lib/parsing.ml: ### ### Types
+examples/lib/parsing.ml: type GrammarError = String;
+examples/lib/parsing.ml: type ParseError = String;
+examples/lib/parsing.ml: ### ### Creating parsers
+examples/lib/parsing.ml: let parser :
+	String -> Either GrammarError (
+		String -> Either ParseError a
+	)
+	# args: grammar, string
+;
+examples/lib/dict.ml: ### ### Creation
+examples/lib/dict.ml: data Dict a;
+examples/lib/dict.ml: let mkDict : List (String, a) -> Dict a;
+examples/lib/dict.ml: ### ### Accessing
+examples/lib/dict.ml: let dictItems : Dict a -> List (String, a);
+examples/lib/dict.ml: let dictGet : Dict a -> String -> Maybe a;
+examples/lib/dict.ml: let dictInsert : String -> Dict a -> a -> Dict a;
+examples/lib/dict.ml: let dictEmpty : Dict a;
+examples/examples/euler.ml: type Path = List String;
+examples/examples/euler.ml: let complete : Graph String -> Path -> Bool;
+examples/examples/euler.ml: let edgesFromPath : Path -> List (List String);
+examples/examples/euler.ml: let valid : Path -> Bool;
+examples/examples/euler.ml: let gen : Graph String -> Path -> List Path;
+examples/examples/euler.ml: let euler : Graph String -> Path -> List Path;
+examples/examples/calcgui.ml: let eval : String -> String;
+examples/examples/calcgui.ml: type State = String;
+examples/examples/calcgui.ml: let tick : Event -> State -> State;
+examples/examples/calcgui.ml: let view : State -> Widget;
+examples/lib/either.ml: ### ### Definitions / Working with `Either`
+examples/lib/either.ml: data Either a b = Left a | Right b;
+examples/lib/either.ml: let unRight : Either a b -> b;
+examples/lib/either.ml: let fromMaybe : b -> Maybe a -> Either b a;
+examples/lib/either.ml: ### ### Monad definition
+examples/lib/either.ml: let bind : Either e a -> (a -> Either e b) -> Either e b;
+examples/lib/either.ml: let flatMap : (a -> Either e b) -> Either e a -> Either e b;
+examples/lib/either.ml: let fmap : (a -> b) -> Either e a -> Either e b;
+examples/lib/either.ml: let pure : a -> Either e a;
+examples/lib/maybe.ml: ### ### Type & Creating / unwrapping
+examples/lib/maybe.ml: data Maybe a = Nothing | Just a;
+examples/lib/maybe.ml: let maybe : a -> Maybe a -> a;
+examples/lib/maybe.ml: ### ### Monad implementation
+examples/lib/maybe.ml: let flatMap : (a -> Maybe b) -> Maybe a -> Maybe b;
+examples/lib/maybe.ml: let bind : Maybe a -> (a -> Maybe b) -> Maybe b;
+examples/lib/maybe.ml: let pure : a -> Maybe a;
+examples/lib/maybe.ml: let fmap : (a -> b) -> Maybe a -> Maybe b;
+examples/lib/maybe.ml: let mapM : (a -> Maybe b) -> List a -> Maybe (List b);
+examples/lib/math.ml: ### ### Trig
+examples/lib/math.ml: let sin : Number -> Number;
+examples/lib/math.ml: let cos : Number -> Number;
+examples/lib/math.ml: let tan : Number -> Number;
+examples/lib/math.ml: let pi : Number;
+examples/lib/math.ml: ### ### Misc.
+examples/lib/math.ml: let pow : Number -> Number -> Number;
+examples/lib/math.ml: let round : Number -> Number -> Number;
+examples/lib/math.ml: let ln : Number -> Number;
+examples/lib/math.ml: let fac : Number -> Number;
+examples/lib/math.ml: let exp : Number -> Number;
+examples/lib/math.ml: let min : Number -> Number -> Number;
+examples/lib/math.ml: let max : Number -> Number -> Number;
+examples/lib/math.ml: ### ### Predicates / Checking properties of numbers
+examples/lib/math.ml: let mod : Number -> Number -> Number;
+examples/lib/math.ml: let divisible : Number -> Number -> Bool;
+examples/lib/math.ml: let odd : Number -> Bool;
+examples/lib/math.ml: let even : Number -> Bool;
+examples/lib/math.ml: ### ### Random
+examples/lib/math.ml: let noise : Vec -> Number;
+examples/lib/list.ml: ### ### Types
+examples/lib/list.ml: data List a
+	= Cons a (List a)
+	| Nil
+	# The default list type generated
+	# by `[...]`
+;
+examples/lib/list.ml: ### ### Creating lists
+examples/lib/list.ml: let range : Number -> Number -> List Number;
+examples/lib/list.ml: let srange : Number -> Number -> Number -> List Number
+	# start, end, step
+;
+examples/lib/list.ml: ### ### Accessors
+examples/lib/list.ml: let tail : List a -> List a;
+examples/lib/list.ml: let tailSafe : List a -> List a;
+examples/lib/list.ml: let head : List a -> a;
+examples/lib/list.ml: let len : List a -> Number;
+examples/lib/list.ml: let listAtSafe : Number -> List a -> Maybe a;
+examples/lib/list.ml: let listAt : Number -> List a -> a;
+examples/lib/list.ml: let take : Number -> List a -> List a;
+examples/lib/list.ml: let chunksOf : Number -> List a -> List (List a);
+examples/lib/list.ml: let contains : a -> List a -> Bool;
+examples/lib/list.ml: ### ### Sorting, etc.
+examples/lib/list.ml: let sort : List a -> List a;
+examples/lib/list.ml: let nub : List a -> List a;
+examples/lib/list.ml: ### ### Manipulating lists
+examples/lib/list.ml: let append : a -> List a -> List a;
+examples/lib/list.ml: let foldr : (b -> a -> b) -> b -> List a -> b;
+examples/lib/list.ml: let extend : List a -> List a -> List a;
+examples/lib/list.ml: let concat : List (List a) -> List a;
+examples/lib/list.ml: let filter : (a -> Bool) -> List a -> List a;
+examples/lib/list.ml: let reverse : List a -> List a;
+examples/lib/list.ml: let map : (a -> b) -> (List a) -> List b;
+examples/lib/list.ml: let foreach2D : Number -> Number -> (Number->Number-> Unit) -> Unit;
+examples/lib/list.ml: let imap : (Number -> a -> b) -> List a -> List b;
+examples/lib/list.ml: let any : List Bool -> Bool;
+examples/lib/list.ml: let zip : List a -> List b -> List (a,b);
+examples/lib/parsing.ml: ### ### Types
+examples/lib/parsing.ml: type GrammarError = String;
+examples/lib/parsing.ml: type ParseError = String;
+examples/lib/parsing.ml: ### ### Creating parsers
+examples/lib/parsing.ml: let parser :
+	String -> Either GrammarError (
+		String -> Either ParseError a
+	)
+	# args: grammar, string
+;
+examples/lib/graphing.ml: ### ### Functions
+examples/lib/graphing.ml: let viewGraphs : List (Number->Number) -> Number -> Number -> Number -> Widget;
+examples/examples/game3d.ml: data Sprite = Sprite Num Vec Vec;
+examples/examples/game3d.ml: let spriteUniforms : Num -> Sprite -> List Uniform;
+examples/examples/game3d.ml: let atlasMap : Atlas -> List Number;
+examples/examples/game3d.ml: let render3D : Vec -> Number -> List Sprite -> Atlas -> Widget;
+examples/examples/game3d.ml: type State =
+	{ angle : Number
+	, pos : Vec
+	};
+examples/examples/game3d.ml: let view : Atlas -> State -> Widget;
+examples/examples/game3d.ml: let tick : Event -> State -> State;
+examples/examples/pixel.ml: let getMouse : Unit -> Vec;
+examples/examples/pixel.ml: data Brush = Brush Number Vec;
+examples/examples/calcgui.ml: let eval : String -> String;
+examples/examples/calcgui.ml: type State = String;
+examples/examples/calcgui.ml: let tick : Event -> State -> State;
+examples/examples/calcgui.ml: let view : State -> Widget;
+examples/lib/numpy.ml: ### ### Type Aliases
+examples/lib/numpy.ml: type Size = List Number;
+examples/lib/numpy.ml: type Index = List Number;
+examples/lib/numpy.ml: ### ### Creating arrays
+examples/lib/numpy.ml: let array : List Number -> Vec;
+examples/lib/numpy.ml: let zeros : Size -> Vec;
+examples/lib/numpy.ml: let full : Size -> Number -> Vec;
+examples/lib/numpy.ml: let linspace : Number -> Number -> Number -> Vec
+	# start, end, nsteps
+;
+examples/lib/numpy.ml: ### ### Getters
+examples/lib/numpy.ml: let toList : Vec -> List Number
+	# only 1-dim.!
+;
+examples/lib/numpy.ml: let size : Vec -> Size
+	# <=> arr.shape in numpy!
+;
+examples/lib/numpy.ml: let get : Index -> Vec -> Number;
+examples/lib/numpy.ml: let slice : Index -> Index -> Vec -> Vec
+	# - start, end, input_array
+	# - fails if out of bounds
+;
+examples/lib/numpy.ml: let sliceInc : Index -> Index -> Vec -> Vec
+	# like slice but end index is included.
+;
+examples/lib/numpy.ml: let slicePartial : Index -> Index -> Vec -> Vec
+	# same as slice, but return all
+	# elements in index range instead
+	# of failing
+;
+examples/lib/numpy.ml: ### ### Manipulating `Vec`s
+examples/lib/numpy.ml: let set : Index -> Number -> Vec -> Vec;
+examples/lib/numpy.ml: let vectorize : (Number -> Number) -> Vec -> Vec;
+examples/lib/numpy.ml: let ivectorize : (Index -> Number -> Number) -> Vec -> Vec;
+examples/lib/numpy.ml: let sum : Vec -> Number;
+examples/lib/numpy.ml: let dot : Vec -> Vec -> Number;
+examples/lib/numpy.ml: let flatten : Vec -> Vec;
+examples/lib/numpy.ml: let delete : Number -> Vec -> Vec
+	# args: i, arr
+	# remove the element at i
+	# only for flat Vecs
+;
+examples/lib/numpy.ml: let concatenate : Number -> Vec -> Vec -> Vec
+	# args: axis, arr1, arr2
+;
+examples/lib/numpy.ml: let reshape : Size -> Vec -> Vec;
+examples/lib/numpy.ml: let transpose : Vec -> Vec;
+examples/lib/string.ml: let str : a -> String;
+examples/lib/string.ml: let split : String -> String -> List String;
+examples/lib/string.ml: let replace : String -> String -> String -> String;
+examples/lib/string.ml: let isNumeric : String -> Bool;
+examples/lib/string.ml: let strIn : String -> String -> Bool;
+examples/lib/string.ml: let strLen : String -> Number;
+examples/lib/string.ml: let strHead : String -> String;
+examples/lib/string.ml: let strTail : String-> String;
+examples/examples/euler.ml: type Path = List String;
+examples/examples/euler.ml: let complete : Graph String -> Path -> Bool;
+examples/examples/euler.ml: let edgesFromPath : Path -> List (List String);
+examples/examples/euler.ml: let valid : Path -> Bool;
+examples/examples/euler.ml: let gen : Graph String -> Path -> List Path;
+examples/examples/euler.ml: let euler : Graph String -> Path -> List Path;
+examples/examples/settingsgui.ml: type State = Num;
+examples/examples/settingsgui.ml: let view : State -> Widget;
+examples/examples/settingsgui.ml: let tick : Event -> State -> State;
+examples/lib/either.ml: ### ### Definitions / Working with `Either`
+examples/lib/either.ml: data Either a b = Left a | Right b;
+examples/lib/either.ml: let unRight : Either a b -> b;
+examples/lib/either.ml: let fromMaybe : b -> Maybe a -> Either b a;
+examples/lib/either.ml: ### ### Monad definition
+examples/lib/either.ml: let bind : Either e a -> (a -> Either e b) -> Either e b;
+examples/lib/either.ml: let flatMap : (a -> Either e b) -> Either e a -> Either e b;
+examples/lib/either.ml: let fmap : (a -> b) -> Either e a -> Either e b;
+examples/lib/either.ml: let pure : a -> Either e a;
+examples/examples/lp.ml: data Term
+    = Var String
+    | Lam String Term Term
+    | Pi String Term Term
+    | App Term Term
+    | Star
+    | Nat
+    | NatLit Number
+;
+examples/examples/lp.ml: type Ctx = Dict Term;
+examples/examples/lp.ml: let subst : String -> Term -> Term -> Term;
+examples/examples/lp.ml: let betaReduce : Term -> Term;
+examples/examples/lp.ml: let normalForm : Term -> Term;
+examples/examples/lp.ml: let alphaEquiv : Dict Num -> Dict Num -> Term -> Term -> Bool;
+examples/examples/lp.ml: let betaEquiv : Term -> Term -> Bool;
+examples/examples/lp.ml: let typ : Ctx -> Term -> Term;
+examples/lib/sound.ml: ### ### Types
+examples/lib/sound.ml: data Sound;
+examples/lib/sound.ml: ### ### Generating Sounds
+examples/lib/sound.ml: let max_amp : Number;
+examples/lib/sound.ml: let sound : (Number -> Number) -> Number -> Sound;
+examples/lib/sound.ml: let beep : Number -> Number -> Sound;
+examples/lib/sound.ml: ### ### Playback
+examples/lib/sound.ml: let play : Sound -> Unit
+    # example:
+    # play $ beep 440 1
+;
+examples/lib/tea.ml: ### ### Types
+examples/lib/tea.ml: type Color = Vec
+	# Alias used for clarity. Vec of length 4.
+;
+examples/lib/tea.ml: data Uniform
+	= UniformFloat String Number
+	| UniformInt String Number
+	| UniformVec2 String Vec
+	| UniformVec3 String Vec
+	| UniformVec4 String Vec
+	| UniformTex0 String Img
+
+	# Uniform types for shaders. Arguments: uniformName, value
+;
+examples/lib/tea.ml: data Widget
+	= Rect Color Vec Vec
+	| TRect Img Vec Vec
+	| SRect String (List Uniform) Vec Vec
+	| Btn String String Vec Vec
+	| Slider String Number Number Number Number Vec Vec
+	| Label String String Vec Vec
+	| Line (List Vec) Number Color
+	| Many (List Widget)
+	| ColorPicker String Vec Vec
+;
+examples/lib/tea.ml: ###>| Attributes for Widgets | |
+examples/lib/tea.ml: ###>|-|-|
+examples/lib/tea.ml: ###>| Rect | color, size, pos |
+examples/lib/tea.ml: ###>| TRect | texture, size, pos |
+examples/lib/tea.ml: ###>| Btn   | name, text, size, pos |
+examples/lib/tea.ml: ###>| Slider| name, min, max, step, value, size, pos |
+examples/lib/tea.ml: ###>| Label | name, text, size, pos |
+examples/lib/tea.ml: ###>| Line  | polygon-points, width, color |
+examples/lib/tea.ml: ###>| Many  | children |
+examples/lib/tea.ml: data Event
+	= Tick
+	| BtnPressed String
+	| BtnReleased String
+	| BtnHeld String
+	| SliderMoved String Number
+	| ColorPicked String Color
+	# Event type for the `tick` function in the app. Make sure pattern matching on
+	# events is exhaustive, so `tick` does not throw an error.
+;
+examples/lib/tea.ml: ### ### Starting the App
+examples/lib/tea.ml: let app : state -> (Event -> state -> state) -> (state -> Widget) -> Unit
+	# starts an app given an initial `state`, `tick` and `view`
+;
+examples/lib/tea.ml: let forceUpdate : state -> state;
+examples/lib/tea.ml: ###>The view gets updated based on the state. The app assumes that
+examples/lib/tea.ml: ###>view is pure: It always returns the same Widgets for the same state.
+examples/lib/tea.ml: ###>When side effects do need to be used for some reason, the `tick` function
+examples/lib/tea.ml: ###>can request an update.
+examples/lib/tea.ml: ###>
+examples/lib/tea.ml: ###>Example:
+examples/lib/tea.ml: ###>```
+examples/lib/tea.ml: ###>let view _ = Label "time" (str $ time ()) @(200, 200) @(0, 0);
+examples/lib/tea.ml: ###>let tick _ _ = forceUpdate (); # Note that the state is Unit and constant.
+examples/lib/tea.ml: ###>setTick () tick view
+examples/lib/tea.ml: ###>```
+examples/lib/tea.ml: let stop : Unit -> Unit
+	# Effectful.
+	# Stops the app. Takes effect on the next tick, the current tick is stil executed.
+;
+examples/lib/tea.ml: ###>Example:
+examples/lib/tea.ml: ###>```
+examples/lib/tea.ml: ###>let tick event state = do
+examples/lib/tea.ml: ###>	if state > 1000 then stop ()
+examples/lib/tea.ml: ###>	inc state;
+examples/lib/tea.ml: ###>
+examples/lib/tea.ml: ###>let view state = Label "mylabel" (str state) @(200, 200) @(0, 0);
+examples/lib/tea.ml: ###>
+examples/lib/tea.ml: ###>setTick 0
+examples/lib/tea.ml: ###>```
+examples/lib/tea.ml: ### ### Basic kinds of apps / patterns
+examples/lib/tea.ml: let staticView : (Unit -> Widget) -> Unit
+	# Renders a view and then halts the app.
+	# Use for graphing, etc.
+;
+examples/lib/tea.ml: ### ### Getters
+examples/lib/tea.ml: let width : Number;
+examples/lib/tea.ml: let height: Number;
+examples/lib/tea.ml: let getFPS : Unit -> Number;
+examples/lib/tea.ml: ### ### Positioning / layouts
+examples/lib/tea.ml: let setPos : Widget -> Vec -> Unit;
+examples/lib/tea.ml: let randPos : Unit -> Vec;
+examples/lib/tea.ml: let grid : Vec -> Vec -> Num -> Num -> List (Vec -> Widget) -> Widget;
+examples/lib/tea.ml: ### ### Colors & constants
+examples/lib/tea.ml: let red : Color;
+examples/lib/tea.ml: let black : Color;
+examples/lib/tea.ml: let white : Color;
+examples/lib/tea.ml: let blue : Color;
+examples/lib/tea.ml: let green : Color;
+examples/lib/tea.ml: let yellow : Color;
+examples/examples/golnumpy.ml: let getNbSum : Vec -> Index -> Number;
+examples/examples/golnumpy.ml: let alive : Number -> Number -> Number;
+examples/examples/golnumpy.ml: let tick : Vec -> Vec;
+examples/examples/golnumpy.ml: let printG : Vec -> Unit;
+examples/lib/calculus.ml: ### ### Differentiation & Integration
+examples/lib/calculus.ml: let diff : (Number -> Number) -> Number -> (Number -> Number)
+	# args: func, n
+	# returns: n-th derivative of func.
+;
+examples/lib/calculus.ml: let integral : (Number -> Number) -> Number -> Number -> Number
+	# args: func, x_start, x_end
+;
+examples/lib/calculus.ml: ### ### Series expansions (Taylor, Fourier etc.)
+examples/lib/calculus.ml: let taylor : (Number -> Number) -> Number -> Number -> (Number -> Number)
+	# args: f, n, x0, x
+;
+examples/lib/calculus.ml: let fourier : (Number -> Number) -> Number -> (Number -> Number)
+	# args: f, m, x
+;
+examples/lib/ugraph.ml: ### ### Types
+examples/lib/ugraph.ml: type Edges a = Dict (List a);
+examples/lib/ugraph.ml: type Vertices a = List a;
+examples/lib/ugraph.ml: data Graph a = Graph (Edges a) (Vertices a);
+examples/lib/ugraph.ml: ### ### Functions
+examples/lib/ugraph.ml: let edgesFromGraph : Graph a -> List (List a);
+examples/lib/util.ml: ### ### Time
+examples/lib/util.ml: let time : Unit -> Number;
+examples/lib/util.ml: let traceTime : (Unit -> b) -> b
+	# log the time an action takes to execute
+;
+examples/lib/util.ml: let setInterval : Number -> state -> (state->state) -> Unit
+	# args: n, state, tick
+	# run tick every n seconds.
+;
+examples/lib/util.ml: let setUpdate : state -> (state->state) ->Unit;
+examples/lib/util.ml: ### ### Terminal
+examples/lib/util.ml: let cls : Unit -> Unit;
+examples/lib/util.ml: let error : String -> a;
+examples/lib/util.ml: let setTermFontSize : Number -> Unit;
+examples/lib/util.ml: let str : a -> String
+	# deprecated. Use lib.string (str)
+;
+examples/lib/util.ml: let printl : List a -> Unit;
+examples/lib/util.ml: ### ### Misc.
+examples/lib/util.ml: let setreclimit : Number -> Unit;
+examples/lib/util.ml: let setCompilerCWD : String -> Unit;
+examples/lib/util.ml: let randint : Number -> Number -> Number;
+examples/lib/util.ml: ### ### File system
+examples/lib/util.ml: let fileexists : String -> Bool;
+examples/lib/util.ml: let readFile : String -> Maybe String;
+examples/lib/util.ml: let readFileUnsafe : String -> String;
+examples/lib/util.ml: ### ### Network
+examples/lib/util.ml: let download : String -> String -> Unit;
+examples/lib/util.ml: ### ### Basic functions
+examples/lib/util.ml: let copy : a -> a;
+examples/lib/util.ml: let uncurry2 : (a -> b -> c) -> (a,b) -> c;
+examples/lib/util.ml: let not : Bool -> Bool;
+examples/lib/util.ml: let float : a -> Number;
+examples/lib/util.ml: let int : a -> Number;
+examples/lib/util.ml: let neg : Number -> Number;
+examples/lib/util.ml: let between : Number-> Number -> Number -> Bool;
+examples/lib/util.ml: let id : a -> a;
+examples/lib/util.ml: let const : a -> b -> a;
+examples/lib/util.ml: let when : Bool -> (Unit -> Unit) -> Unit;
+examples/lib/util.ml: let mapRecord : (a -> a) -> a -> a;
+examples/lib/util.ml: let with : a -> b -> b;
+examples/lib/util.ml: let union : a -> a -> a;
+examples/lib/util.ml: let times : Number -> (a -> a) -> a -> a;
+examples/lib/util.ml: let ftee : (a -> Unit) -> (a -> a) -> a -> a;
+examples/lib/dict.ml: ### ### Creation
+examples/lib/dict.ml: data Dict a;
+examples/lib/dict.ml: let mkDict : List (String, a) -> Dict a;
+examples/lib/dict.ml: ### ### Accessing
+examples/lib/dict.ml: let dictItems : Dict a -> List (String, a);
+examples/lib/dict.ml: let dictGet : Dict a -> String -> Maybe a;
+examples/lib/dict.ml: let dictInsert : String -> Dict a -> a -> Dict a;
+examples/lib/dict.ml: let dictEmpty : Dict a;
+examples/examples/gol.ml: let determineAlive : Bool -> Number -> Bool;
+examples/examples/gol.ml: let addPattern : Img -> Vec -> Vec -> Unit;
+examples/examples/gol.ml: let mygrid : Img;
+examples/examples/bouncybtn.ml: type State = { zoom : Number, y : Number,
+	v : Number, data : Vec, nticks : Number };
+examples/examples/bouncybtn.ml: let view : State -> Widget;
+examples/examples/bouncybtn.ml: let update : Event -> State -> State;
+examples/examples/lc.ml: data Exp
+	= Num String
+	| Var String
+	| App Exp Exp
+	| Lam String Exp;
+examples/examples/lc.ml: data Value
+	= Clos (Dict Value) String Exp
+	| Fun (Value -> Either String Value)
+	| Atom Number;
+examples/examples/lc.ml: let eval : Dict Value -> Exp -> Either String Value;
+examples/lib/image.ml: ### ### Definitions & Creating images/buffers
+examples/lib/image.ml: data Img;
+examples/lib/image.ml: data Buffer;
+examples/lib/image.ml: type Color = Vec;
+examples/lib/image.ml: let setpixel : Img -> Vec -> Color -> Unit;
+examples/lib/image.ml: let image : Vec -> Img;
+examples/lib/image.ml: let imgLoad : String -> Img;
+examples/lib/image.ml: let imgBuf : Img -> Buffer;
+examples/lib/image.ml: ### ### Functions
+examples/lib/image.ml: let imgSize : Img -> Vec;
+examples/lib/image.ml: let imgHeight : Img -> Number;
+examples/lib/image.ml: let imgWidth : Img -> Number;
+examples/lib/image.ml: let imgCopy : Img -> Img;
+examples/lib/image.ml: let imgMap : Img -> (Number->Number->Color->Color) -> Unit;
+examples/lib/image.ml: let imgGet : Buffer -> Vec -> Vec;
+examples/lib/image.ml: let imgSave : String -> Img -> Unit;
+examples/lib/image.ml: let imgClear : Img -> Color -> Unit;
+examples/lib/image.ml: let imgMapRect: Vec -> Vec -> Img -> (Number->Number->Color->Color) -> Unit
+	# args: size, pos, img, func
+;
+examples/lib/image.ml: let imgSmooth : Img -> Img;
+examples/lib/image.ml: let imgFlipH : Img -> Img;
+examples/lib/image.ml: let imgFlipV : Img -> Img;
+examples/lib/image.ml: let imgShade : Img -> String -> Img;
+examples/lib/image.ml: data Atlas = Atlas Img (List Vec)
+	# arguments: atlasTex, imgSizes
+;
+examples/lib/image.ml: let mkAtlasImg : List Img -> Img
+	# make an atlas of vertically stacked
+	# images from the input images.
+;
+examples/lib/image.ml: let mkAtlas : List Img -> Atlas
+	# create an Atlas from the input images
+;
+examples/lib/input.ml: let input : String -> (String -> Unit) -> Unit;
+examples/examples/euler.ml: type Path = List String;
+examples/examples/euler.ml: let complete : Graph String -> Path -> Bool;
+examples/examples/euler.ml: let edgesFromPath : Path -> List (List String);
+examples/examples/euler.ml: let valid : Path -> Bool;
+examples/examples/euler.ml: let gen : Graph String -> Path -> List Path;
+examples/examples/euler.ml: let euler : Graph String -> Path -> List Path;
+examples/examples/game3d.ml: data Sprite = Sprite Num Vec Vec;
+examples/examples/game3d.ml: let spriteUniforms : Num -> Sprite -> List Uniform;
+examples/examples/game3d.ml: let atlasMap : Atlas -> List Number;
+examples/examples/game3d.ml: let render3D : Vec -> Number -> List Sprite -> Atlas -> Widget;
+examples/examples/game3d.ml: type State =
+	{ angle : Number
+	, pos : Vec
+	};
+examples/examples/game3d.ml: let view : Atlas -> State -> Widget;
+examples/examples/game3d.ml: let tick : Event -> State -> State;
+examples/lib/ugraph.ml: ### ### Types
+examples/lib/ugraph.ml: type Edges a = Dict (List a);
+examples/lib/ugraph.ml: type Vertices a = List a;
+examples/lib/ugraph.ml: data Graph a = Graph (Edges a) (Vertices a);
+examples/lib/ugraph.ml: ### ### Functions
+examples/lib/ugraph.ml: let edgesFromGraph : Graph a -> List (List a);
+examples/lib/list.ml: ### ### Types
+examples/lib/list.ml: data List a
+	= Cons a (List a)
+	| Nil
+	# The default list type generated
+	# by `[...]`
+;
+examples/lib/list.ml: ### ### Creating lists
+examples/lib/list.ml: let range : Number -> Number -> List Number;
+examples/lib/list.ml: let srange : Number -> Number -> Number -> List Number
+	# start, end, step
+;
+examples/lib/list.ml: ### ### Accessors
+examples/lib/list.ml: let tail : List a -> List a;
+examples/lib/list.ml: let tailSafe : List a -> List a;
+examples/lib/list.ml: let head : List a -> a;
+examples/lib/list.ml: let len : List a -> Number;
+examples/lib/list.ml: let listAtSafe : Number -> List a -> Maybe a;
+examples/lib/list.ml: let listAt : Number -> List a -> a;
+examples/lib/list.ml: let take : Number -> List a -> List a;
+examples/lib/list.ml: let chunksOf : Number -> List a -> List (List a);
+examples/lib/list.ml: let contains : a -> List a -> Bool;
+examples/lib/list.ml: ### ### Sorting, etc.
+examples/lib/list.ml: let sort : List a -> List a;
+examples/lib/list.ml: let nub : List a -> List a;
+examples/lib/list.ml: ### ### Manipulating lists
+examples/lib/list.ml: let append : a -> List a -> List a;
+examples/lib/list.ml: let foldr : (b -> a -> b) -> b -> List a -> b;
+examples/lib/list.ml: let extend : List a -> List a -> List a;
+examples/lib/list.ml: let concat : List (List a) -> List a;
+examples/lib/list.ml: let filter : (a -> Bool) -> List a -> List a;
+examples/lib/list.ml: let reverse : List a -> List a;
+examples/lib/list.ml: let map : (a -> b) -> (List a) -> List b;
+examples/lib/list.ml: let foreach2D : Number -> Number -> (Number->Number-> Unit) -> Unit;
+examples/lib/list.ml: let imap : (Number -> a -> b) -> List a -> List b;
+examples/lib/list.ml: let any : List Bool -> Bool;
+examples/lib/list.ml: let zip : List a -> List b -> List (a,b);
+examples/lib/string.ml: let str : a -> String;
+examples/lib/string.ml: let split : String -> String -> List String;
+examples/lib/string.ml: let replace : String -> String -> String -> String;
+examples/lib/string.ml: let isNumeric : String -> Bool;
+examples/lib/string.ml: let strIn : String -> String -> Bool;
+examples/lib/string.ml: let strLen : String -> Number;
+examples/lib/string.ml: let strHead : String -> String;
+examples/lib/string.ml: let strTail : String-> String;
+examples/lib/numpy.ml: ### ### Type Aliases
+examples/lib/numpy.ml: type Size = List Number;
+examples/lib/numpy.ml: type Index = List Number;
+examples/lib/numpy.ml: ### ### Creating arrays
+examples/lib/numpy.ml: let array : List Number -> Vec;
+examples/lib/numpy.ml: let zeros : Size -> Vec;
+examples/lib/numpy.ml: let full : Size -> Number -> Vec;
+examples/lib/numpy.ml: let linspace : Number -> Number -> Number -> Vec
+	# start, end, nsteps
+;
+examples/lib/numpy.ml: ### ### Getters
+examples/lib/numpy.ml: let toList : Vec -> List Number
+	# only 1-dim.!
+;
+examples/lib/numpy.ml: let size : Vec -> Size
+	# <=> arr.shape in numpy!
+;
+examples/lib/numpy.ml: let get : Index -> Vec -> Number;
+examples/lib/numpy.ml: let slice : Index -> Index -> Vec -> Vec
+	# - start, end, input_array
+	# - fails if out of bounds
+;
+examples/lib/numpy.ml: let sliceInc : Index -> Index -> Vec -> Vec
+	# like slice but end index is included.
+;
+examples/lib/numpy.ml: let slicePartial : Index -> Index -> Vec -> Vec
+	# same as slice, but return all
+	# elements in index range instead
+	# of failing
+;
+examples/lib/numpy.ml: ### ### Manipulating `Vec`s
+examples/lib/numpy.ml: let set : Index -> Number -> Vec -> Vec;
+examples/lib/numpy.ml: let vectorize : (Number -> Number) -> Vec -> Vec;
+examples/lib/numpy.ml: let ivectorize : (Index -> Number -> Number) -> Vec -> Vec;
+examples/lib/numpy.ml: let sum : Vec -> Number;
+examples/lib/numpy.ml: let dot : Vec -> Vec -> Number;
+examples/lib/numpy.ml: let flatten : Vec -> Vec;
+examples/lib/numpy.ml: let delete : Number -> Vec -> Vec
+	# args: i, arr
+	# remove the element at i
+	# only for flat Vecs
+;
+examples/lib/numpy.ml: let concatenate : Number -> Vec -> Vec -> Vec
+	# args: axis, arr1, arr2
+;
+examples/lib/numpy.ml: let reshape : Size -> Vec -> Vec;
+examples/lib/numpy.ml: let transpose : Vec -> Vec;
+examples/examples/gol.ml: let determineAlive : Bool -> Number -> Bool;
+examples/examples/gol.ml: let addPattern : Img -> Vec -> Vec -> Unit;
+examples/examples/gol.ml: let mygrid : Img;
+examples/lib/either.ml: ### ### Definitions / Working with `Either`
+examples/lib/either.ml: data Either a b = Left a | Right b;
+examples/lib/either.ml: let unRight : Either a b -> b;
+examples/lib/either.ml: let fromMaybe : b -> Maybe a -> Either b a;
+examples/lib/either.ml: ### ### Monad definition
+examples/lib/either.ml: let bind : Either e a -> (a -> Either e b) -> Either e b;
+examples/lib/either.ml: let flatMap : (a -> Either e b) -> Either e a -> Either e b;
+examples/lib/either.ml: let fmap : (a -> b) -> Either e a -> Either e b;
+examples/lib/either.ml: let pure : a -> Either e a;
+examples/lib/graphing.ml: ### ### Functions
+examples/lib/graphing.ml: let viewGraphs : List (Number->Number) -> Number -> Number -> Number -> Widget;
+examples/lib/maybe.ml: ### ### Type & Creating / unwrapping
+examples/lib/maybe.ml: data Maybe a = Nothing | Just a;
+examples/lib/maybe.ml: let maybe : a -> Maybe a -> a;
+examples/lib/maybe.ml: ### ### Monad implementation
+examples/lib/maybe.ml: let flatMap : (a -> Maybe b) -> Maybe a -> Maybe b;
+examples/lib/maybe.ml: let bind : Maybe a -> (a -> Maybe b) -> Maybe b;
+examples/lib/maybe.ml: let pure : a -> Maybe a;
+examples/lib/maybe.ml: let fmap : (a -> b) -> Maybe a -> Maybe b;
+examples/lib/maybe.ml: let mapM : (a -> Maybe b) -> List a -> Maybe (List b);
+examples/lib/image.ml: ### ### Definitions & Creating images/buffers
+examples/lib/image.ml: data Img;
+examples/lib/image.ml: data Buffer;
+examples/lib/image.ml: type Color = Vec;
+examples/lib/image.ml: let setpixel : Img -> Vec -> Color -> Unit;
+examples/lib/image.ml: let image : Vec -> Img;
+examples/lib/image.ml: let imgLoad : String -> Img;
+examples/lib/image.ml: let imgBuf : Img -> Buffer;
+examples/lib/image.ml: ### ### Functions
+examples/lib/image.ml: let imgSize : Img -> Vec;
+examples/lib/image.ml: let imgHeight : Img -> Number;
+examples/lib/image.ml: let imgWidth : Img -> Number;
+examples/lib/image.ml: let imgCopy : Img -> Img;
+examples/lib/image.ml: let imgMap : Img -> (Number->Number->Color->Color) -> Unit;
+examples/lib/image.ml: let imgGet : Buffer -> Vec -> Vec;
+examples/lib/image.ml: let imgSave : String -> Img -> Unit;
+examples/lib/image.ml: let imgClear : Img -> Color -> Unit;
+examples/lib/image.ml: let imgMapRect: Vec -> Vec -> Img -> (Number->Number->Color->Color) -> Unit
+	# args: size, pos, img, func
+;
+examples/lib/image.ml: let imgSmooth : Img -> Img;
+examples/lib/image.ml: let imgFlipH : Img -> Img;
+examples/lib/image.ml: let imgFlipV : Img -> Img;
+examples/lib/image.ml: let imgShade : Img -> String -> Img;
+examples/lib/image.ml: data Atlas = Atlas Img (List Vec)
+	# arguments: atlasTex, imgSizes
+;
+examples/lib/image.ml: let mkAtlasImg : List Img -> Img
+	# make an atlas of vertically stacked
+	# images from the input images.
+;
+examples/lib/image.ml: let mkAtlas : List Img -> Atlas
+	# create an Atlas from the input images
+;
+examples/examples/pixel.ml: let getMouse : Unit -> Vec;
+examples/examples/pixel.ml: data Brush = Brush Number Vec;
+examples/examples/settingsgui.ml: type State = Num;
+examples/examples/settingsgui.ml: let view : State -> Widget;
+examples/examples/settingsgui.ml: let tick : Event -> State -> State;
+examples/lib/parsing.ml: ### ### Types
+examples/lib/parsing.ml: type GrammarError = String;
+examples/lib/parsing.ml: type ParseError = String;
+examples/lib/parsing.ml: ### ### Creating parsers
+examples/lib/parsing.ml: let parser :
+	String -> Either GrammarError (
+		String -> Either ParseError a
+	)
+	# args: grammar, string
+;
+examples/examples/golnumpy.ml: let getNbSum : Vec -> Index -> Number;
+examples/examples/golnumpy.ml: let alive : Number -> Number -> Number;
+examples/examples/golnumpy.ml: let tick : Vec -> Vec;
+examples/examples/golnumpy.ml: let printG : Vec -> Unit;
+examples/examples/calcgui.ml: let eval : String -> String;
+examples/examples/calcgui.ml: type State = String;
+examples/examples/calcgui.ml: let tick : Event -> State -> State;
+examples/examples/calcgui.ml: let view : State -> Widget;
+examples/lib/calculus.ml: ### ### Differentiation & Integration
+examples/lib/calculus.ml: let diff : (Number -> Number) -> Number -> (Number -> Number)
+	# args: func, n
+	# returns: n-th derivative of func.
+;
+examples/lib/calculus.ml: let integral : (Number -> Number) -> Number -> Number -> Number
+	# args: func, x_start, x_end
+;
+examples/lib/calculus.ml: ### ### Series expansions (Taylor, Fourier etc.)
+examples/lib/calculus.ml: let taylor : (Number -> Number) -> Number -> Number -> (Number -> Number)
+	# args: f, n, x0, x
+;
+examples/lib/calculus.ml: let fourier : (Number -> Number) -> Number -> (Number -> Number)
+	# args: f, m, x
+;
+examples/lib/input.ml: let input : String -> (String -> Unit) -> Unit;
+examples/lib/sound.ml: ### ### Types
+examples/lib/sound.ml: data Sound;
+examples/lib/sound.ml: ### ### Generating Sounds
+examples/lib/sound.ml: let max_amp : Number;
+examples/lib/sound.ml: let sound : (Number -> Number) -> Number -> Sound;
+examples/lib/sound.ml: let beep : Number -> Number -> Sound;
+examples/lib/sound.ml: ### ### Playback
+examples/lib/sound.ml: let play : Sound -> Unit
+    # example:
+    # play $ beep 440 1
+;
+examples/examples/lc.ml: data Exp
+	= Num String
+	| Var String
+	| App Exp Exp
+	| Lam String Exp;
+examples/examples/lc.ml: data Value
+	= Clos (Dict Value) String Exp
+	| Fun (Value -> Either String Value)
+	| Atom Number;
+examples/examples/lc.ml: let eval : Dict Value -> Exp -> Either String Value;
+examples/lib/math.ml: ### ### Trig
+examples/lib/math.ml: let sin : Number -> Number;
+examples/lib/math.ml: let cos : Number -> Number;
+examples/lib/math.ml: let tan : Number -> Number;
+examples/lib/math.ml: let pi : Number;
+examples/lib/math.ml: ### ### Misc.
+examples/lib/math.ml: let pow : Number -> Number -> Number;
+examples/lib/math.ml: let round : Number -> Number -> Number;
+examples/lib/math.ml: let ln : Number -> Number;
+examples/lib/math.ml: let fac : Number -> Number;
+examples/lib/math.ml: let exp : Number -> Number;
+examples/lib/math.ml: let min : Number -> Number -> Number;
+examples/lib/math.ml: let max : Number -> Number -> Number;
+examples/lib/math.ml: ### ### Predicates / Checking properties of numbers
+examples/lib/math.ml: let mod : Number -> Number -> Number;
+examples/lib/math.ml: let divisible : Number -> Number -> Bool;
+examples/lib/math.ml: let odd : Number -> Bool;
+examples/lib/math.ml: let even : Number -> Bool;
+examples/lib/math.ml: ### ### Random
+examples/lib/math.ml: let noise : Vec -> Number;
+examples/examples/lp.ml: data Term
+    = Var String
+    | Lam String Term Term
+    | Pi String Term Term
+    | App Term Term
+    | Star
+    | Nat
+    | NatLit Number
+;
+examples/examples/lp.ml: type Ctx = Dict Term;
+examples/examples/lp.ml: let subst : String -> Term -> Term -> Term;
+examples/examples/lp.ml: let betaReduce : Term -> Term;
+examples/examples/lp.ml: let normalForm : Term -> Term;
+examples/examples/lp.ml: let alphaEquiv : Dict Num -> Dict Num -> Term -> Term -> Bool;
+examples/examples/lp.ml: let betaEquiv : Term -> Term -> Bool;
+examples/examples/lp.ml: let typ : Ctx -> Term -> Term;
+examples/lib/tea.ml: ### ### Types
+examples/lib/tea.ml: type Color = Vec
+	# Alias used for clarity. Vec of length 4.
+;
+examples/lib/tea.ml: data Uniform
+	= UniformFloat String Number
+	| UniformInt String Number
+	| UniformVec2 String Vec
+	| UniformVec3 String Vec
+	| UniformVec4 String Vec
+	| UniformTex0 String Img
+
+	# Uniform types for shaders. Arguments: uniformName, value
+;
+examples/lib/tea.ml: data Widget
+	= Rect Color Vec Vec
+	| TRect Img Vec Vec
+	| SRect String (List Uniform) Vec Vec
+	| Btn String String Vec Vec
+	| Slider String Number Number Number Number Vec Vec
+	| Label String String Vec Vec
+	| Line (List Vec) Number Color
+	| Many (List Widget)
+	| ColorPicker String Vec Vec
+;
+examples/lib/tea.ml: ###>| Attributes for Widgets | |
+examples/lib/tea.ml: ###>|-|-|
+examples/lib/tea.ml: ###>| Rect | color, size, pos |
+examples/lib/tea.ml: ###>| TRect | texture, size, pos |
+examples/lib/tea.ml: ###>| Btn   | name, text, size, pos |
+examples/lib/tea.ml: ###>| Slider| name, min, max, step, value, size, pos |
+examples/lib/tea.ml: ###>| Label | name, text, size, pos |
+examples/lib/tea.ml: ###>| Line  | polygon-points, width, color |
+examples/lib/tea.ml: ###>| Many  | children |
+examples/lib/tea.ml: data Event
+	= Tick
+	| BtnPressed String
+	| BtnReleased String
+	| BtnHeld String
+	| SliderMoved String Number
+	| ColorPicked String Color
+	# Event type for the `tick` function in the app. Make sure pattern matching on
+	# events is exhaustive, so `tick` does not throw an error.
+;
+examples/lib/tea.ml: ### ### Starting the App
+examples/lib/tea.ml: let app : state -> (Event -> state -> state) -> (state -> Widget) -> Unit
+	# starts an app given an initial `state`, `tick` and `view`
+;
+examples/lib/tea.ml: let forceUpdate : state -> state;
+examples/lib/tea.ml: ###>The view gets updated based on the state. The app assumes that
+examples/lib/tea.ml: ###>view is pure: It always returns the same Widgets for the same state.
+examples/lib/tea.ml: ###>When side effects do need to be used for some reason, the `tick` function
+examples/lib/tea.ml: ###>can request an update.
+examples/lib/tea.ml: ###>
+examples/lib/tea.ml: ###>Example:
+examples/lib/tea.ml: ###>```
+examples/lib/tea.ml: ###>let view _ = Label "time" (str $ time ()) @(200, 200) @(0, 0);
+examples/lib/tea.ml: ###>let tick _ _ = forceUpdate (); # Note that the state is Unit and constant.
+examples/lib/tea.ml: ###>setTick () tick view
+examples/lib/tea.ml: ###>```
+examples/lib/tea.ml: let stop : Unit -> Unit
+	# Effectful.
+	# Stops the app. Takes effect on the next tick, the current tick is stil executed.
+;
+examples/lib/tea.ml: ###>Example:
+examples/lib/tea.ml: ###>```
+examples/lib/tea.ml: ###>let tick event state = do
+examples/lib/tea.ml: ###>	if state > 1000 then stop ()
+examples/lib/tea.ml: ###>	inc state;
+examples/lib/tea.ml: ###>
+examples/lib/tea.ml: ###>let view state = Label "mylabel" (str state) @(200, 200) @(0, 0);
+examples/lib/tea.ml: ###>
+examples/lib/tea.ml: ###>setTick 0
+examples/lib/tea.ml: ###>```
+examples/lib/tea.ml: ### ### Basic kinds of apps / patterns
+examples/lib/tea.ml: let staticView : (Unit -> Widget) -> Unit
+	# Renders a view and then halts the app.
+	# Use for graphing, etc.
+;
+examples/lib/tea.ml: ### ### Getters
+examples/lib/tea.ml: let width : Number;
+examples/lib/tea.ml: let height: Number;
+examples/lib/tea.ml: let getFPS : Unit -> Number;
+examples/lib/tea.ml: ### ### Positioning / layouts
+examples/lib/tea.ml: let setPos : Widget -> Vec -> Unit;
+examples/lib/tea.ml: let randPos : Unit -> Vec;
+examples/lib/tea.ml: let grid : Vec -> Vec -> Num -> Num -> List (Vec -> Widget) -> Widget;
+examples/lib/tea.ml: ### ### Colors & constants
+examples/lib/tea.ml: let red : Color;
+examples/lib/tea.ml: let black : Color;
+examples/lib/tea.ml: let white : Color;
+examples/lib/tea.ml: let blue : Color;
+examples/lib/tea.ml: let green : Color;
+examples/lib/tea.ml: let yellow : Color;
+examples/lib/util.ml: ### ### Time
+examples/lib/util.ml: let time : Unit -> Number;
+examples/lib/util.ml: let traceTime : (Unit -> b) -> b
+	# log the time an action takes to execute
+;
+examples/lib/util.ml: let setInterval : Number -> state -> (state->state) -> Unit
+	# args: n, state, tick
+	# run tick every n seconds.
+;
+examples/lib/util.ml: let setUpdate : state -> (state->state) ->Unit;
+examples/lib/util.ml: ### ### Terminal
+examples/lib/util.ml: let cls : Unit -> Unit;
+examples/lib/util.ml: let error : String -> a;
+examples/lib/util.ml: let setTermFontSize : Number -> Unit;
+examples/lib/util.ml: let str : a -> String
+	# deprecated. Use lib.string (str)
+;
+examples/lib/util.ml: let printl : List a -> Unit;
+examples/lib/util.ml: ### ### Misc.
+examples/lib/util.ml: let setreclimit : Number -> Unit;
+examples/lib/util.ml: let setCompilerCWD : String -> Unit;
+examples/lib/util.ml: let randint : Number -> Number -> Number;
+examples/lib/util.ml: ### ### File system
+examples/lib/util.ml: let fileexists : String -> Bool;
+examples/lib/util.ml: let readFile : String -> Maybe String;
+examples/lib/util.ml: let readFileUnsafe : String -> String;
+examples/lib/util.ml: ### ### Network
+examples/lib/util.ml: let download : String -> String -> Unit;
+examples/lib/util.ml: ### ### Basic functions
+examples/lib/util.ml: let copy : a -> a;
+examples/lib/util.ml: let uncurry2 : (a -> b -> c) -> (a,b) -> c;
+examples/lib/util.ml: let not : Bool -> Bool;
+examples/lib/util.ml: let float : a -> Number;
+examples/lib/util.ml: let int : a -> Number;
+examples/lib/util.ml: let neg : Number -> Number;
+examples/lib/util.ml: let between : Number-> Number -> Number -> Bool;
+examples/lib/util.ml: let id : a -> a;
+examples/lib/util.ml: let const : a -> b -> a;
+examples/lib/util.ml: let when : Bool -> (Unit -> Unit) -> Unit;
+examples/lib/util.ml: let mapRecord : (a -> a) -> a -> a;
+examples/lib/util.ml: let with : a -> b -> b;
+examples/lib/util.ml: let union : a -> a -> a;
+examples/lib/util.ml: let times : Number -> (a -> a) -> a -> a;
+examples/lib/util.ml: let ftee : (a -> Unit) -> (a -> a) -> a -> a;
+examples/lib/dict.ml: ### ### Creation
+examples/lib/dict.ml: data Dict a;
+examples/lib/dict.ml: let mkDict : List (String, a) -> Dict a;
+examples/lib/dict.ml: ### ### Accessing
+examples/lib/dict.ml: let dictItems : Dict a -> List (String, a);
+examples/lib/dict.ml: let dictGet : Dict a -> String -> Maybe a;
+examples/lib/dict.ml: let dictInsert : String -> Dict a -> a -> Dict a;
+examples/lib/dict.ml: let dictEmpty : Dict a;
+examples/examples/bouncybtn.ml: type State = { zoom : Number, y : Number,
+	v : Number, data : Vec, nticks : Number };
+examples/examples/bouncybtn.ml: let view : State -> Widget;
+examples/examples/bouncybtn.ml: let update : Event -> State -> State;
+examples/lib/maybe.ml: ### ### Type & Creating / unwrapping
+examples/lib/maybe.ml: data Maybe a = Nothing | Just a;
+examples/lib/maybe.ml: let maybe : a -> Maybe a -> a;
+examples/lib/maybe.ml: ### ### Monad implementation
+examples/lib/maybe.ml: let flatMap : (a -> Maybe b) -> Maybe a -> Maybe b;
+examples/lib/maybe.ml: let bind : Maybe a -> (a -> Maybe b) -> Maybe b;
+examples/lib/maybe.ml: let pure : a -> Maybe a;
+examples/lib/maybe.ml: let fmap : (a -> b) -> Maybe a -> Maybe b;
+examples/lib/maybe.ml: let mapM : (a -> Maybe b) -> List a -> Maybe (List b);
+examples/lib/either.ml: ### ### Definitions / Working with `Either`
+examples/lib/either.ml: data Either a b = Left a | Right b;
+examples/lib/either.ml: let unRight : Either a b -> b;
+examples/lib/either.ml: let fromMaybe : b -> Maybe a -> Either b a;
+examples/lib/either.ml: ### ### Monad definition
+examples/lib/either.ml: let bind : Either e a -> (a -> Either e b) -> Either e b;
+examples/lib/either.ml: let flatMap : (a -> Either e b) -> Either e a -> Either e b;
+examples/lib/either.ml: let fmap : (a -> b) -> Either e a -> Either e b;
+examples/lib/either.ml: let pure : a -> Either e a;
+examples/lib/image.ml: ### ### Definitions & Creating images/buffers
+examples/lib/image.ml: data Img;
+examples/lib/image.ml: data Buffer;
+examples/lib/image.ml: type Color = Vec;
+examples/lib/image.ml: let setpixel : Img -> Vec -> Color -> Unit;
+examples/lib/image.ml: let image : Vec -> Img;
+examples/lib/image.ml: let imgLoad : String -> Img;
+examples/lib/image.ml: let imgBuf : Img -> Buffer;
+examples/lib/image.ml: ### ### Functions
+examples/lib/image.ml: let imgSize : Img -> Vec;
+examples/lib/image.ml: let imgHeight : Img -> Number;
+examples/lib/image.ml: let imgWidth : Img -> Number;
+examples/lib/image.ml: let imgCopy : Img -> Img;
+examples/lib/image.ml: let imgMap : Img -> (Number->Number->Color->Color) -> Unit;
+examples/lib/image.ml: let imgGet : Buffer -> Vec -> Vec;
+examples/lib/image.ml: let imgSave : String -> Img -> Unit;
+examples/lib/image.ml: let imgClear : Img -> Color -> Unit;
+examples/lib/image.ml: let imgMapRect: Vec -> Vec -> Img -> (Number->Number->Color->Color) -> Unit
+	# args: size, pos, img, func
+;
+examples/lib/image.ml: let imgSmooth : Img -> Img;
+examples/lib/image.ml: let imgFlipH : Img -> Img;
+examples/lib/image.ml: let imgFlipV : Img -> Img;
+examples/lib/image.ml: let imgShade : Img -> String -> Img;
+examples/lib/image.ml: data Atlas = Atlas Img (List Vec)
+	# arguments: atlasTex, imgSizes
+;
+examples/lib/image.ml: let mkAtlasImg : List Img -> Img
+	# make an atlas of vertically stacked
+	# images from the input images.
+;
+examples/lib/image.ml: let mkAtlas : List Img -> Atlas
+	# create an Atlas from the input images
+;
+examples/examples/golnumpy.ml: let getNbSum : Vec -> Index -> Number;
+examples/examples/golnumpy.ml: let alive : Number -> Number -> Number;
+examples/examples/golnumpy.ml: let tick : Vec -> Vec;
+examples/examples/golnumpy.ml: let printG : Vec -> Unit;
+examples/lib/math.ml: ### ### Trig
+examples/lib/math.ml: let sin : Number -> Number;
+examples/lib/math.ml: let cos : Number -> Number;
+examples/lib/math.ml: let tan : Number -> Number;
+examples/lib/math.ml: let pi : Number;
+examples/lib/math.ml: ### ### Misc.
+examples/lib/math.ml: let pow : Number -> Number -> Number;
+examples/lib/math.ml: let round : Number -> Number -> Number;
+examples/lib/math.ml: let ln : Number -> Number;
+examples/lib/math.ml: let fac : Number -> Number;
+examples/lib/math.ml: let exp : Number -> Number;
+examples/lib/math.ml: let min : Number -> Number -> Number;
+examples/lib/math.ml: let max : Number -> Number -> Number;
+examples/lib/math.ml: ### ### Predicates / Checking properties of numbers
+examples/lib/math.ml: let mod : Number -> Number -> Number;
+examples/lib/math.ml: let divisible : Number -> Number -> Bool;
+examples/lib/math.ml: let odd : Number -> Bool;
+examples/lib/math.ml: let even : Number -> Bool;
+examples/lib/math.ml: ### ### Random
+examples/lib/math.ml: let noise : Vec -> Number;
+examples/lib/graphing.ml: ### ### Functions
+examples/lib/graphing.ml: let viewGraphs : List (Number->Number) -> Number -> Number -> Number -> Widget;
+examples/examples/settingsgui.ml: type State = Num;
+examples/examples/settingsgui.ml: let view : State -> Widget;
+examples/examples/settingsgui.ml: let tick : Event -> State -> State;
+examples/examples/euler.ml: type Path = List String;
+examples/examples/euler.ml: let complete : Graph String -> Path -> Bool;
+examples/examples/euler.ml: let edgesFromPath : Path -> List (List String);
+examples/examples/euler.ml: let valid : Path -> Bool;
+examples/examples/euler.ml: let gen : Graph String -> Path -> List Path;
+examples/examples/euler.ml: let euler : Graph String -> Path -> List Path;
+examples/examples/game3d.ml: data Sprite = Sprite Num Vec Vec;
+examples/examples/game3d.ml: let spriteUniforms : Num -> Sprite -> List Uniform;
+examples/examples/game3d.ml: let atlasMap : Atlas -> List Number;
+examples/examples/game3d.ml: let render3D : Vec -> Number -> List Sprite -> Atlas -> Widget;
+examples/examples/game3d.ml: type State =
+	{ angle : Number
+	, pos : Vec
+	};
+examples/examples/game3d.ml: let view : Atlas -> State -> Widget;
+examples/examples/game3d.ml: let tick : Event -> State -> State;
+examples/examples/pixel.ml: let getMouse : Unit -> Vec;
+examples/examples/pixel.ml: data Brush = Brush Number Vec;
+examples/examples/calcgui.ml: let eval : String -> String;
+examples/examples/calcgui.ml: type State = String;
+examples/examples/calcgui.ml: let tick : Event -> State -> State;
+examples/examples/calcgui.ml: let view : State -> Widget;
+examples/lib/tea.ml: ### ### Types
+examples/lib/tea.ml: type Color = Vec
+	# Alias used for clarity. Vec of length 4.
+;
+examples/lib/tea.ml: data Uniform
+	= UniformFloat String Number
+	| UniformInt String Number
+	| UniformVec2 String Vec
+	| UniformVec3 String Vec
+	| UniformVec4 String Vec
+	| UniformTex0 String Img
+
+	# Uniform types for shaders. Arguments: uniformName, value
+;
+examples/lib/tea.ml: data Widget
+	= Rect Color Vec Vec
+	| TRect Img Vec Vec
+	| SRect String (List Uniform) Vec Vec
+	| Btn String String Vec Vec
+	| Slider String Number Number Number Number Vec Vec
+	| Label String String Vec Vec
+	| Line (List Vec) Number Color
+	| Many (List Widget)
+	| ColorPicker String Vec Vec
+;
+examples/lib/tea.ml: ###>| Attributes for Widgets | |
+examples/lib/tea.ml: ###>|-|-|
+examples/lib/tea.ml: ###>| Rect | color, size, pos |
+examples/lib/tea.ml: ###>| TRect | texture, size, pos |
+examples/lib/tea.ml: ###>| Btn   | name, text, size, pos |
+examples/lib/tea.ml: ###>| Slider| name, min, max, step, value, size, pos |
+examples/lib/tea.ml: ###>| Label | name, text, size, pos |
+examples/lib/tea.ml: ###>| Line  | polygon-points, width, color |
+examples/lib/tea.ml: ###>| Many  | children |
+examples/lib/tea.ml: data Event
+	= Tick
+	| BtnPressed String
+	| BtnReleased String
+	| BtnHeld String
+	| SliderMoved String Number
+	| ColorPicked String Color
+	# Event type for the `tick` function in the app. Make sure pattern matching on
+	# events is exhaustive, so `tick` does not throw an error.
+;
+examples/lib/tea.ml: ### ### Starting the App
+examples/lib/tea.ml: let app : state -> (Event -> state -> state) -> (state -> Widget) -> Unit
+	# starts an app given an initial `state`, `tick` and `view`
+;
+examples/lib/tea.ml: let forceUpdate : state -> state;
+examples/lib/tea.ml: ###>The view gets updated based on the state. The app assumes that
+examples/lib/tea.ml: ###>view is pure: It always returns the same Widgets for the same state.
+examples/lib/tea.ml: ###>When side effects do need to be used for some reason, the `tick` function
+examples/lib/tea.ml: ###>can request an update.
+examples/lib/tea.ml: ###>
+examples/lib/tea.ml: ###>Example:
+examples/lib/tea.ml: ###>```
+examples/lib/tea.ml: ###>let view _ = Label "time" (str $ time ()) @(200, 200) @(0, 0);
+examples/lib/tea.ml: ###>let tick _ _ = forceUpdate (); # Note that the state is Unit and constant.
+examples/lib/tea.ml: ###>setTick () tick view
+examples/lib/tea.ml: ###>```
+examples/lib/tea.ml: let stop : Unit -> Unit
+	# Effectful.
+	# Stops the app. Takes effect on the next tick, the current tick is stil executed.
+;
+examples/lib/tea.ml: ###>Example:
+examples/lib/tea.ml: ###>```
+examples/lib/tea.ml: ###>let tick event state = do
+examples/lib/tea.ml: ###>	if state > 1000 then stop ()
+examples/lib/tea.ml: ###>	inc state;
+examples/lib/tea.ml: ###>
+examples/lib/tea.ml: ###>let view state = Label "mylabel" (str state) @(200, 200) @(0, 0);
+examples/lib/tea.ml: ###>
+examples/lib/tea.ml: ###>setTick 0
+examples/lib/tea.ml: ###>```
+examples/lib/tea.ml: ### ### Basic kinds of apps / patterns
+examples/lib/tea.ml: let staticView : (Unit -> Widget) -> Unit
+	# Renders a view and then halts the app.
+	# Use for graphing, etc.
+;
+examples/lib/tea.ml: ### ### Getters
+examples/lib/tea.ml: let width : Number;
+examples/lib/tea.ml: let height: Number;
+examples/lib/tea.ml: let getFPS : Unit -> Number;
+examples/lib/tea.ml: ### ### Positioning / layouts
+examples/lib/tea.ml: let setPos : Widget -> Vec -> Unit;
+examples/lib/tea.ml: let randPos : Unit -> Vec;
+examples/lib/tea.ml: let grid : Vec -> Vec -> Num -> Num -> List (Vec -> Widget) -> Widget;
+examples/lib/tea.ml: ### ### Colors & constants
+examples/lib/tea.ml: let red : Color;
+examples/lib/tea.ml: let black : Color;
+examples/lib/tea.ml: let white : Color;
+examples/lib/tea.ml: let blue : Color;
+examples/lib/tea.ml: let green : Color;
+examples/lib/tea.ml: let yellow : Color;
+examples/lib/sound.ml: ### ### Types
+examples/lib/sound.ml: data Sound;
+examples/lib/sound.ml: ### ### Generating Sounds
+examples/lib/sound.ml: let max_amp : Number;
+examples/lib/sound.ml: let sound : (Number -> Number) -> Number -> Sound;
+examples/lib/sound.ml: let beep : Number -> Number -> Sound;
+examples/lib/sound.ml: ### ### Playback
+examples/lib/sound.ml: let play : Sound -> Unit
+    # example:
+    # play $ beep 440 1
+;
+examples/examples/bouncybtn.ml: type State = { zoom : Number, y : Number,
+	v : Number, data : Vec, nticks : Number };
+examples/examples/bouncybtn.ml: let view : State -> Widget;
+examples/examples/bouncybtn.ml: let update : Event -> State -> State;
+examples/lib/calculus.ml: ### ### Differentiation & Integration
+examples/lib/calculus.ml: let diff : (Number -> Number) -> Number -> (Number -> Number)
+	# args: func, n
+	# returns: n-th derivative of func.
+;
+examples/lib/calculus.ml: let integral : (Number -> Number) -> Number -> Number -> Number
+	# args: func, x_start, x_end
+;
+examples/lib/calculus.ml: ### ### Series expansions (Taylor, Fourier etc.)
+examples/lib/calculus.ml: let taylor : (Number -> Number) -> Number -> Number -> (Number -> Number)
+	# args: f, n, x0, x
+;
+examples/lib/calculus.ml: let fourier : (Number -> Number) -> Number -> (Number -> Number)
+	# args: f, m, x
+;
+examples/lib/string.ml: let str : a -> String;
+examples/lib/string.ml: let split : String -> String -> List String;
+examples/lib/string.ml: let replace : String -> String -> String -> String;
+examples/lib/string.ml: let isNumeric : String -> Bool;
+examples/lib/string.ml: let strIn : String -> String -> Bool;
+examples/lib/string.ml: let strLen : String -> Number;
+examples/lib/string.ml: let strHead : String -> String;
+examples/lib/string.ml: let strTail : String-> String;
+examples/examples/lc.ml: data Exp
+	= Num String
+	| Var String
+	| App Exp Exp
+	| Lam String Exp;
+examples/examples/lc.ml: data Value
+	= Clos (Dict Value) String Exp
+	| Fun (Value -> Either String Value)
+	| Atom Number;
+examples/examples/lc.ml: let eval : Dict Value -> Exp -> Either String Value;
+examples/lib/ugraph.ml: ### ### Types
+examples/lib/ugraph.ml: type Edges a = Dict (List a);
+examples/lib/ugraph.ml: type Vertices a = List a;
+examples/lib/ugraph.ml: data Graph a = Graph (Edges a) (Vertices a);
+examples/lib/ugraph.ml: ### ### Functions
+examples/lib/ugraph.ml: let edgesFromGraph : Graph a -> List (List a);
+examples/lib/input.ml: let input : String -> (String -> Unit) -> Unit;
+examples/lib/numpy.ml: ### ### Type Aliases
+examples/lib/numpy.ml: type Size = List Number;
+examples/lib/numpy.ml: type Index = List Number;
+examples/lib/numpy.ml: ### ### Creating arrays
+examples/lib/numpy.ml: let array : List Number -> Vec;
+examples/lib/numpy.ml: let zeros : Size -> Vec;
+examples/lib/numpy.ml: let full : Size -> Number -> Vec;
+examples/lib/numpy.ml: let linspace : Number -> Number -> Number -> Vec
+	# start, end, nsteps
+;
+examples/lib/numpy.ml: ### ### Getters
+examples/lib/numpy.ml: let toList : Vec -> List Number
+	# only 1-dim.!
+;
+examples/lib/numpy.ml: let size : Vec -> Size
+	# <=> arr.shape in numpy!
+;
+examples/lib/numpy.ml: let get : Index -> Vec -> Number;
+examples/lib/numpy.ml: let slice : Index -> Index -> Vec -> Vec
+	# - start, end, input_array
+	# - fails if out of bounds
+;
+examples/lib/numpy.ml: let sliceInc : Index -> Index -> Vec -> Vec
+	# like slice but end index is included.
+;
+examples/lib/numpy.ml: let slicePartial : Index -> Index -> Vec -> Vec
+	# same as slice, but return all
+	# elements in index range instead
+	# of failing
+;
+examples/lib/numpy.ml: ### ### Manipulating `Vec`s
+examples/lib/numpy.ml: let set : Index -> Number -> Vec -> Vec;
+examples/lib/numpy.ml: let vectorize : (Number -> Number) -> Vec -> Vec;
+examples/lib/numpy.ml: let ivectorize : (Index -> Number -> Number) -> Vec -> Vec;
+examples/lib/numpy.ml: let sum : Vec -> Number;
+examples/lib/numpy.ml: let dot : Vec -> Vec -> Number;
+examples/lib/numpy.ml: let flatten : Vec -> Vec;
+examples/lib/numpy.ml: let delete : Number -> Vec -> Vec
+	# args: i, arr
+	# remove the element at i
+	# only for flat Vecs
+;
+examples/lib/numpy.ml: let concatenate : Number -> Vec -> Vec -> Vec
+	# args: axis, arr1, arr2
+;
+examples/lib/numpy.ml: let reshape : Size -> Vec -> Vec;
+examples/lib/numpy.ml: let transpose : Vec -> Vec;
+examples/lib/dict.ml: ### ### Creation
+examples/lib/dict.ml: data Dict a;
+examples/lib/dict.ml: let mkDict : List (String, a) -> Dict a;
+examples/lib/dict.ml: ### ### Accessing
+examples/lib/dict.ml: let dictItems : Dict a -> List (String, a);
+examples/lib/dict.ml: let dictGet : Dict a -> String -> Maybe a;
+examples/lib/dict.ml: let dictInsert : String -> Dict a -> a -> Dict a;
+examples/lib/dict.ml: let dictEmpty : Dict a;
+examples/lib/parsing.ml: ### ### Types
+examples/lib/parsing.ml: type GrammarError = String;
+examples/lib/parsing.ml: type ParseError = String;
+examples/lib/parsing.ml: ### ### Creating parsers
+examples/lib/parsing.ml: let parser :
+	String -> Either GrammarError (
+		String -> Either ParseError a
+	)
+	# args: grammar, string
+;
+examples/lib/util.ml: ### ### Time
+examples/lib/util.ml: let time : Unit -> Number;
+examples/lib/util.ml: let traceTime : (Unit -> b) -> b
+	# log the time an action takes to execute
+;
+examples/lib/util.ml: let setInterval : Number -> state -> (state->state) -> Unit
+	# args: n, state, tick
+	# run tick every n seconds.
+;
+examples/lib/util.ml: let setUpdate : state -> (state->state) ->Unit;
+examples/lib/util.ml: ### ### Terminal
+examples/lib/util.ml: let cls : Unit -> Unit;
+examples/lib/util.ml: let error : String -> a;
+examples/lib/util.ml: let setTermFontSize : Number -> Unit;
+examples/lib/util.ml: let str : a -> String
+	# deprecated. Use lib.string (str)
+;
+examples/lib/util.ml: let printl : List a -> Unit;
+examples/lib/util.ml: ### ### Misc.
+examples/lib/util.ml: let setreclimit : Number -> Unit;
+examples/lib/util.ml: let setCompilerCWD : String -> Unit;
+examples/lib/util.ml: let randint : Number -> Number -> Number;
+examples/lib/util.ml: ### ### File system
+examples/lib/util.ml: let fileexists : String -> Bool;
+examples/lib/util.ml: let readFile : String -> Maybe String;
+examples/lib/util.ml: let readFileUnsafe : String -> String;
+examples/lib/util.ml: ### ### Network
+examples/lib/util.ml: let download : String -> String -> Unit;
+examples/lib/util.ml: ### ### Basic functions
+examples/lib/util.ml: let copy : a -> a;
+examples/lib/util.ml: let uncurry2 : (a -> b -> c) -> (a,b) -> c;
+examples/lib/util.ml: let not : Bool -> Bool;
+examples/lib/util.ml: let float : a -> Number;
+examples/lib/util.ml: let int : a -> Number;
+examples/lib/util.ml: let neg : Number -> Number;
+examples/lib/util.ml: let between : Number-> Number -> Number -> Bool;
+examples/lib/util.ml: let id : a -> a;
+examples/lib/util.ml: let const : a -> b -> a;
+examples/lib/util.ml: let when : Bool -> (Unit -> Unit) -> Unit;
+examples/lib/util.ml: let mapRecord : (a -> a) -> a -> a;
+examples/lib/util.ml: let with : a -> b -> b;
+examples/lib/util.ml: let union : a -> a -> a;
+examples/lib/util.ml: let times : Number -> (a -> a) -> a -> a;
+examples/lib/util.ml: let ftee : (a -> Unit) -> (a -> a) -> a -> a;
+examples/examples/lp.ml: data Term
+    = Var String
+    | Lam String Term Term
+    | Pi String Term Term
+    | App Term Term
+    | Star
+    | Nat
+    | NatLit Number
+;
+examples/examples/lp.ml: type Ctx = Dict Term;
+examples/examples/lp.ml: let subst : String -> Term -> Term -> Term;
+examples/examples/lp.ml: let betaReduce : Term -> Term;
+examples/examples/lp.ml: let normalForm : Term -> Term;
+examples/examples/lp.ml: let alphaEquiv : Dict Num -> Dict Num -> Term -> Term -> Bool;
+examples/examples/lp.ml: let betaEquiv : Term -> Term -> Bool;
+examples/examples/lp.ml: let typ : Ctx -> Term -> Term;
+examples/lib/list.ml: ### ### Types
+examples/lib/list.ml: data List a
+	= Cons a (List a)
+	| Nil
+	# The default list type generated
+	# by `[...]`
+;
+examples/lib/list.ml: ### ### Creating lists
+examples/lib/list.ml: let range : Number -> Number -> List Number;
+examples/lib/list.ml: let srange : Number -> Number -> Number -> List Number
+	# start, end, step
+;
+examples/lib/list.ml: ### ### Accessors
+examples/lib/list.ml: let tail : List a -> List a;
+examples/lib/list.ml: let tailSafe : List a -> List a;
+examples/lib/list.ml: let head : List a -> a;
+examples/lib/list.ml: let len : List a -> Number;
+examples/lib/list.ml: let listAtSafe : Number -> List a -> Maybe a;
+examples/lib/list.ml: let listAt : Number -> List a -> a;
+examples/lib/list.ml: let take : Number -> List a -> List a;
+examples/lib/list.ml: let chunksOf : Number -> List a -> List (List a);
+examples/lib/list.ml: let contains : a -> List a -> Bool;
+examples/lib/list.ml: ### ### Sorting, etc.
+examples/lib/list.ml: let sort : List a -> List a;
+examples/lib/list.ml: let nub : List a -> List a;
+examples/lib/list.ml: ### ### Manipulating lists
+examples/lib/list.ml: let append : a -> List a -> List a;
+examples/lib/list.ml: let foldr : (b -> a -> b) -> b -> List a -> b;
+examples/lib/list.ml: let extend : List a -> List a -> List a;
+examples/lib/list.ml: let concat : List (List a) -> List a;
+examples/lib/list.ml: let filter : (a -> Bool) -> List a -> List a;
+examples/lib/list.ml: let reverse : List a -> List a;
+examples/lib/list.ml: let map : (a -> b) -> (List a) -> List b;
+examples/lib/list.ml: let foreach2D : Number -> Number -> (Number->Number-> Unit) -> Unit;
+examples/lib/list.ml: let imap : (Number -> a -> b) -> List a -> List b;
+examples/lib/list.ml: let any : List Bool -> Bool;
+examples/lib/list.ml: let zip : List a -> List b -> List (a,b);
+examples/examples/gol.ml: let determineAlive : Bool -> Number -> Bool;
+examples/examples/gol.ml: let addPattern : Img -> Vec -> Vec -> Unit;
+examples/examples/gol.ml: let mygrid : Img;
+examples/lib/tea.ml: ### ### Types
+examples/lib/tea.ml: ###>| Attributes for Widgets | |
+examples/lib/tea.ml: ###>|-|-|
+examples/lib/tea.ml: ###>| Rect | color, size, pos |
+examples/lib/tea.ml: ###>| TRect | texture, size, pos |
+examples/lib/tea.ml: ###>| Btn   | name, text, size, pos |
+examples/lib/tea.ml: ###>| Slider| name, min, max, step, value, size, pos |
+examples/lib/tea.ml: ###>| Label | name, text, size, pos |
+examples/lib/tea.ml: ###>| Line  | polygon-points, width, color |
+examples/lib/tea.ml: ###>| Many  | children |
+examples/lib/tea.ml: ### ### Starting the App
+examples/lib/tea.ml: ###>The view gets updated based on the state. The app assumes that
+examples/lib/tea.ml: ###>view is pure: It always returns the same Widgets for the same state.
+examples/lib/tea.ml: ###>When side effects do need to be used for some reason, the `tick` function
+examples/lib/tea.ml: ###>can request an update.
+examples/lib/tea.ml: ###>
+examples/lib/tea.ml: ###>Example:
+examples/lib/tea.ml: ###>```
+examples/lib/tea.ml: ###>let view _ = Label "time" (str $ time ()) @(200, 200) @(0, 0);
+examples/lib/tea.ml: ###>let tick _ _ = forceUpdate (); # Note that the state is Unit and constant.
+examples/lib/tea.ml: ###>setTick () tick view
+examples/lib/tea.ml: ###>```
+examples/lib/tea.ml: ###>Example:
+examples/lib/tea.ml: ###>```
+examples/lib/tea.ml: ###>let tick event state = do
+examples/lib/tea.ml: ###>	if state > 1000 then stop ()
+examples/lib/tea.ml: ###>	inc state;
+examples/lib/tea.ml: ###>
+examples/lib/tea.ml: ###>let view state = Label "mylabel" (str state) @(200, 200) @(0, 0);
+examples/lib/tea.ml: ###>
+examples/lib/tea.ml: ###>setTick 0
+examples/lib/tea.ml: ###>```
+examples/lib/tea.ml: ###
+examples/lib/tea.ml: ### ### Basic kinds of apps / patterns
+examples/lib/tea.ml: ### ### Getters
+examples/lib/tea.ml: ### ### Positioning / layouts
+examples/lib/tea.ml: ### ### Colors & constants
+examples/lib/calculus.ml: ### ### Differentiation & Integration
+examples/lib/calculus.ml: ### ### Series expansions (Taylor, Fourier etc.)
+examples/lib/math.ml: ### ### Trig
+examples/lib/math.ml: ### ### Misc.
+examples/lib/math.ml: ### ### Predicates / Checking properties of numbers
+examples/lib/math.ml: ### ### Random
+examples/lib/numpy.ml: ### ### Type Aliases
+examples/lib/numpy.ml: ### ### Creating arrays
+examples/lib/numpy.ml: ### ### Getters
+examples/lib/numpy.ml: ### ### Manipulating `Vec`s
+examples/lib/sound.ml: ### ### Types
+examples/lib/sound.ml: ### ### Generating Sounds
+examples/lib/sound.ml: ### ### Playback
+examples/lib/dict.ml: ### ### Creation
+examples/lib/dict.ml: ### ### Accessing
+examples/lib/either.ml: ### ### Definitions / Working with `Either`
+examples/lib/either.ml: ### ### Monad definition
+examples/lib/ugraph.ml: ### ### Types
+examples/lib/ugraph.ml: ### ### Functions
+examples/lib/util.ml: ### ### Time
+examples/lib/util.ml: ### ### Terminal
+examples/lib/util.ml: ### ### Misc.
+examples/lib/util.ml: ### ### File system
+examples/lib/util.ml: ### ### Network
+examples/lib/util.ml: ### ### Basic functions
+examples/lib/maybe.ml: ### ### Type & Creating / unwrapping
+examples/lib/maybe.ml: ### ### Monad implementation
+examples/lib/image.ml: ### ### Definitions & Creating images/buffers
+examples/lib/image.ml: ### ### Functions
+examples/lib/list.ml: ### ### Types
+examples/lib/list.ml: ### ### Creating lists
+examples/lib/list.ml: ### ### Accessors
+examples/lib/list.ml: ### ### Sorting, etc.
+examples/lib/list.ml: ### ### Manipulating lists
+examples/lib/graphing.ml: ### ### Functions
+examples/lib/parsing.ml: ### ### Types
+examples/lib/parsing.ml: ### ### Creating parsers
+examples/examples/golnumpy.ml: let getNbSum : Vec -> Index -> Number;
+examples/examples/golnumpy.ml: let alive : Number -> Number -> Number;
+examples/examples/golnumpy.ml: let tick : Vec -> Vec;
+examples/examples/golnumpy.ml: let printG : Vec -> Unit;
+examples/examples/bouncybtn.ml: type State = { zoom : Number, y : Number,
+	v : Number, data : Vec, nticks : Number };
+examples/examples/bouncybtn.ml: let view : State -> Widget;
+examples/examples/bouncybtn.ml: let update : Event -> State -> State;
+examples/lib/either.ml: data Either a b = Left a | Right b;
+examples/lib/either.ml: let unRight : Either a b -> b;
+examples/lib/either.ml: let fromMaybe : b -> Maybe a -> Either b a;
+examples/lib/either.ml: let bind : Either e a -> (a -> Either e b) -> Either e b;
+examples/lib/either.ml: let flatMap : (a -> Either e b) -> Either e a -> Either e b;
+examples/lib/either.ml: let fmap : (a -> b) -> Either e a -> Either e b;
+examples/lib/either.ml: let pure : a -> Either e a;
+examples/lib/tea.ml: type Color = Vec
+	# Alias used for clarity. Vec of length 4.
+;
+examples/lib/tea.ml: data Uniform
+	= UniformFloat String Number
+	| UniformInt String Number
+	| UniformVec2 String Vec
+	| UniformVec3 String Vec
+	| UniformVec4 String Vec
+	| UniformTex0 String Img
+
+	# Uniform types for shaders. Arguments: uniformName, value
+;
+examples/lib/tea.ml: data Widget
+	= Rect Color Vec Vec
+	| TRect Img Vec Vec
+	| SRect String (List Uniform) Vec Vec
+	| Btn String String Vec Vec
+	| Slider String Number Number Number Number Vec Vec
+	| Label String String Vec Vec
+	| Line (List Vec) Number Color
+	| Many (List Widget)
+	| ColorPicker String Vec Vec
+;
+examples/lib/tea.ml: data Event
+	= Tick
+	| BtnPressed String
+	| BtnReleased String
+	| BtnHeld String
+	| SliderMoved String Number
+	| ColorPicked String Color
+	# Event type for the `tick` function in the app. Make sure pattern matching on
+	# events is exhaustive, so `tick` does not throw an error.
+;
+examples/lib/tea.ml: let app : state -> (Event -> state -> state) -> (state -> Widget) -> Unit
+	# starts an app given an initial `state`, `tick` and `view`
+;
+examples/lib/tea.ml: let forceUpdate : state -> state;
+examples/lib/tea.ml: let stop : Unit -> Unit
+	# Effectful.
+	# Stops the app. Takes effect on the next tick, the current tick is stil executed.
+;
+examples/lib/tea.ml: let staticView : (Unit -> Widget) -> Unit
+	# Renders a view and then halts the app.
+	# Use for graphing, etc.
+;
+examples/lib/tea.ml: let width : Number;
+examples/lib/tea.ml: let height: Number;
+examples/lib/tea.ml: let getFPS : Unit -> Number;
+examples/lib/tea.ml: let setPos : Widget -> Vec -> Unit;
+examples/lib/tea.ml: let randPos : Unit -> Vec;
+examples/lib/tea.ml: let grid : Vec -> Vec -> Num -> Num -> List (Vec -> Widget) -> Widget;
+examples/lib/tea.ml: let red : Color;
+examples/lib/tea.ml: let black : Color;
+examples/lib/tea.ml: let white : Color;
+examples/lib/tea.ml: let blue : Color;
+examples/lib/tea.ml: let green : Color;
+examples/lib/tea.ml: let yellow : Color;
+examples/examples/calcgui.ml: let eval : String -> String;
+examples/examples/calcgui.ml: type State = String;
+examples/examples/calcgui.ml: let tick : Event -> State -> State;
+examples/examples/calcgui.ml: let view : State -> Widget;
+examples/examples/settingsgui.ml: type State = Num;
+examples/examples/settingsgui.ml: let view : State -> Widget;
+examples/examples/settingsgui.ml: let tick : Event -> State -> State;
+examples/examples/pixel.ml: let getMouse : Unit -> Vec;
+examples/examples/pixel.ml: data Brush = Brush Number Vec;
+examples/examples/lp.ml: data Term
+    = Var String
+    | Lam String Term Term
+    | Pi String Term Term
+    | App Term Term
+    | Star
+    | Nat
+    | NatLit Number
+;
+examples/examples/lp.ml: type Ctx = Dict Term;
+examples/examples/lp.ml: let subst : String -> Term -> Term -> Term;
+examples/examples/lp.ml: let betaReduce : Term -> Term;
+examples/examples/lp.ml: let normalForm : Term -> Term;
+examples/examples/lp.ml: let alphaEquiv : Dict Num -> Dict Num -> Term -> Term -> Bool;
+examples/examples/lp.ml: let betaEquiv : Term -> Term -> Bool;
+examples/examples/lp.ml: let typ : Ctx -> Term -> Term;
+examples/lib/util.ml: let time : Unit -> Number;
+examples/lib/util.ml: let traceTime : (Unit -> b) -> b
+	# log the time an action takes to execute
+;
+examples/lib/util.ml: let setInterval : Number -> state -> (state->state) -> Unit
+	# args: n, state, tick
+	# run tick every n seconds.
+;
+examples/lib/util.ml: let setUpdate : state -> (state->state) ->Unit;
+examples/lib/util.ml: let cls : Unit -> Unit;
+examples/lib/util.ml: let error : String -> a;
+examples/lib/util.ml: let setTermFontSize : Number -> Unit;
+examples/lib/util.ml: let str : a -> String
+	# deprecated. Use lib.string (str)
+;
+examples/lib/util.ml: let printl : List a -> Unit;
+examples/lib/util.ml: let setreclimit : Number -> Unit;
+examples/lib/util.ml: let setCompilerCWD : String -> Unit;
+examples/lib/util.ml: let randint : Number -> Number -> Number;
+examples/lib/util.ml: let fileexists : String -> Bool;
+examples/lib/util.ml: let readFile : String -> Maybe String;
+examples/lib/util.ml: let readFileUnsafe : String -> String;
+examples/lib/util.ml: let download : String -> String -> Unit;
+examples/lib/util.ml: let copy : a -> a;
+examples/lib/util.ml: let uncurry2 : (a -> b -> c) -> (a,b) -> c;
+examples/lib/util.ml: let not : Bool -> Bool;
+examples/lib/util.ml: let float : a -> Number;
+examples/lib/util.ml: let int : a -> Number;
+examples/lib/util.ml: let neg : Number -> Number;
+examples/lib/util.ml: let between : Number-> Number -> Number -> Bool;
+examples/lib/util.ml: let id : a -> a;
+examples/lib/util.ml: let const : a -> b -> a;
+examples/lib/util.ml: let when : Bool -> (Unit -> Unit) -> Unit;
+examples/lib/util.ml: let mapRecord : (a -> a) -> a -> a;
+examples/lib/util.ml: let with : a -> b -> b;
+examples/lib/util.ml: let union : a -> a -> a;
+examples/lib/util.ml: let times : Number -> (a -> a) -> a -> a;
+examples/lib/util.ml: let ftee : (a -> Unit) -> (a -> a) -> a -> a;
+examples/lib/maybe.ml: data Maybe a = Nothing | Just a;
+examples/lib/maybe.ml: let maybe : a -> Maybe a -> a;
+examples/lib/maybe.ml: let flatMap : (a -> Maybe b) -> Maybe a -> Maybe b;
+examples/lib/maybe.ml: let bind : Maybe a -> (a -> Maybe b) -> Maybe b;
+examples/lib/maybe.ml: let pure : a -> Maybe a;
+examples/lib/maybe.ml: let fmap : (a -> b) -> Maybe a -> Maybe b;
+examples/lib/maybe.ml: let mapM : (a -> Maybe b) -> List a -> Maybe (List b);
+examples/lib/input.ml: let input : String -> (String -> Unit) -> Unit;
+examples/lib/string.ml: let str : a -> String;
+examples/lib/string.ml: let split : String -> String -> List String;
+examples/lib/string.ml: let replace : String -> String -> String -> String;
+examples/lib/string.ml: let isNumeric : String -> Bool;
+examples/lib/string.ml: let strIn : String -> String -> Bool;
+examples/lib/string.ml: let strLen : String -> Number;
+examples/lib/string.ml: let strHead : String -> String;
+examples/lib/string.ml: let strTail : String-> String;
+examples/lib/graphing.ml: let viewGraphs : List (Number->Number) -> Number -> Number -> Number -> Widget;
+examples/lib/math.ml: let sin : Number -> Number;
+examples/lib/math.ml: let cos : Number -> Number;
+examples/lib/math.ml: let tan : Number -> Number;
+examples/lib/math.ml: let pi : Number;
+examples/lib/math.ml: let pow : Number -> Number -> Number;
+examples/lib/math.ml: let round : Number -> Number -> Number;
+examples/lib/math.ml: let ln : Number -> Number;
+examples/lib/math.ml: let fac : Number -> Number;
+examples/lib/math.ml: let exp : Number -> Number;
+examples/lib/math.ml: let min : Number -> Number -> Number;
+examples/lib/math.ml: let max : Number -> Number -> Number;
+examples/lib/math.ml: let mod : Number -> Number -> Number;
+examples/lib/math.ml: let divisible : Number -> Number -> Bool;
+examples/lib/math.ml: let odd : Number -> Bool;
+examples/lib/math.ml: let even : Number -> Bool;
+examples/lib/math.ml: let noise : Vec -> Number;
+examples/lib/dict.ml: data Dict a;
+examples/lib/dict.ml: let mkDict : List (String, a) -> Dict a;
+examples/lib/dict.ml: let dictItems : Dict a -> List (String, a);
+examples/lib/dict.ml: let dictGet : Dict a -> String -> Maybe a;
+examples/lib/dict.ml: let dictInsert : String -> Dict a -> a -> Dict a;
+examples/lib/dict.ml: let dictEmpty : Dict a;
+examples/lib/image.ml: data Img;
+examples/lib/image.ml: data Buffer;
+examples/lib/image.ml: type Color = Vec;
+examples/lib/image.ml: let setpixel : Img -> Vec -> Color -> Unit;
+examples/lib/image.ml: let image : Vec -> Img;
+examples/lib/image.ml: let imgLoad : String -> Img;
+examples/lib/image.ml: let imgBuf : Img -> Buffer;
+examples/lib/image.ml: let imgSize : Img -> Vec;
+examples/lib/image.ml: let imgHeight : Img -> Number;
+examples/lib/image.ml: let imgWidth : Img -> Number;
+examples/lib/image.ml: let imgCopy : Img -> Img;
+examples/lib/image.ml: let imgMap : Img -> (Number->Number->Color->Color) -> Unit;
+examples/lib/image.ml: let imgGet : Buffer -> Vec -> Vec;
+examples/lib/image.ml: let imgSave : String -> Img -> Unit;
+examples/lib/image.ml: let imgClear : Img -> Color -> Unit;
+examples/lib/image.ml: let imgMapRect: Vec -> Vec -> Img -> (Number->Number->Color->Color) -> Unit
+	# args: size, pos, img, func
+;
+examples/lib/image.ml: let imgSmooth : Img -> Img;
+examples/lib/image.ml: let imgFlipH : Img -> Img;
+examples/lib/image.ml: let imgFlipV : Img -> Img;
+examples/lib/image.ml: let imgShade : Img -> String -> Img;
+examples/lib/image.ml: data Atlas = Atlas Img (List Vec)
+	# arguments: atlasTex, imgSizes
+;
+examples/lib/image.ml: let mkAtlasImg : List Img -> Img
+	# make an atlas of vertically stacked
+	# images from the input images.
+;
+examples/lib/image.ml: let mkAtlas : List Img -> Atlas
+	# create an Atlas from the input images
+;
+examples/lib/parsing.ml: type GrammarError = String;
+examples/lib/parsing.ml: type ParseError = String;
+examples/lib/parsing.ml: let parser :
+	String -> Either GrammarError (
+		String -> Either ParseError a
+	)
+	# args: grammar, string
+;
+examples/examples/game3d.ml: data Sprite = Sprite Num Vec Vec;
+examples/examples/game3d.ml: let spriteUniforms : Num -> Sprite -> List Uniform;
+examples/examples/game3d.ml: let atlasMap : Atlas -> List Number;
+examples/examples/game3d.ml: let render3D : Vec -> Number -> List Sprite -> Atlas -> Widget;
+examples/examples/game3d.ml: type State =
+	{ angle : Number
+	, pos : Vec
+	};
+examples/examples/game3d.ml: let view : Atlas -> State -> Widget;
+examples/examples/game3d.ml: let tick : Event -> State -> State;
+examples/examples/euler.ml: type Path = List String;
+examples/examples/euler.ml: let complete : Graph String -> Path -> Bool;
+examples/examples/euler.ml: let edgesFromPath : Path -> List (List String);
+examples/examples/euler.ml: let valid : Path -> Bool;
+examples/examples/euler.ml: let gen : Graph String -> Path -> List Path;
+examples/examples/euler.ml: let euler : Graph String -> Path -> List Path;
+examples/lib/numpy.ml: type Size = List Number;
+examples/lib/numpy.ml: type Index = List Number;
+examples/lib/numpy.ml: let array : List Number -> Vec;
+examples/lib/numpy.ml: let zeros : Size -> Vec;
+examples/lib/numpy.ml: let full : Size -> Number -> Vec;
+examples/lib/numpy.ml: let linspace : Number -> Number -> Number -> Vec
+	# start, end, nsteps
+;
+examples/lib/numpy.ml: let toList : Vec -> List Number
+	# only 1-dim.!
+;
+examples/lib/numpy.ml: let size : Vec -> Size
+	# <=> arr.shape in numpy!
+;
+examples/lib/numpy.ml: let get : Index -> Vec -> Number;
+examples/lib/numpy.ml: let slice : Index -> Index -> Vec -> Vec
+	# - start, end, input_array
+	# - fails if out of bounds
+;
+examples/lib/numpy.ml: let sliceInc : Index -> Index -> Vec -> Vec
+	# like slice but end index is included.
+;
+examples/lib/numpy.ml: let slicePartial : Index -> Index -> Vec -> Vec
+	# same as slice, but return all
+	# elements in index range instead
+	# of failing
+;
+examples/lib/numpy.ml: let set : Index -> Number -> Vec -> Vec;
+examples/lib/numpy.ml: let vectorize : (Number -> Number) -> Vec -> Vec;
+examples/lib/numpy.ml: let ivectorize : (Index -> Number -> Number) -> Vec -> Vec;
+examples/lib/numpy.ml: let sum : Vec -> Number;
+examples/lib/numpy.ml: let dot : Vec -> Vec -> Number;
+examples/lib/numpy.ml: let flatten : Vec -> Vec;
+examples/lib/numpy.ml: let delete : Number -> Vec -> Vec
+	# args: i, arr
+	# remove the element at i
+	# only for flat Vecs
+;
+examples/lib/numpy.ml: let concatenate : Number -> Vec -> Vec -> Vec
+	# args: axis, arr1, arr2
+;
+examples/lib/numpy.ml: let reshape : Size -> Vec -> Vec;
+examples/lib/numpy.ml: let transpose : Vec -> Vec;
+examples/lib/list.ml: data List a
+	= Cons a (List a)
+	| Nil
+	# The default list type generated
+	# by `[...]`
+;
+examples/lib/list.ml: let range : Number -> Number -> List Number;
+examples/lib/list.ml: let srange : Number -> Number -> Number -> List Number
+	# start, end, step
+;
+examples/lib/list.ml: let tail : List a -> List a;
+examples/lib/list.ml: let tailSafe : List a -> List a;
+examples/lib/list.ml: let head : List a -> a;
+examples/lib/list.ml: let len : List a -> Number;
+examples/lib/list.ml: let listAtSafe : Number -> List a -> Maybe a;
+examples/lib/list.ml: let listAt : Number -> List a -> a;
+examples/lib/list.ml: let take : Number -> List a -> List a;
+examples/lib/list.ml: let chunksOf : Number -> List a -> List (List a);
+examples/lib/list.ml: let contains : a -> List a -> Bool;
+examples/lib/list.ml: let sort : List a -> List a;
+examples/lib/list.ml: let nub : List a -> List a;
+examples/lib/list.ml: let append : a -> List a -> List a;
+examples/lib/list.ml: let foldr : (b -> a -> b) -> b -> List a -> b;
+examples/lib/list.ml: let extend : List a -> List a -> List a;
+examples/lib/list.ml: let concat : List (List a) -> List a;
+examples/lib/list.ml: let filter : (a -> Bool) -> List a -> List a;
+examples/lib/list.ml: let reverse : List a -> List a;
+examples/lib/list.ml: let map : (a -> b) -> (List a) -> List b;
+examples/lib/list.ml: let foreach2D : Number -> Number -> (Number->Number-> Unit) -> Unit;
+examples/lib/list.ml: let imap : (Number -> a -> b) -> List a -> List b;
+examples/lib/list.ml: let any : List Bool -> Bool;
+examples/lib/list.ml: let zip : List a -> List b -> List (a,b);
+examples/examples/gol.ml: let determineAlive : Bool -> Number -> Bool;
+examples/examples/gol.ml: let addPattern : Img -> Vec -> Vec -> Unit;
+examples/examples/gol.ml: let mygrid : Img;
+examples/lib/calculus.ml: let diff : (Number -> Number) -> Number -> (Number -> Number)
+	# args: func, n
+	# returns: n-th derivative of func.
+;
+examples/lib/calculus.ml: let integral : (Number -> Number) -> Number -> Number -> Number
+	# args: func, x_start, x_end
+;
+examples/lib/calculus.ml: let taylor : (Number -> Number) -> Number -> Number -> (Number -> Number)
+	# args: f, n, x0, x
+;
+examples/lib/calculus.ml: let fourier : (Number -> Number) -> Number -> (Number -> Number)
+	# args: f, m, x
+;
+examples/lib/ugraph.ml: type Edges a = Dict (List a);
+examples/lib/ugraph.ml: type Vertices a = List a;
+examples/lib/ugraph.ml: data Graph a = Graph (Edges a) (Vertices a);
+examples/lib/ugraph.ml: let edgesFromGraph : Graph a -> List (List a);
+examples/lib/sound.ml: data Sound;
+examples/lib/sound.ml: let max_amp : Number;
+examples/lib/sound.ml: let sound : (Number -> Number) -> Number -> Sound;
+examples/lib/sound.ml: let beep : Number -> Number -> Sound;
+examples/lib/sound.ml: let play : Sound -> Unit
+    # example:
+    # play $ beep 440 1
+;
+examples/examples/lc.ml: data Exp
+	= Num String
+	| Var String
+	| App Exp Exp
+	| Lam String Exp;
+examples/examples/lc.ml: data Value
+	= Clos (Dict Value) String Exp
+	| Fun (Value -> Either String Value)
+	| Atom Number;
+examples/examples/lc.ml: let eval : Dict Value -> Exp -> Either String Value;
+examples/examples/golnumpy.ml: let getNbSum : Vec -> Index -> Number;
+examples/examples/golnumpy.ml: let alive : Number -> Number -> Number;
+examples/examples/golnumpy.ml: let tick : Vec -> Vec;
+examples/examples/golnumpy.ml: let printG : Vec -> Unit;
+examples/examples/bouncybtn.ml: type State = { zoom : Number, y : Number,
+	v : Number, data : Vec, nticks : Number };
+examples/examples/bouncybtn.ml: let view : State -> Widget;
+examples/examples/bouncybtn.ml: let update : Event -> State -> State;
+examples/lib/either.ml: data Either a b = Left a | Right b;
+examples/lib/either.ml: let unRight : Either a b -> b;
+examples/lib/either.ml: let fromMaybe : b -> Maybe a -> Either b a;
+examples/lib/either.ml: let bind : Either e a -> (a -> Either e b) -> Either e b;
+examples/lib/either.ml: let flatMap : (a -> Either e b) -> Either e a -> Either e b;
+examples/lib/either.ml: let fmap : (a -> b) -> Either e a -> Either e b;
+examples/lib/either.ml: let pure : a -> Either e a;
+examples/lib/tea.ml: type Color = Vec
+	# Alias used for clarity. Vec of length 4.
+;
+examples/lib/tea.ml: data Uniform
+	= UniformFloat String Number
+	| UniformInt String Number
+	| UniformVec2 String Vec
+	| UniformVec3 String Vec
+	| UniformVec4 String Vec
+	| UniformTex0 String Img
+
+	# Uniform types for shaders. Arguments: uniformName, value
+;
+examples/lib/tea.ml: data Widget
+	= Rect Color Vec Vec
+	| TRect Img Vec Vec
+	| SRect String (List Uniform) Vec Vec
+	| Btn String String Vec Vec
+	| Slider String Number Number Number Number Vec Vec
+	| Label String String Vec Vec
+	| Line (List Vec) Number Color
+	| Many (List Widget)
+	| ColorPicker String Vec Vec
+;
+examples/lib/tea.ml: data Event
+	= Tick
+	| BtnPressed String
+	| BtnReleased String
+	| BtnHeld String
+	| SliderMoved String Number
+	| ColorPicked String Color
+	# Event type for the `tick` function in the app. Make sure pattern matching on
+	# events is exhaustive, so `tick` does not throw an error.
+;
+examples/lib/tea.ml: let app : state -> (Event -> state -> state) -> (state -> Widget) -> Unit
+	# starts an app given an initial `state`, `tick` and `view`
+;
+examples/lib/tea.ml: let forceUpdate : state -> state;
+examples/lib/tea.ml: let stop : Unit -> Unit
+	# Effectful.
+	# Stops the app. Takes effect on the next tick, the current tick is stil executed.
+;
+examples/lib/tea.ml: let staticView : (Unit -> Widget) -> Unit
+	# Renders a view and then halts the app.
+	# Use for graphing, etc.
+;
+examples/lib/tea.ml: let width : Number;
+examples/lib/tea.ml: let height: Number;
+examples/lib/tea.ml: let getFPS : Unit -> Number;
+examples/lib/tea.ml: let setPos : Widget -> Vec -> Unit;
+examples/lib/tea.ml: let randPos : Unit -> Vec;
+examples/lib/tea.ml: let grid : Vec -> Vec -> Num -> Num -> List (Vec -> Widget) -> Widget;
+examples/lib/tea.ml: let red : Color;
+examples/lib/tea.ml: let black : Color;
+examples/lib/tea.ml: let white : Color;
+examples/lib/tea.ml: let blue : Color;
+examples/lib/tea.ml: let green : Color;
+examples/lib/tea.ml: let yellow : Color;
+examples/examples/calcgui.ml: let eval : String -> String;
+examples/examples/calcgui.ml: type State = String;
+examples/examples/calcgui.ml: let tick : Event -> State -> State;
+examples/examples/calcgui.ml: let view : State -> Widget;
+examples/examples/settingsgui.ml: type State = Num;
+examples/examples/settingsgui.ml: let view : State -> Widget;
+examples/examples/settingsgui.ml: let tick : Event -> State -> State;
+examples/examples/pixel.ml: let getMouse : Unit -> Vec;
+examples/examples/pixel.ml: data Brush = Brush Number Vec;
+examples/examples/lp.ml: data Term
+    = Var String
+    | Lam String Term Term
+    | Pi String Term Term
+    | App Term Term
+    | Star
+    | Nat
+    | NatLit Number
+;
+examples/examples/lp.ml: type Ctx = Dict Term;
+examples/examples/lp.ml: let subst : String -> Term -> Term -> Term;
+examples/examples/lp.ml: let betaReduce : Term -> Term;
+examples/examples/lp.ml: let normalForm : Term -> Term;
+examples/examples/lp.ml: let alphaEquiv : Dict Num -> Dict Num -> Term -> Term -> Bool;
+examples/examples/lp.ml: let betaEquiv : Term -> Term -> Bool;
+examples/examples/lp.ml: let typ : Ctx -> Term -> Term;
+examples/lib/util.ml: let time : Unit -> Number;
+examples/lib/util.ml: let traceTime : (Unit -> b) -> b
+	# log the time an action takes to execute
+;
+examples/lib/util.ml: let setInterval : Number -> state -> (state->state) -> Unit
+	# args: n, state, tick
+	# run tick every n seconds.
+;
+examples/lib/util.ml: let setUpdate : state -> (state->state) ->Unit;
+examples/lib/util.ml: let cls : Unit -> Unit;
+examples/lib/util.ml: let error : String -> a;
+examples/lib/util.ml: let setTermFontSize : Number -> Unit;
+examples/lib/util.ml: let str : a -> String
+	# deprecated. Use lib.string (str)
+;
+examples/lib/util.ml: let printl : List a -> Unit;
+examples/lib/util.ml: let setreclimit : Number -> Unit;
+examples/lib/util.ml: let setCompilerCWD : String -> Unit;
+examples/lib/util.ml: let randint : Number -> Number -> Number;
+examples/lib/util.ml: let fileexists : String -> Bool;
+examples/lib/util.ml: let readFile : String -> Maybe String;
+examples/lib/util.ml: let readFileUnsafe : String -> String;
+examples/lib/util.ml: let download : String -> String -> Unit;
+examples/lib/util.ml: let copy : a -> a;
+examples/lib/util.ml: let uncurry2 : (a -> b -> c) -> (a,b) -> c;
+examples/lib/util.ml: let not : Bool -> Bool;
+examples/lib/util.ml: let float : a -> Number;
+examples/lib/util.ml: let int : a -> Number;
+examples/lib/util.ml: let neg : Number -> Number;
+examples/lib/util.ml: let between : Number-> Number -> Number -> Bool;
+examples/lib/util.ml: let id : a -> a;
+examples/lib/util.ml: let const : a -> b -> a;
+examples/lib/util.ml: let when : Bool -> (Unit -> Unit) -> Unit;
+examples/lib/util.ml: let mapRecord : (a -> a) -> a -> a;
+examples/lib/util.ml: let with : a -> b -> b;
+examples/lib/util.ml: let union : a -> a -> a;
+examples/lib/util.ml: let times : Number -> (a -> a) -> a -> a;
+examples/lib/util.ml: let ftee : (a -> Unit) -> (a -> a) -> a -> a;
+examples/lib/maybe.ml: data Maybe a = Nothing | Just a;
+examples/lib/maybe.ml: let maybe : a -> Maybe a -> a;
+examples/lib/maybe.ml: let flatMap : (a -> Maybe b) -> Maybe a -> Maybe b;
+examples/lib/maybe.ml: let bind : Maybe a -> (a -> Maybe b) -> Maybe b;
+examples/lib/maybe.ml: let pure : a -> Maybe a;
+examples/lib/maybe.ml: let fmap : (a -> b) -> Maybe a -> Maybe b;
+examples/lib/maybe.ml: let mapM : (a -> Maybe b) -> List a -> Maybe (List b);
+examples/lib/input.ml: let input : String -> (String -> Unit) -> Unit;
+examples/lib/string.ml: let str : a -> String;
+examples/lib/string.ml: let split : String -> String -> List String;
+examples/lib/string.ml: let replace : String -> String -> String -> String;
+examples/lib/string.ml: let isNumeric : String -> Bool;
+examples/lib/string.ml: let strIn : String -> String -> Bool;
+examples/lib/string.ml: let strLen : String -> Number;
+examples/lib/string.ml: let strHead : String -> String;
+examples/lib/string.ml: let strTail : String-> String;
+examples/lib/graphing.ml: let viewGraphs : List (Number->Number) -> Number -> Number -> Number -> Widget;
+examples/lib/math.ml: let sin : Number -> Number;
+examples/lib/math.ml: let cos : Number -> Number;
+examples/lib/math.ml: let tan : Number -> Number;
+examples/lib/math.ml: let pi : Number;
+examples/lib/math.ml: let pow : Number -> Number -> Number;
+examples/lib/math.ml: let round : Number -> Number -> Number;
+examples/lib/math.ml: let ln : Number -> Number;
+examples/lib/math.ml: let fac : Number -> Number;
+examples/lib/math.ml: let exp : Number -> Number;
+examples/lib/math.ml: let min : Number -> Number -> Number;
+examples/lib/math.ml: let max : Number -> Number -> Number;
+examples/lib/math.ml: let mod : Number -> Number -> Number;
+examples/lib/math.ml: let divisible : Number -> Number -> Bool;
+examples/lib/math.ml: let odd : Number -> Bool;
+examples/lib/math.ml: let even : Number -> Bool;
+examples/lib/math.ml: let noise : Vec -> Number;
+examples/lib/dict.ml: data Dict a;
+examples/lib/dict.ml: let mkDict : List (String, a) -> Dict a;
+examples/lib/dict.ml: let dictItems : Dict a -> List (String, a);
+examples/lib/dict.ml: let dictGet : Dict a -> String -> Maybe a;
+examples/lib/dict.ml: let dictInsert : String -> Dict a -> a -> Dict a;
+examples/lib/dict.ml: let dictEmpty : Dict a;
+examples/lib/image.ml: data Img;
+examples/lib/image.ml: data Buffer;
+examples/lib/image.ml: type Color = Vec;
+examples/lib/image.ml: let setpixel : Img -> Vec -> Color -> Unit;
+examples/lib/image.ml: let image : Vec -> Img;
+examples/lib/image.ml: let imgLoad : String -> Img;
+examples/lib/image.ml: let imgBuf : Img -> Buffer;
+examples/lib/image.ml: let imgSize : Img -> Vec;
+examples/lib/image.ml: let imgHeight : Img -> Number;
+examples/lib/image.ml: let imgWidth : Img -> Number;
+examples/lib/image.ml: let imgCopy : Img -> Img;
+examples/lib/image.ml: let imgMap : Img -> (Number->Number->Color->Color) -> Unit;
+examples/lib/image.ml: let imgGet : Buffer -> Vec -> Vec;
+examples/lib/image.ml: let imgSave : String -> Img -> Unit;
+examples/lib/image.ml: let imgClear : Img -> Color -> Unit;
+examples/lib/image.ml: let imgMapRect: Vec -> Vec -> Img -> (Number->Number->Color->Color) -> Unit
+	# args: size, pos, img, func
+;
+examples/lib/image.ml: let imgSmooth : Img -> Img;
+examples/lib/image.ml: let imgFlipH : Img -> Img;
+examples/lib/image.ml: let imgFlipV : Img -> Img;
+examples/lib/image.ml: let imgShade : Img -> String -> Img;
+examples/lib/image.ml: data Atlas = Atlas Img (List Vec)
+	# arguments: atlasTex, imgSizes
+;
+examples/lib/image.ml: let mkAtlasImg : List Img -> Img
+	# make an atlas of vertically stacked
+	# images from the input images.
+;
+examples/lib/image.ml: let mkAtlas : List Img -> Atlas
+	# create an Atlas from the input images
+;
+examples/lib/parsing.ml: type GrammarError = String;
+examples/lib/parsing.ml: type ParseError = String;
+examples/lib/parsing.ml: let parser :
+	String -> Either GrammarError (
+		String -> Either ParseError a
+	)
+	# args: grammar, string
+;
+examples/examples/game3d.ml: data Sprite = Sprite Num Vec Vec;
+examples/examples/game3d.ml: let spriteUniforms : Num -> Sprite -> List Uniform;
+examples/examples/game3d.ml: let atlasMap : Atlas -> List Number;
+examples/examples/game3d.ml: let render3D : Vec -> Number -> List Sprite -> Atlas -> Widget;
+examples/examples/game3d.ml: type State =
+	{ angle : Number
+	, pos : Vec
+	};
+examples/examples/game3d.ml: let view : Atlas -> State -> Widget;
+examples/examples/game3d.ml: let tick : Event -> State -> State;
+examples/examples/euler.ml: type Path = List String;
+examples/examples/euler.ml: let complete : Graph String -> Path -> Bool;
+examples/examples/euler.ml: let edgesFromPath : Path -> List (List String);
+examples/examples/euler.ml: let valid : Path -> Bool;
+examples/examples/euler.ml: let gen : Graph String -> Path -> List Path;
+examples/examples/euler.ml: let euler : Graph String -> Path -> List Path;
+examples/lib/numpy.ml: type Size = List Number;
+examples/lib/numpy.ml: type Index = List Number;
+examples/lib/numpy.ml: let array : List Number -> Vec;
+examples/lib/numpy.ml: let zeros : Size -> Vec;
+examples/lib/numpy.ml: let full : Size -> Number -> Vec;
+examples/lib/numpy.ml: let linspace : Number -> Number -> Number -> Vec
+	# start, end, nsteps
+;
+examples/lib/numpy.ml: let toList : Vec -> List Number
+	# only 1-dim.!
+;
+examples/lib/numpy.ml: let size : Vec -> Size
+	# <=> arr.shape in numpy!
+;
+examples/lib/numpy.ml: let get : Index -> Vec -> Number;
+examples/lib/numpy.ml: let slice : Index -> Index -> Vec -> Vec
+	# - start, end, input_array
+	# - fails if out of bounds
+;
+examples/lib/numpy.ml: let sliceInc : Index -> Index -> Vec -> Vec
+	# like slice but end index is included.
+;
+examples/lib/numpy.ml: let slicePartial : Index -> Index -> Vec -> Vec
+	# same as slice, but return all
+	# elements in index range instead
+	# of failing
+;
+examples/lib/numpy.ml: let set : Index -> Number -> Vec -> Vec;
+examples/lib/numpy.ml: let vectorize : (Number -> Number) -> Vec -> Vec;
+examples/lib/numpy.ml: let ivectorize : (Index -> Number -> Number) -> Vec -> Vec;
+examples/lib/numpy.ml: let sum : Vec -> Number;
+examples/lib/numpy.ml: let dot : Vec -> Vec -> Number;
+examples/lib/numpy.ml: let flatten : Vec -> Vec;
+examples/lib/numpy.ml: let delete : Number -> Vec -> Vec
+	# args: i, arr
+	# remove the element at i
+	# only for flat Vecs
+;
+examples/lib/numpy.ml: let concatenate : Number -> Vec -> Vec -> Vec
+	# args: axis, arr1, arr2
+;
+examples/lib/numpy.ml: let reshape : Size -> Vec -> Vec;
+examples/lib/numpy.ml: let transpose : Vec -> Vec;
+examples/lib/list.ml: data List a
+	= Cons a (List a)
+	| Nil
+	# The default list type generated
+	# by `[...]`
+;
+examples/lib/list.ml: let range : Number -> Number -> List Number;
+examples/lib/list.ml: let srange : Number -> Number -> Number -> List Number
+	# start, end, step
+;
+examples/lib/list.ml: let tail : List a -> List a;
+examples/lib/list.ml: let tailSafe : List a -> List a;
+examples/lib/list.ml: let head : List a -> a;
+examples/lib/list.ml: let len : List a -> Number;
+examples/lib/list.ml: let listAtSafe : Number -> List a -> Maybe a;
+examples/lib/list.ml: let listAt : Number -> List a -> a;
+examples/lib/list.ml: let take : Number -> List a -> List a;
+examples/lib/list.ml: let chunksOf : Number -> List a -> List (List a);
+examples/lib/list.ml: let contains : a -> List a -> Bool;
+examples/lib/list.ml: let sort : List a -> List a;
+examples/lib/list.ml: let nub : List a -> List a;
+examples/lib/list.ml: let append : a -> List a -> List a;
+examples/lib/list.ml: let foldr : (b -> a -> b) -> b -> List a -> b;
+examples/lib/list.ml: let extend : List a -> List a -> List a;
+examples/lib/list.ml: let concat : List (List a) -> List a;
+examples/lib/list.ml: let filter : (a -> Bool) -> List a -> List a;
+examples/lib/list.ml: let reverse : List a -> List a;
+examples/lib/list.ml: let map : (a -> b) -> (List a) -> List b;
+examples/lib/list.ml: let foreach2D : Number -> Number -> (Number->Number-> Unit) -> Unit;
+examples/lib/list.ml: let imap : (Number -> a -> b) -> List a -> List b;
+examples/lib/list.ml: let any : List Bool -> Bool;
+examples/lib/list.ml: let zip : List a -> List b -> List (a,b);
+examples/examples/gol.ml: let determineAlive : Bool -> Number -> Bool;
+examples/examples/gol.ml: let addPattern : Img -> Vec -> Vec -> Unit;
+examples/examples/gol.ml: let mygrid : Img;
+examples/lib/calculus.ml: let diff : (Number -> Number) -> Number -> (Number -> Number)
+	# args: func, n
+	# returns: n-th derivative of func.
+;
+examples/lib/calculus.ml: let integral : (Number -> Number) -> Number -> Number -> Number
+	# args: func, x_start, x_end
+;
+examples/lib/calculus.ml: let taylor : (Number -> Number) -> Number -> Number -> (Number -> Number)
+	# args: f, n, x0, x
+;
+examples/lib/calculus.ml: let fourier : (Number -> Number) -> Number -> (Number -> Number)
+	# args: f, m, x
+;
+examples/lib/ugraph.ml: type Edges a = Dict (List a);
+examples/lib/ugraph.ml: type Vertices a = List a;
+examples/lib/ugraph.ml: data Graph a = Graph (Edges a) (Vertices a);
+examples/lib/ugraph.ml: let edgesFromGraph : Graph a -> List (List a);
+examples/lib/sound.ml: data Sound;
+examples/lib/sound.ml: let max_amp : Number;
+examples/lib/sound.ml: let sound : (Number -> Number) -> Number -> Sound;
+examples/lib/sound.ml: let beep : Number -> Number -> Sound;
+examples/lib/sound.ml: let play : Sound -> Unit
+    # example:
+    # play $ beep 440 1
+;
+examples/examples/lc.ml: data Exp
+	= Num String
+	| Var String
+	| App Exp Exp
+	| Lam String Exp;
+examples/examples/lc.ml: data Value
+	= Clos (Dict Value) String Exp
+	| Fun (Value -> Either String Value)
+	| Atom Number;
+examples/examples/lc.ml: let eval : Dict Value -> Exp -> Either String Value;

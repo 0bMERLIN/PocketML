@@ -1,3 +1,6 @@
-data Maybe a;
-let readFile : Maybe String;
-()
+let x = '
+
+print("hello, world!")
+
+';
+print x

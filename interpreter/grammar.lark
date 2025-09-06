@@ -34,7 +34,7 @@
     | NAME -> var
     | "(" expr ")"
     | NUMBER -> num
-    | (STRING | /"""(.|[\n])*?"""/) -> string
+    | (STRING) -> string
     | /%%(.|[\n])+%%/ -> inlinepython
     | "{" entry ("," entry)* "}" -> record
 
@@ -115,9 +115,14 @@ LOWERNAME: /[a-z]/(/[0-9]/*)(NAME?)
 // python-like comments
 COMMENT: /#.*/
 
+// strings can be multiline
+_STRING_INNER: /(.|[\n])*?/
+_STRING_ESC_INNER: _STRING_INNER /(?<!\\)(\\\\)*?/
+
+STRING : "\"" _STRING_ESC_INNER "\"" | "'" _STRING_ESC_INNER "'"
+
 %ignore COMMENT
 %ignore WS
-%import common.ESCAPED_STRING -> STRING
 %import common.CNAME -> NAME
 %import common.NUMBER
 %import common.WS

@@ -18,6 +18,30 @@ install any libraries python complains about.
 You can also build the project yourself using the [buildozer](https://buildozer.readthedocs.io/en/latest/) tool.
 
 #### 1.1 Data Types
+PocketML has records, tuples and string, number and boolean types.
+A word on the string syntax:
+As PocketML is a scripting/tinkering language for mobile devices, bulky syntax should be avoided.
+Strings can be delimited with `'` or `"` and can _span multiple lines_; there is no separate syntax for multiline strings.
+
+```
+"I am a string"
+```
+
+```
+"
+I, too, am a string...
+and multiline!
+"
+```
+
+```
+'
+// Maybe you're writing a fun little C interpreter in PocketML!
+// And want C source code strings in your PocketML code...
+printf("Here's some double quotes in a multiline string, very useful indeed...");
+'
+```
+
 PocketML uses Sum types like most other statically 
 typed functional languages:
 ```haskell
@@ -92,7 +116,7 @@ can be patterns:
 let unwrapM (Just x) = x;
 let unwrapE = \(Right x) -> x;
 ```
-Another example of patterned lets:
+Another (less useful) example of patterned lets:
 ```sml
 let f x 1 = x + 1;
 print $ f 2 1
@@ -249,6 +273,9 @@ Modules inside a directory can be addressed using `.`:
 ```python
 import directory.mymodule;
 ```
+>Note: Module imports are relative, but the lib/ folder is accessible from anywhere!
+>From the syntax, you can see that importing modules from a higher-up directory ("../something.ml")
+>is not possible.
 
 Imports can also be selective (only importing _some_ names from a module).
 Modules can also be aliased (given an explicit name).

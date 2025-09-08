@@ -771,6 +771,9 @@ class Typechecker(Interpreter):
             raise PMLTypeError(f"Unknown type variable {x} (line {x.line})")
         return TVar(str(x), x.line)
 
+    def tunit(self):
+        return Typ("Unit", [], -1)
+
     def typename(self, *args):
         if len(args) == 1:
             name = args[0]

@@ -93,6 +93,7 @@ constructor: UPPERNAME typeatom1*
     | typeatom
 
 ?typeatom: LOWERNAME -> tvar
+    | "(" ")" -> tunit
     | "(" tupletelems ")" -> ttuple
     | "(" type ")"
     | "{" tentry ("," tentry)* "}" -> trecord

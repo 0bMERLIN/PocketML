@@ -101,5 +101,5 @@ let tick e s =
 	| _ -> forceUpdate s
 ;
 
-app { pos = @(0,0.2), angle=0 } tick
+app { pos = @(0,.25), angle=0 } tick
 	(view $ mkAtlas [mymap, mymap, mymap])

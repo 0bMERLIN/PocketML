@@ -24,7 +24,8 @@ let fromMaybe b m = case m
 ### ### Monad definition
 
 let bind : Either e a -> (a -> Either e b) -> Either e b;
-let bind m f = case m
+let bind m f =
+	case m
 	| Right x -> f x
 	| Left x -> Left x;
 

@@ -1,7 +1,37 @@
 import lib.dict;
-import lib.maybe;
-import lib.util (error, when);
-import lib.string (str);
+import lib.either;
+import lib.maybe as M;
+import lib.util (error, when, cls);
+import lib.string (str, strip);
+import lib.parsing;
+import lib.list (len);
+import lib.input;
+
+let gr= '
+
+?start: expr
+
+?expr: term "+" expr -> add
+	| term
+
+?term: term atom -> app
+	| atom
+
+?atom: NAME -> var
+	| "(" NAME ":" expr ")" "->" expr -> lam
+	| "Pi" "(" NAME ":" expr ")" "->" expr -> pi
+	| "Let" NAME "=" expr ";" expr -> let
+	| "*" -> star
+	| "Nat" -> nat
+	| NUMBER -> nat_lit
+
+NAME: /[a-z_][a-zA-Z0-9_]*/
+NUMBER: /-?\d+(\.\d+)?/
+
+%import common.WS
+%import common.CNAME
+%ignore WS
+';
 
 data Term
     = Var String
@@ -11,6 +41,8 @@ data Term
     | Star
     | Nat
     | NatLit Number
+    | Let String Term Term
+    | Add Term Term
 ;
 
 type Ctx = Dict Term;
@@ -21,6 +53,8 @@ let subst s r = \case
     | App f a -> App (subst s r f) (subst s r a)
     | Lam x t b -> Lam x (subst s r t) (subst s r b)
     | Pi x t b -> Pi x (subst s r t) (subst s r b)
+    | Let x e b -> Let x (subst s r e) (subst s r b)
+    | Add a b -> Add (subst s r a) (subst s r b)
     | o -> o
 ;
 
@@ -30,6 +64,9 @@ let betaReduce = \case
 	| App f a -> App (betaReduce f) (betaReduce a)
 	| Lam x t a -> Lam x (betaReduce t) (betaReduce a)
 	| Pi x t a -> Pi x (betaReduce t) (betaReduce a)
+	| Add a b -> (case (betaReduce a,betaReduce b)
+		| (NatLit n, NatLit m) -> NatLit (n+m)
+		| (x,y) -> Add x y)
     | t -> t
 ;
 
@@ -39,18 +76,13 @@ let normalForm t =
 	if b == t then t else normalForm b
 ;
 
-let alphaEquiv : Dict Num -> Dict Num -> Term -> Term -> Bool;
+let alphaEquiv : Dict Num->Dict Num->Term->Term->Bool;
 let alphaEquiv c1 c2 t1 t2 = case (t1, t2)
 	| (Var x, Var y) ->
 		(case (dictGet c1 x, dictGet c2 y)
-			| (Just v1, Just v2) ->
-				let _ = print ("v1,v2: " + str v1 + ", " + str v2);
-				v1 == v2
-			| (Nothing, Nothing) ->
-				let _ = print ("x,y: " + str x + ", " + str y);
-				x == y
-			| _ -> False
-		)
+			| (Just v1, Just v2) -> v1 == v2
+			| (Nothing, Nothing) -> x == y
+			| _ -> False)
 	| (App m n, App p q) ->
 		alphaEquiv c1 c2 m p && alphaEquiv c1 c2 n q
 	| (Lam x1 t1 b1, Lam x2 t2 b2) ->
@@ -65,37 +97,65 @@ let alphaEquiv c1 c2 t1 t2 = case (t1, t2)
 			(dictInsert x1 c1 l)
 			(dictInsert x2 c2 l)
 			t1 t2
+	| (Add m n, Add p q) ->
+		alphaEquiv c1 c2 m p && alphaEquiv c1 c2 n q
 	| (x, y) -> x == y
 ;
 
 let betaEquiv : Term -> Term -> Bool;
-let betaEquiv t1 t2 = alphaEquiv dictEmpty dictEmpty (normalForm t1) (normalForm t2);
+let betaEquiv t1 t2 = alphaEquiv dictEmpty dictEmpty
+	(normalForm t1) (normalForm t2);
 
-let typ : Ctx -> Term -> Term;
+let typ : Ctx -> Term -> Either String Term;
 let typ c = \case
-    Var x -> (case dictGet c x
-        | Just res -> res
-        | Nothing -> error "variable not found.")
+    Var x -> fromMaybe
+    	("variable "+x+" not found.")
+    	(dictGet c x)
     | Lam x t b ->
-        Pi x t (typ (dictInsert x c t) b)
-    | Pi x t b -> Star
-    | App f a -> (case typ c f
+    	bind (typ (dictInsert x c t) b) (\bT ->
+        Right (Pi x t bT))
+    | Pi x t b -> Right Star
+    | App f a ->
+    	bind (typ c f) $ \fT ->
+    	(case fT
         | Pi x t b ->
-			let aT = typ c a;
-			let _ = when (not $ betaEquiv t aT) (\_ ->
-				error ("Type mismatch: " + str t + ", " + str aT));
-            subst x a b
-		| o -> error ("expected a Pi-type, got " + str o))
-    | Nat -> Star
-    | NatLit _ -> Nat
-    | o -> error (str o + " is not a valid term.")
+			bind (typ c a) $ \aT ->
+			if not $ betaEquiv t aT
+			then Left ("Type mismatch: " + str t
+					+ ", " + str aT)
+            else Right (subst x a b)
+		| o -> Left
+			("expected a Pi-type, got " + str o))
+    | Nat -> Right Star
+    | NatLit _ -> Right Nat
+    | Let x e b ->
+    	bind (typ c e) $ \t ->
+    	typ (dictInsert x c t) b
+    | Add x y ->
+    	bind (typ c x) $ \xT ->
+    	bind (typ c y) $ \yT ->
+    	if not (betaEquiv xT yT &&
+    		betaEquiv xT Nat)
+    	then Left
+    		("Type mismatch: Expected Nat and Nat"
+    		+ ", got " + str xT +" and " +str yT)
+    	else Right Nat
+	| o -> Left (str o + " is not a valid term.")
 ;
 
-print $ typ dictEmpty
-	(App
-		(App
-			(Lam "a" Star (Lam "x" (Var "a") (Var "x")))
-			Nat)
-		(Lam "_" Nat (NatLit 10)))
+let parse = unRight (parser gr);
 
+# REPL
+let rec inputLoop = \_ ->
+	input "dep>" (\src ->
+		let _ = print src;
+		let _ = if strip src == "cls"
+			then cls()
+			else
+				let res = bind (parse src)
+					(typ dictEmpty);
+				print res;
+		inputLoop ())
+;
 
+inputLoop ()

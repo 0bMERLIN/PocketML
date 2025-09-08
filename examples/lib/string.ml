@@ -14,6 +14,7 @@ PML_strLen = lambda s: len(s)
 PML_str = str
 PML_strHead = lambda s: s[0]
 PML_strTail = lambda s: s[1:]
+PML_strip = lambda s: s.strip()
 %%%;
 
 ## Functions for working with the builtin `String` type.
@@ -25,6 +26,7 @@ data List a
 let str : a -> String;
 let split : String -> String -> List String;# chars str -> list
 let replace : String -> String -> String -> String; # old new str
+let strip : String -> String;
 let isNumeric : String -> Bool;
 let strIn : String -> String -> Bool; # a b, check if a is any of the characters in b
 let strLen : String -> Number;

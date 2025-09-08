@@ -47,4 +47,4 @@ let view s =
         let inp = Label s "inp" @(0,w*5) @(w*4,w);
         Many [inp, btns];
 
-setTick init tick view
+app init tick view

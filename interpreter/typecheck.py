@@ -923,11 +923,12 @@ def solve(constraints, t):
     # (a terminal constraint is for example: t1 = Int for the type t1)
 
     while len(cs) > 1 or (len(cs) == 1 and not isinstance(cs[0][0], TVar)):
-        if DBG:
-            os.system("clear")
-            for a, b, l in cs:
-                print(a, "=", b, f"(line {l})")
-            input()
+        # TODO: DEPRECATED DEBUG
+        # if DBG:
+        #     os.system("clear")
+        #     for a, b, l in cs:
+        #         print(a, "=", b, f"(line {l})")
+        #     input()
 
         a, b, line = cs.pop(0)
 

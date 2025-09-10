@@ -47,4 +47,4 @@ let tick e brush = case brush | Brush s c -> (
 		forceUpdate brush
 );
 
-setTick (Brush 10 @(255,255,255,255)) tick view
+app (Brush 10 @(255,255,255,255)) tick view

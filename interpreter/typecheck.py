@@ -517,8 +517,6 @@ class Typechecker(Interpreter):
             t = Typ("->", [tv, t], a.meta.line)
         t = solve(self.constraints, t)
         
-        # self.constraints = [] # TODO: find out if this is allowed or if it breaks something
-
         # assignment
         if str(x) == "_":
             return self.visit(b)
@@ -918,7 +916,8 @@ class Typechecker(Interpreter):
         return TRecord(dict(entries), entries[0][1].line)
 
 def solve(constraints, t):
-    cs = deepcopy(constraints)
+    cs = copy(constraints) # TODO: find out if deepcopy is needed
+    
     grave = []  # all constraints that were not able to be used
     # will be kept around as they could be terminal constraints
     # (a terminal constraint is for example: t1 = Int for the type t1)
@@ -938,31 +937,32 @@ def solve(constraints, t):
         if isinstance(a, TVar) and isinstance(b, TRecord) and b.access_check:
             newcs = []
 
-            if not any((x.occurs(a.name) or y.occurs(a.name)) for x, y, _ in cs):
+            if any((x.occurs(a.name) or y.occurs(a.name)) for x, y, _ in cs):
+                for x, y, l in cs:
+                    if (
+                        isinstance(x, TVar)
+                        and isinstance(y, TRecord)
+                        and y.access_check
+                        and str(x) == str(a)
+                    ):
+                        newcs += b.unify(y, l)
+                        entries = copy(b.entries)
+                        entries.update(y.entries)
+                        b.entries = entries
+                        newcs += [(a, TRecord(entries, l, True), line)]
+                    else:
+                        newcs += [(x.subst(a.name, b), y.subst(a.name, b), l)]
+                cs = newcs
+            else:
                 grave.append((a, b))
-
-            for x, y, l in cs:
-                if (
-                    isinstance(x, TVar)
-                    and isinstance(y, TRecord)
-                    and y.access_check
-                    and str(x) == str(a)
-                ):
-                    newcs += b.unify(y, l)
-                    entries = copy(b.entries)
-                    entries.update(y.entries)
-                    b.entries = entries
-                    newcs += [(a, TRecord(entries, l, True), line)]
-                else:
-                    newcs += [(x.subst(a.name, b), y.subst(a.name, b), l)]
-            cs = newcs
 
         #
         elif isinstance(a, TVar):
             # if this constraint is not used further
-            if not any((x.occurs(a.name) or y.occurs(a.name)) for x, y, _ in cs):
+            if any((x.occurs(a.name) or y.occurs(a.name)) for x, y, _ in cs):
+                cs = [(x.subst(a.name, b), y.subst(a.name, b), l) for x, y, l in cs]
+            else:
                 grave.append((a, b))
-            cs = [(x.subst(a.name, b), y.subst(a.name, b), l) for x, y, l in cs]
 
         else:  # Typ
             cs = a.unify(b, line) + cs

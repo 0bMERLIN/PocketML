@@ -92,6 +92,8 @@ def PML_concatenate(ax, a, b):
 		raise Exception("Cannot concatenate on axis " + str(ax))
 
 
+PML_mag = np.linalg.norm
+
 %%%;
 import lib.list (type List, map, zip);
 import lib.math (min, max, type Vec);
@@ -165,5 +167,7 @@ let concatenate : Number -> Vec -> Vec -> Vec
 
 let reshape : Size -> Vec -> Vec;
 let transpose : Vec -> Vec;
+
+let mag : Vec -> Number;
 
 module (*)

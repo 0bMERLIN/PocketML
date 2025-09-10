@@ -63,6 +63,9 @@ def preprocess_do_blocks(source_code: str):
     n_open_lets = 0
     last_let_dist = 1  # number of lines since the last let
 
+    OPEN = "{"
+    CLOSE = "}"
+
     for original_line, line in zip(original_lines, lines):
         stripped = line.lstrip()
         if not stripped:
@@ -82,13 +85,13 @@ def preprocess_do_blocks(source_code: str):
         if next_line_do:
             indent_stack.append([indent, prev_n_open_parens, 0, 0])
             next_line_do = False
-            result += "{"
+            result += OPEN
 
         # a do block is terminated by dedent
         if indent < indent_stack[-1][0]:
-            close_lets = "}" * indent_stack[-1][2]
+            close_lets = CLOSE * indent_stack[-1][2]
             indent_stack.pop()
-            result += close_lets + "}" + (";" if len(indent_stack) > 1 else "")
+            result += close_lets + CLOSE + (";" if len(indent_stack) > 1 else "")
 
         # do block is terminated by ";"
         if (
@@ -99,7 +102,7 @@ def preprocess_do_blocks(source_code: str):
         ):
             j = line.find(";")
             original_line = (
-                original_line[:j] + "}" + "}" * indent_stack[-1][2] + original_line[j:]
+                original_line[:j] + CLOSE + CLOSE * indent_stack[-1][2] + original_line[j:]
             )
             indent_stack.pop()
 
@@ -110,7 +113,7 @@ def preprocess_do_blocks(source_code: str):
             j = len(line)
             for _ in range(indent_stack[-1][1]):
                 j = str(reversed(line)).find(")")
-            close_lets = "}" * indent_stack[-1][2]
+            close_lets = CLOSE * indent_stack[-1][2]
             original_line = original_line[:j] + close_lets + ";}" + original_line[j:]
             indent_stack.pop()
 
@@ -143,7 +146,8 @@ def preprocess_do_blocks(source_code: str):
     for _, ps, n_open_lets, _ in indent_stack[1:]:
         if ps != 0:
             continue
-        result += "}" + n_open_lets * "}"
+        result += CLOSE + n_open_lets * CLOSE
+
     return result
 
 

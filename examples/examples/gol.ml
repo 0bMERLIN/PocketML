@@ -16,8 +16,8 @@ let nAlive buf v =
 	len (filter (\x -> x > 0) $
 		map (\o ->
 			let p = imgGet buf (v+o);
-			if vecLen p == 0 then 0 else
-			vecAt 0 p)
+			if mag p == 0 then 0 else
+			get [0] p)
 		offsets);
 
 let determineAlive : Bool -> Number -> Bool;
@@ -33,7 +33,7 @@ let tick img =
 	let buf = imgBuf img;
 	imgMap img (\x y cell ->
 		let n = nAlive buf @(x,y);
-		let c = vecAt 0 cell > 0;
+		let c = get [0] cell > 0;
 		if determineAlive c n
 			then @(255,255,255,255)
 			else @(0,0,0,255)
@@ -57,7 +57,7 @@ let _ =
 	addPattern mygrid @(0, 0) gosper
 ;
 
-let _ = setTick 0 (\e t -> case e | Tick ->
+let _ = app 0 (\e t -> case e | Tick ->
 	let _ = when (divisible t 5)
 		(\_ -> traceTime (\_ -> tick mygrid));
 	inc t) (\_ -> TRect mygrid @(700,700) @(150,800));

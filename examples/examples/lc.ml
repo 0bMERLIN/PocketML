@@ -1,6 +1,6 @@
 import lib.parsing;
 
-let parse = parser """
+let parse = parser '
 
 ?start: expr
 
@@ -19,7 +19,7 @@ num: /-?\d+(\.\d+)?/
 %import common.WS
 %ignore WS
 
-""";
+';
 
 import lib.util;
 import lib.list;

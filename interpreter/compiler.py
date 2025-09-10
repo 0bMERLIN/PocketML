@@ -47,12 +47,12 @@ def prettify(v):
         return "(" + ", ".join([*map(prettify, v.values())]) + ")"
 
     # list
-    if type(v) == tuple and len(v) != 0 and v[0] in ["PML_Cons", "PML_Nil"]:
+    if type(v) in [tuple, list] and len(v) != 0 and v[0] in ["PML_Cons", "PML_Nil"]:
         l = convlist(v)
         return "[" + ", ".join(list(map(prettify, l))) + "]"
 
     # custom data type
-    if type(v) == tuple and len(v) != 0 and type(v[0]) == str:
+    if type(v) in [tuple, list] and len(v) != 0 and type(v[0]) == str:
         res = str(v[0].removeprefix("PML_")) + " " + " ".join(map(prettify, v[1:]))
         return f"({res})" if len(v) > 1 else res
 

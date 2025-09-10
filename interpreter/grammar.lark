@@ -12,7 +12,7 @@
 
 // statement expressions like let, if, etc.
 ?atom1: atom2 "." NAME -> access
-    | "do" "{" _sep{expr, ";"}  (";")?"}" -> do
+    | "do" "{" (expr ";")* "}" -> do
     | "import" import_module_path import_list? import_as? ";" expr -> _import
     | "module" "(" ("*" | _sep{export, ","}) ")" -> module // no empty modules allowed!
     | "case" expr "|" _sep{case, "|"} -> match

@@ -88,10 +88,7 @@ PML_copy=copy
 
 def PML_readFile(p):
 	from kivy import platform
-	if platform == "android":
-		p = path.cwd+"/"+p
-	else:
-		p = path.storage_path+"/"+path.cwd+"/"+p
+	p = path.cwd+"/"+p
 	p = p.replace("//","/")
 	try:
 		with open(p,'r') \
@@ -103,7 +100,6 @@ def PML_readFile(p):
 %%%;
 
 ## Util functions for the OS, kivy process, network and more.
-
 
 ### ### Time
 let time : Unit -> Number;
@@ -123,6 +119,7 @@ let setTermFontSize : Number -> Unit;
 let str : a -> String
 	# deprecated. Use lib.string (str)
 ;
+
 data List a
 	# --hide
 ;

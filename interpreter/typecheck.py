@@ -99,7 +99,8 @@ class ModuleData:
 
 
 # store filename, types & file hash
-global_module_cache: Cache[Tuple[ModuleData, ParseTree]] = Cache()
+PythonSrc = str
+global_module_cache: Cache[Tuple[ModuleData, ParseTree, PythonSrc | None]] = Cache()
 
 
 BUILTIN_TYPES = {
@@ -124,7 +125,7 @@ BUILTIN_TYPES = {
             TRecord({f"_{n}": tvar(f"a{n}") for n in range(10)}, -1, baked=True), t_unit
         )
     ),
-    "print_raw": Scheme.generalize(t_fn(tvar("a"), t_unit))
+    "print_raw": Scheme.generalize(t_fn(tvar("a"), t_unit)),
 }
 
 BUILTIN_KINDS = {"Bool": 0, "Number": 0, "Unit": 0, "String": 0, "Vec": 0, "Num": 0}
@@ -140,7 +141,7 @@ def load_file(filename, logger=print) -> Tuple[ParseTree, ModuleData]:
     """
 
     filename = path.abspath(filename).replace("//", "/")
-    
+
     if not os.path.isfile(filename):
         raise ParseError(f"Module ({filename}) not found!")
 
@@ -181,7 +182,7 @@ def load_file(filename, logger=print) -> Tuple[ParseTree, ModuleData]:
                 copy(typechecker.type_aliases),
             )
 
-        global_module_cache.cache(filename, (m, tree))
+        global_module_cache.cache(filename, (m, tree, None))
         if SHOW_COMPILE_TIME:
             logger(f"[TYPED] ({filename})\t", round(t2 - t1, 4))
 
@@ -504,7 +505,7 @@ class Typechecker(Interpreter):
     def let(self, *args):
 
         x = args[0]
-        params = args[1:-2] # pattern params
+        params = args[1:-2]  # pattern params
         e, b = args[-2], args[-1]
         old_env = copy(self.env)
 
@@ -516,7 +517,7 @@ class Typechecker(Interpreter):
         for tv, a in reversed(list(zip(tvs, params))):
             t = Typ("->", [tv, t], a.meta.line)
         t = solve(self.constraints, t)
-        
+
         # assignment
         if str(x) == "_":
             return self.visit(b)
@@ -525,7 +526,7 @@ class Typechecker(Interpreter):
             t.baked = True
 
         self.env = copy(old_env)
-        
+
         if x in self.env:
             self.constr(self.env[x].inst(), t, x.line)
         else:
@@ -600,7 +601,7 @@ class Typechecker(Interpreter):
 
     def lam(self, *args):
 
-        xs = args[:-1] # pattern params
+        xs = args[:-1]  # pattern params
         b = args[-1]
 
         # visit args
@@ -915,9 +916,10 @@ class Typechecker(Interpreter):
         entries = [self.visit(e) for e in entries]
         return TRecord(dict(entries), entries[0][1].line)
 
+
 def solve(constraints, t):
-    cs = copy(constraints) # TODO: find out if deepcopy is needed
-    
+    cs = copy(constraints)  # TODO: find out if deepcopy is needed
+
     grave = []  # all constraints that were not able to be used
     # will be kept around as they could be terminal constraints
     # (a terminal constraint is for example: t1 = Int for the type t1)

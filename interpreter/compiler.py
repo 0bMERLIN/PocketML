@@ -2,7 +2,7 @@ from copy import copy
 import time
 from interpreter import path
 from interpreter.parser import parse_file
-from interpreter.typecheck import global_module_cache
+import interpreter.typecheck as typecheck
 from lark import Token, Tree, v_args
 from lark.visitors import Interpreter
 from interpreter.path import storage_path
@@ -224,10 +224,8 @@ class Compiler(Interpreter):
         filename += ".ml"
 
         p = path.abspath(filename)
-        if global_module_cache.cached(p):
-            if SHOW_CACHE_USES:
-                print("----> used cached parse for", p)
-            tree = global_module_cache.get(p)[1]
+        if typecheck.global_module_cache.cached(p):
+            _, tree, _ = typecheck.global_module_cache.get(p)
         else:
             tree = parse_file(p)
 
@@ -244,7 +242,28 @@ class Compiler(Interpreter):
 
         self.emit("\n__EXPORTS__={}\n")
         self.emit("\n__OLD_ENV__=copy(globals())\n")
-        self.visit(tree)
+
+        # compile the imported module
+        if (
+            typecheck.global_module_cache.cached(p)
+            and (src := typecheck.global_module_cache.get(p)[2]) != None
+        ):
+            # has been compiled before, use cached source
+            self.emit(src)
+        else:
+            old = self.filename if hasattr(self, "filename") else None
+            self.filename = p
+            n = len(self.res.split("\n"))
+            self.visit(tree)
+            self.filename = old
+            n2 = len(self.res.split("\n"))
+
+            # add the newly compiled module to the cache
+            if typecheck.global_module_cache.cached(p):
+                src = "\n".join(self.res.split("\n")[n - 1 : n2 + 1])
+                current_cache = typecheck.global_module_cache.get(p)
+                typecheck.global_module_cache.cache(p, (*current_cache[0:2], src))
+
         # if module alias, replace __EXPORTS__ with { "[alias]" : __EXPORTS__ }
         if alias is not None:
             self.emit("\nglobals().update({ " + f'"PML_{alias}" : __EXPORTS__' + " })")
@@ -253,19 +272,16 @@ class Compiler(Interpreter):
         exports_compiled = (
             "{" + ", ".join([f"'PML_{k}' : {v}" for k, v in exports.items()]) + "}"
         )
-        self.emit("\nif \"__EXPORTS__\" in __OLD_ENV__: del __OLD_ENV__[\"__EXPORTS__\"]\n")
+        self.emit('\nif "__EXPORTS__" in __OLD_ENV__: del __OLD_ENV__["__EXPORTS__"]\n')
         self.emit("\nglobals().update(__OLD_ENV__)\n")
 
         if import_list is None and alias is None:
-            self.emit("\nglobals().update(__EXPORTS__)\n") # import all
-        
+            self.emit("\nglobals().update(__EXPORTS__)\n")  # import all
+
         if import_list is not None:
             self.emit(f"\nglobals().update({exports_compiled})")
 
-        # body
         res = self.visit(e)
-
-
         return res
 
     def valueexport(self, nm):
@@ -277,6 +293,8 @@ class Compiler(Interpreter):
     def module(self, *exports):
         exports = [self.visit(e) for e in exports]
         # if exports is empty export everything
+
+        print(self.filename)
         if len(exports) == 0:
             self.emit(
                 "__EXPORTS__ = {k:v for k,v in globals().items() if k.startswith('PML_')}\n"
@@ -379,7 +397,7 @@ class Compiler(Interpreter):
         # function definition (def ...)
         if len(params) > 1:
             self.emit("\n@curry")
-        fn_params = ["_param"+str(i) for i in range(len(params))]
+        fn_params = ["_param" + str(i) for i in range(len(params))]
         self.emit(f"def PML_{x}({', '.join(fn_params)}):")
         self.indent()
         self.emit(f"match [{', '.join(fn_params)}]:")
@@ -416,8 +434,8 @@ class Compiler(Interpreter):
         # function definition (def ...)
         if len(xs) > 1:
             self.emit("\n@curry")
-        
-        fn_params = ["_param"+str(i) for i in range(len(xs))]
+
+        fn_params = ["_param" + str(i) for i in range(len(xs))]
         self.emit(f"def {fn_name}({', '.join(fn_params)}):")
         self.indent()
         self.emit(f"match [{', '.join(fn_params)}]:")
@@ -514,11 +532,11 @@ class Compiler(Interpreter):
         return (str(nm), self.visit(p))
 
     def precordvar(self, nm):
-        return (str(nm), "PML_"+str(nm))
+        return (str(nm), "PML_" + str(nm))
 
     def precord(self, *entries):
         xs = list(map(self.visit, entries))
-        return "{" + ",".join([(f'"{k}": {v}') for k,v in xs]) + "}"
+        return "{" + ",".join([(f'"{k}": {v}') for k, v in xs]) + "}"
 
     def ptuple(self, elems):
         xs = self.visit_children(elems)

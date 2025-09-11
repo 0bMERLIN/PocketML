@@ -5,22 +5,20 @@ Whip up a quick _GUI_, _plot_ or even prototype _your new programming language_ 
 
 Visit the [PocketML](https://github.com/0bMERLIN/PocketML) repository.
 
+---
+
+A little sample:
+```haskell
+app () (\event state -> state + 1)
+    (\state -> Label "mylabel" (str state) @(100, 100) @(0, 0))
+```
+
 ## Guides
 - [Language/Installation Guide](Guide.md)
 - [Programming in PocketML: The Game of Life](GameOfLife.md)
 - [Programming in PocketML: Making a calculator GUI](CalcGUI.md)
 - [Hacking / Python interop](Hacking.md)
 - [Features, Libraries & Type system](Features.md)
-
-## A little sample
-
-```haskell
-let view state = Label "mylabel" (str state) @(100, 100) @(0, 0);
-let tick event state = case event | Tick -> state + 1 | _ -> state;
-app 0 tick view
-```
-PocketML hates boilerplate as it is meant to be used _on the go_.
-Visit the repository for a demo of the mobile editor!
 
 ## Blog
 - [Powerful ML Modules in PocketML](BlogModules.md)

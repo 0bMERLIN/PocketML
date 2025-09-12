@@ -91,11 +91,12 @@ def imgSave(fname, texture):
 	print("Image saved " + fname)
 
 def PML_imgLoad(p):
+
 	try:
-		t = CoreImage(path.cwd + p).texture
+		t = CoreImage((path.cwd + "/" + p).replace("//", "/")).texture
 		t.mag_filter = "nearest"
-		if t.uvsize[1]<0:
-			t.flip_vertical()
+		# if t.uvsize[1]<0:
+		# 	t.flip_vertical()
 		return t
 	except Exception as e:
 		print("Oops", e)
@@ -129,7 +130,7 @@ def PML_mkAtlasImg(textures):
     colorfmt = textures[0].colorfmt
 
     for tex in textures:
-        if tex.width != width or tex.colorfmt != colorfmt:
+        if tex.colorfmt != colorfmt:
             raise ValueError("All textures must have the same width and color format")
 
     total_height = sum(tex.height for tex in textures)

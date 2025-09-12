@@ -11,8 +11,7 @@
     | atom atom1 -> app
 
 // statement expressions like let, if, etc.
-?atom1: atom2 "." NAME -> access
-    | "do" "{" (expr ";")* "}" -> do
+?atom1: "do" "{" (expr ";")* "}" -> do
     | "import" import_module_path import_list? import_as? ";" expr -> _import
     | "module" "(" ("*" | _sep{export, ","}) ")" -> module // no empty modules allowed!
     | "case" expr "|" _sep{case, "|"} -> match
@@ -27,7 +26,8 @@
     | atom2
 
 // literals, variables and expressions in parentheses
-?atom2: "@(" nparrayelems ")" -> nparray
+?atom2: atom2 "." NAME -> access
+    | "@(" nparrayelems ")" -> nparray
     | "(" tupleelems ")" -> _tuple
     | "[" listelems "]" -> list
     | none_expr -> none
@@ -100,7 +100,7 @@ constructor: UPPERNAME typeatom1*
 
 ?typeatom1: typeatom | typename -> ttyp
 
-typename: (NAME ".")? UPPERNAME
+typename: (UPPERNAME ".")* UPPERNAME
 
 tupletelems: typeatom1 "," (typeatom1 ("," typeatom1)*)?
 

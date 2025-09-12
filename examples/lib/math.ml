@@ -67,6 +67,13 @@ def PML_noise(v, seed=0):
     
     return (lerp(x1, x2, v) + 1) / 2
 
+@curry
+def PML_random(a, b):
+    return np.random.uniform(a, b)
+
+def PML_angleOf(v):
+    return np.arctan2(v[1], v[0])
+
 %%%;
 
 import lib.util (not, const);
@@ -78,6 +85,7 @@ let sin : Number -> Number;
 let cos : Number -> Number;
 let tan : Number -> Number;
 let pi : Number;
+let angleOf : Vec -> Number;
 
 ### ### Misc.
 let sign x = if x < 0 then -1 else 1;
@@ -113,6 +121,10 @@ let even x = divisible x 2;
 
 ### ### Random
 
-let noise : Vec -> Number;
+let noise : Vec -> Number
+    # 2D Perlin noise
+;
+
+let random : Number -> Number -> Number;
 
 module (*)

@@ -382,6 +382,12 @@ class Compiler(Interpreter):
             self.emit(res + " = " + eres)
             self.dedent()
 
+        else:
+            self.emit("else:")
+            self.indent()
+            self.emit(res + " = None")
+            self.dedent()
+
         return res
 
     def let(self, *args):

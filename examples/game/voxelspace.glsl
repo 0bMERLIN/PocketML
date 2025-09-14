@@ -12,7 +12,8 @@ uniform float angle;
 
 uniform sampler2D tex;
 uniform float atlasMap[N];
-uniform vec2 atlasSizes[N];
+uniform vec2 atlasSizes[N]; // sizes of the images on the atlas in pixels
+uniform vec2 atlasImgSize; // size of the atlas texture in pixels
 uniform int atlasSize;
 
 uniform vec4 spriteLines[N];
@@ -42,8 +43,8 @@ vec4 sample(vec2 v, int t) {
 	
 	vec2 sz = atlasSizes[t];
 	float h = texHeight(t);
-	vec2 p = v;//floor(v*sz) / sz;
-	return texture2D(tex, vec2(p.x,atlasMap[t] + p.y*h));
+	vec2 p = v;
+	return texture2D(tex, vec2(p.x * (atlasSizes[t].x / atlasImgSize.x),atlasMap[t] + p.y*h));
 }
 
 vec4 sample0(vec2 v) {
@@ -137,7 +138,7 @@ void main(void) {
 			col = c.a*c + (1.0-c.a)*col;
 			col.rgb =
 				mix(col.rgb, sky,
-					max(0.0, 2.0*(it.x/dist-.5)));
+					min(1.0, max(0.0, 2.0*(it.x/dist-.5))));
 		}
 	}
     

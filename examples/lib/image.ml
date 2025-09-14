@@ -16,9 +16,13 @@ SP = "/storage/emulated/0/Android/data/org.test.myapp/files/" \
 	if platform == "android" else "examples/"
 
 def mkimage(width, height):
+
 	pixels = bytearray(width * height * 4)
+	# Flip the pixel data vertically before creating the texture
+	arr = np.frombuffer(pixels, dtype=np.uint8).reshape((height, width, 4))
+	arr = np.flipud(arr)
 	texture = Texture.create(size=(width, height), colorfmt="rgba")
-	texture.blit_buffer(pixels, colorfmt='rgba', bufferfmt='ubyte')
+	texture.blit_buffer(arr.tobytes(), colorfmt='rgba', bufferfmt='ubyte')
 	texture.mag_filter = "nearest"
 	texture.min_filter = "nearest"
 	return texture
@@ -66,8 +70,10 @@ def PML_imgMapRect(size, pos, texture, f):
 					pos[0],
 					min(w, pos[0]+size[0])):
 				color = arr[y,x]
-				new_color = f(x)(y)(color)
-				arr[y,x] = [*map(int,list(new_color))]
+
+				y1 = y if texture.tex_coords[1] == 0 else h-y
+				new_color = f(x)(y1)(color)
+				arr[y1,x] = [*map(int,list(new_color))]
 		texture.blit_buffer(arr.tobytes(), 
 			colorfmt='rgba',
 			bufferfmt='ubyte')
@@ -85,18 +91,24 @@ def PML_imgBuf(tex):
 
 def imgSave(fname, texture):
 	data = io.BytesIO()
-	CoreImage(texture).save(data, fmt='png')
-	with open(path.cwd + fname, "wb+") as f:
+	# Extract pixel data and flip with numpy
+	arr = np.frombuffer(texture.pixels, dtype=np.uint8).copy()
+	arr = arr.reshape((texture.height, texture.width, 4))
+
+	if texture.tex_coords[1] == 0:
+		arr = np.flipud(arr)
+	# Create a new texture for saving
+	tex = Texture.create(size=(texture.width, texture.height), colorfmt="rgba")
+	tex.blit_buffer(arr.tobytes(), colorfmt="rgba", bufferfmt="ubyte")
+	CoreImage(tex).save(data, fmt='png')
+	with open((path.cwd + "/" + fname).replace("//", "/"), "wb+") as f:
 		f.write(data.getvalue())
 	print("Image saved " + fname)
 
 def PML_imgLoad(p):
-
 	try:
 		t = CoreImage((path.cwd + "/" + p).replace("//", "/")).texture
 		t.mag_filter = "nearest"
-		# if t.uvsize[1]<0:
-		# 	t.flip_vertical()
 		return t
 	except Exception as e:
 		print("Oops", e)
@@ -122,36 +134,36 @@ from kivy.graphics import Fbo, Rectangle, ClearBuffers, ClearColor
 from kivy.graphics.texture import Texture
 
 def PML_mkAtlasImg(textures):
-    textures = convlist(textures)
-    if not textures:
-        raise ValueError("No textures provided")
+	textures = convlist(textures)
+	if not textures:
+		raise ValueError("No textures provided")
 
-    width = textures[0].width
-    colorfmt = textures[0].colorfmt
+	width = textures[0].width
+	colorfmt = textures[0].colorfmt
 
-    for tex in textures:
-        if tex.colorfmt != colorfmt:
-            raise ValueError("All textures must have the same width and color format")
+	for tex in textures:
+		if tex.colorfmt != colorfmt:
+			raise ValueError("All textures must have the same width and color format")
 
-    total_height = sum(tex.height for tex in textures)
+	total_height = sum(tex.height for tex in textures)
 
-    # Create an FBO with the final size
-    fbo = Fbo(size=(width, total_height), with_stencilbuffer=False)
+	# Create an FBO with the final size
+	fbo = Fbo(size=(width, total_height), with_stencilbuffer=False)
 
-    with fbo:
-        # Clear the FBO with transparent background
-        ClearColor(0, 0, 0, 0)
-        ClearBuffers()
+	with fbo:
+		# Clear the FBO with transparent background
+		ClearColor(0, 0, 0, 0)
+		ClearBuffers()
 
-        y_offset = 0
-        for tex in textures:
-            Rectangle(texture=tex, pos=(0, y_offset), size=(tex.width, tex.height))
-            y_offset += tex.height
+		y_offset = 0
+		for tex in textures:
+			Rectangle(texture=tex, pos=(0, y_offset), size=(tex.width, tex.height))
+			y_offset += tex.height
 
-    # Force the FBO to render
-    fbo.draw()
-    setfilter(fbo.texture)
-    return fbo.texture
+	# Force the FBO to render
+	fbo.draw()
+	setfilter(fbo.texture)
+	return fbo.texture
 
 PML_imgSize = lambda i: \
 	np.array([i.width,i.height])

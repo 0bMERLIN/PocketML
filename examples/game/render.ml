@@ -45,7 +45,7 @@ let render3D pos angle sprites atl worldTexture skyColor hasFog =
 		, UniformVec2 "pos" pos
         , UniformInt "worldTexture" worldTexture
 		, UniformVec3 "sky" skyColor
-		, UniformInt "hasFog" (if hasFog then 1 else 0)
+		, UniformInt "fogEnabled" (if hasFog then 1 else 0)
 		]
 		# Atlas map
 		+ imap (\i ->
@@ -54,8 +54,11 @@ let render3D pos angle sprites atl worldTexture skyColor hasFog =
 		# Atlas image sizes
 		+ imap (\i ->
 			UniformVec2
-				("atlasSizes[+"+str i+"+]"))
+				("atlasSizes["+str i+"]"))
 			szs
+		
+		# Size of the entire atlas
+		+ [UniformVec2 "atlasImgSize" (imgSize tex)]
 		
 		+ concat (imap spriteUniforms sprites))
 		@(width,width) @(0,height*.2);

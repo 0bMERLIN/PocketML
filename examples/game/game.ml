@@ -28,8 +28,10 @@ let moonmap = imgShade (image @(300, 300)) (readFileUnsafe "mapgenmoon.glsl");
 let textures =
 	[ earthmap
 	, moonmap
-	, imgLoad "icon.png"
+	, imgLoad "rock.png"
+	, imgLoad "tree.png"
 	];
+
 let atlas = mkAtlas textures;
 
 # planets
@@ -59,6 +61,12 @@ let getMapHeight p v =
 # game model
 data Resource = Tree | Rock;
 
+let resourceToTexture : Resource -> Number;
+let resourceToTexture r = 2 + case r
+	| Tree -> 0
+	| Rock -> 1
+;
+
 type Scene =
 	{ planet : Planet
 	, resources : List (Resource, Vec)
@@ -77,7 +85,7 @@ let resourceToBillboard playerPos (res, pos) =
 	let heading = angleOf (vec2To3 playerPos - pos) + pi/2;
 	let right = @(cos heading, sin heading, 0);
 	let up = @(0,0,1);
-	Render.Sprite 2 pos (pos + up ° 0.03 - right ° 0.03)
+	Render.Sprite (resourceToTexture res) pos (pos + up ° 0.03 - right ° 0.03)
 ;
 
 let view state =

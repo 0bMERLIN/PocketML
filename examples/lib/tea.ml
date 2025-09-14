@@ -119,6 +119,70 @@ class GameObj:
 
 ###### PRIMITIVES / HELPERS
 
+class CustomColorPicker(Widget):
+	def __init__(self, name, size=(200,200), pos=(0,0)):
+		super().__init__()
+		self.name = name
+		self.size = size
+		self.pos = pos
+		x, y = pos
+		w, h = size
+
+		# Sliders
+		labels = list(reversed(["R", "G", "B", "A"]))
+		self.sliders = []
+		for i, label_text in enumerate(labels):
+			label = Label(
+				text=label_text,
+				pos=(x, y + i * h / 5),
+				size=(w / 5, h / 5),
+				halign="right",
+				valign="middle"
+			)
+			self.add_widget(label)
+			slider = Slider(
+				min=0, max=1, value=1, step=.01,
+				pos=(x + w / 5, y + i * h / 5),
+				size=(w * 2 / 5, h / 5)
+			)
+			self.add_widget(slider)
+			slider.bind(value=lambda _, v: self.color_picked())
+			self.sliders.append(slider)
+
+		# Color wheel
+		self.color_wheel = ColorWheel(
+			size=(w / 2, w / 2),
+			size_hint=(None,None),
+			pos=(x + w / 1.5, y+1000)
+		)
+
+		Clock.schedule_once(lambda *_: self.position_color_wheel(x,y,w,h), .5)
+
+		self.add_widget(self.color_wheel)
+		self.color_wheel.bind(color=lambda _, v: self.on_wheel_color(v))
+
+		# Rectangle to display the current color
+		with self.canvas:
+			self.color_instruction = Color(1, 1, 1, 1)
+			self.color_rect = Rectangle(
+				pos=(x + w / 5, y + 4 * h / 5),
+				size=(w * 4 / 5, h / 5)
+			)
+	
+	def position_color_wheel(self,x,y,w,h):
+		self.color_wheel.pos = (x + w / 1.5, y)
+
+	def on_wheel_color(self, v):
+		# Update sliders and color rectangle when color wheel changes
+		for i, val in enumerate(reversed(v)):
+			self.sliders[i].value = val
+		self.color_picked()
+		
+	def color_picked(self):
+		v = [s.value for s in reversed(self.sliders)]
+		self.color_instruction.rgba = tuple(v)
+		emit_event("ColorPicked", self.name, np.array(v) * 255)
+
 def rect(pos,size,texture=None):
 	PushMatrix()
 	r=Rotate()
@@ -191,12 +255,9 @@ def update_srect(s, src,_,size,pos):
 	s.pos = floats(2*pos/np.array([Window.width,Window.height]))
 
 def init_colpicker(name, size,pos):
-	l=BoxLayout(orientation="vertical",size=floats(size),pos=floats(pos))
-	c = ColorWheel()
-	l.add_widget(c)
-	editor.graphicalout.add_widget(l)
-	c.bind(color=lambda _,v:emit_event("ColorPicked",name,np.array(v)*255))
-	return l
+	c = CustomColorPicker(name, size=floats(size),pos=floats(pos))
+	editor.graphicalout.add_widget(c)
+	return c
 
 def update_colpicker(c,_,size,pos):
 	c.pos=floats(pos)

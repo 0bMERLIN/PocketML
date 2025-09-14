@@ -1,3 +1,4 @@
+import json
 from kivy.uix.widget import Widget
 from kivy.uix.textinput import TextInput
 from kivy.core.window import Window
@@ -12,9 +13,16 @@ from kivy.core.window import Window
 from editor.moduleviewer import ModuleViewer
 from utils import BTN_H, BTN_W, relpath
 
-with open("current_file.txt") as f:
-    current_files = f.read().strip("\n").split("\n")
-
+# Load currently open files from json
+# example format:
+# {
+#     "examples/examples/game.ml": {
+#         "focus": 0,
+#         "font_size": 14
+#     }
+# }
+with open("current_files.json") as f:
+    current_files = json.load(f)
 
 class LongPressTabHeader(TabbedPanelHeader):
     """A tab header that does something when long pressed"""
@@ -57,15 +65,15 @@ class Editor(Widget):
         )
 
         self.files_tab_panel.do_default_tab = False
+        
+        # Load currently open files
         for f in current_files:
-            if f.endswith("[OPEN]"):
-                f = f.removesuffix("[OPEN]")
-                self.create_new_file_tab(f)
+            self.create_new_file_tab(f, font_size=current_files[f]["font_size"])
+
+            if current_files[f]["focus"]:
                 Clock.schedule_once(
                     lambda _: self.files_tab_panel.switch_to(self.file_tabs[f]), 0
                 )
-
-            self.create_new_file_tab(f)
 
         self.tab_panel = TabbedPanel(
             size=(Window.width, Window.height),
@@ -120,11 +128,12 @@ class Editor(Widget):
         self.tab_panel.add_widget(tab)
         return tab
 
-    def create_new_file_tab(self, filename):
+    def create_new_file_tab(self, filename, font_size=32):
         if relpath(filename) in self.file_tabs:
             return
 
-        i = InputField(filename, self)
+        i = InputField(filename, self, font_size=font_size)
+        i.code_input.set_font_size(font_size)
 
         tab = LongPressTabHeader(text=filename.split("/")[-1])
         tab.action = i.close
@@ -137,14 +146,20 @@ class Editor(Widget):
         return i
 
     def save_current_files(self):
-        current_filename = self.files_tab_panel.current_tab.text
-        with open("current_file.txt", "w+") as f:
-            for fname in self.file_tabs:
-                f.write(
-                    fname
-                    + ("[OPEN]" if fname.endswith(current_filename) else "")
-                    + "\n"
-                )
+        # save currently open files, TODO: migrate to json
+
+        with open("current_files.json", "w+") as f:
+            json.dump(
+                {
+                    fname: {
+                        "focus": fname.endswith(self.files_tab_panel.current_tab.text),
+                        "font_size": self.file_tabs[fname].content.code_input.fontsize,
+                    }
+                    for fname in self.file_tabs
+                },
+                f,
+                indent=4,
+            )
 
     def save_all(self):
         for f in self.file_tabs.values():

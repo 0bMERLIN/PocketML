@@ -183,7 +183,7 @@ class InputField(Widget):
         except Exception as e:
             self.gettype_button.text = str(e)
 
-    def __init__(self, filename, editor, **kwargs):
+    def __init__(self, filename, editor, font_size=32, **kwargs):
         super().__init__(**kwargs)
 
         ############### UI
@@ -216,6 +216,7 @@ class InputField(Widget):
         self.code_input = LineNumCodeInput(
             code_input_y,
             code_input_h,
+            font_size=font_size,
             pos=(0, code_input_y),
             size=(Window.width, code_input_h),
         )

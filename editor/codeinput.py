@@ -63,7 +63,7 @@ class LineNumCodeInput(BoxLayout):
         self.update_line_numbers()
         self.sync_scroll()
 
-    def __init__(self, code_input_y, code_input_h, **kwargs):
+    def __init__(self, code_input_y, code_input_h, font_size=32, **kwargs):
         super().__init__(orientation="horizontal", **kwargs)
 
         # Create line number label
@@ -174,7 +174,7 @@ class LineNumCodeInput(BoxLayout):
         self.add_widget(self.code_input)
 
         # update graphics
-        Clock.schedule_once(lambda _: self.set_font_size(32), 0.1)
+        Clock.schedule_once(lambda _: self.set_font_size(font_size), 0.1)
         Clock.schedule_once(lambda _: self.update_graphics(), 0.3)
 
         # add the key down event handler

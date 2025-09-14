@@ -1,0 +1,6 @@
+{
+    "examples/test.ml": {
+        "focus": true,
+        "font_size": 38
+    }
+}
